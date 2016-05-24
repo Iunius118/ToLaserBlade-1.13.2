@@ -54,8 +54,6 @@ public class ItemLaserBlade extends ItemSword {
 		return true;
 	}
 
-
-
 	@Override
 	public int getHarvestLevel(ItemStack stack, String toolClass) {
 		return material.getHarvestLevel();

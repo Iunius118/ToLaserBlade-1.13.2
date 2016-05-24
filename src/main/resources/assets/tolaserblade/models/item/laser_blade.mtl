@@ -1,6 +1,9 @@
+# ToLaserBlade
+# Copyright 2016 Iunius118
+# Created by Metasequoia
 
 newmtl mat_Hilt
-Kd 0.12549 0.12549 0.25098
+Kd 0.75000 0.75000 0.75000
 Tr 1.00000
 
 newmtl mat_Blade_core
@@ -10,3 +13,4 @@ Tr 1.00000
 newmtl mat_Blade_halo
 Kd 1.00000 0.00000 0.00000
 Tr 0.25000
+
