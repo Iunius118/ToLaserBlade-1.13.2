@@ -20,6 +20,7 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformT
 import net.minecraft.client.renderer.block.model.ItemOverride;
 import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
@@ -99,6 +100,7 @@ public class ModelLaserBlade implements IPerspectiveAwareModel {
 		VertexBuffer renderer = Tessellator.getInstance().getBuffer();
 		int sizeBlade = quadsBlade.size();
 		int sizeHilt = quadsHilt.size();
+		int color = -1;
 
 		switch (cameraTransformType) {
 		case FIRST_PERSON_LEFT_HAND:
@@ -124,7 +126,8 @@ public class ModelLaserBlade implements IPerspectiveAwareModel {
 		default:
 			GlStateManager.scale(0.9D, 0.9D, 0.9D);
 			GlStateManager.rotate(45.0F, 0.0F, 0.0F, -1.0F);
-			GlStateManager.translate(0.0F, -0.75F, 0.0F);
+			GlStateManager.translate(0.0F, -0.75F, -0.04F);
+			color = itemStack.hasEffect() ? -1 : -4144960;
 		}
 
 		renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.ITEM);
@@ -135,7 +138,7 @@ public class ModelLaserBlade implements IPerspectiveAwareModel {
 
 		Tessellator.getInstance().draw();
 
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
 		GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
 		RenderHelper.disableStandardItemLighting();
 		float lastBrightnessX = OpenGlHelper.lastBrightnessX;
@@ -145,7 +148,7 @@ public class ModelLaserBlade implements IPerspectiveAwareModel {
 		renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.ITEM);
 
 		for (int i = 0; i < sizeBlade; ++i) {
-			LightUtil.renderQuadColor(renderer, quadsBlade.get(i), -1);
+			LightUtil.renderQuadColor(renderer, quadsBlade.get(i), color);
 		}
 
 		Tessellator.getInstance().draw();
@@ -153,7 +156,60 @@ public class ModelLaserBlade implements IPerspectiveAwareModel {
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
 		RenderHelper.enableStandardItemLighting();
 		GL11.glPopAttrib();
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+
+		if (itemStack.hasEffect()) {
+			doRenderEffect();
+		}
+	}
+
+	public void doRenderEffect() {
+		VertexBuffer renderer = Tessellator.getInstance().getBuffer();
+		int sizeBlade = quadsBlade.size();
+		int sizeHilt = quadsHilt.size();
+
+		GlStateManager.depthMask(false);
+		GlStateManager.depthFunc(514);
+		GlStateManager.disableLighting();
+		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_COLOR, GlStateManager.DestFactor.ONE);
+		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("textures/misc/enchanted_item_glint.png"));
+		GlStateManager.matrixMode(5890);
+		GlStateManager.pushMatrix();
+		GlStateManager.scale(8.0F, 8.0F, 8.0F);
+		float f = (float)(Minecraft.getSystemTime() % 3000L) / 3000.0F / 8.0F;
+		GlStateManager.translate(f, 0.0F, 0.0F);
+		GlStateManager.rotate(-50.0F, 0.0F, 0.0F, 1.0F);
+
+		renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.ITEM);
+
+		for (int i = 0; i < sizeHilt; ++i) {
+			LightUtil.renderQuadColor(renderer, quadsHilt.get(i), -8372020);
+		}
+
+		Tessellator.getInstance().draw();
+
+		GlStateManager.popMatrix();
+		GlStateManager.pushMatrix();
+		GlStateManager.scale(8.0F, 8.0F, 8.0F);
+		float f1 = (float)(Minecraft.getSystemTime() % 4873L) / 4873.0F / 8.0F;
+		GlStateManager.translate(-f1, 0.0F, 0.0F);
+		GlStateManager.rotate(10.0F, 0.0F, 0.0F, 1.0F);
+
+		renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.ITEM);
+
+		for (int i = 0; i < sizeHilt; ++i) {
+			LightUtil.renderQuadColor(renderer, quadsHilt.get(i), -8372020);
+		}
+
+		Tessellator.getInstance().draw();
+
+		GlStateManager.popMatrix();
+		GlStateManager.matrixMode(5888);
+		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+		GlStateManager.enableLighting();
+		GlStateManager.depthFunc(515);
+		GlStateManager.depthMask(true);
+		Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 	}
 
 	public List<BakedQuad> getPartQuads(IBakedModel bakedModelIn, List<String> visibleGroups) {
