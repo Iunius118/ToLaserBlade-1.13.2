@@ -1,5 +1,5 @@
 
-	ToLaserBlade 0.0.1 (BETA VIRSION)
+	ToLaserBlade 0.0.1 (BETA VERSION)
 
 Requirement
 	Minecraft [1.9.4]
@@ -24,3 +24,4 @@ Items
 
 
 Copyright 2016 Iunius118
+https://github.com/Iunius118/ToLaserBlade
