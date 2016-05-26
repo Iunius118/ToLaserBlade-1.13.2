@@ -81,17 +81,17 @@ public class ModelLaserBlade implements IPerspectiveAwareModel {
 	public boolean isRenderingEffect = false;
 
 	public ModelLaserBlade(IBakedModel bakedModelIn, IBakedModel bakedGUIModelIn) {
-		originalModel = bakedModelIn;
-		guiModel = bakedGUIModelIn;
-		quadsBlade = getPartQuads(bakedModelIn, Arrays.asList(new String[]{"Blade"}));
-		quadsHilt = getPartQuads(bakedModelIn, Arrays.asList(new String[]{"Hilt"}));
+		this(bakedModelIn, bakedGUIModelIn, false);
 	}
 
-	public ModelLaserBlade(IBakedModel bakedModelIn, List<BakedQuad> ListBladeQuads, List<BakedQuad> ListHiltQuads, IBakedModel bakedGUIModelIn) {
+	public ModelLaserBlade(IBakedModel bakedModelIn, IBakedModel bakedGUIModelIn, boolean isInitialized) {
 		originalModel = bakedModelIn;
 		guiModel = bakedGUIModelIn;
-		quadsBlade = ListBladeQuads;
-		quadsHilt = ListHiltQuads;
+
+		if (!isInitialized) {
+			quadsBlade = getPartQuads(bakedModelIn, Arrays.asList(new String[]{"Blade"}));
+			quadsHilt = getPartQuads(bakedModelIn, Arrays.asList(new String[]{"Hilt"}));
+		}
 	}
 
 	public void doRender() {
@@ -107,11 +107,13 @@ public class ModelLaserBlade implements IPerspectiveAwareModel {
 			GlStateManager.rotate(45.0F, 0.0F, 0.0F, 1.0F);
 			GlStateManager.scale(1.0D, 1.25D, 1.0D);
 			GlStateManager.translate(0.0F, -0.6F, 0.0F);
+			GlStateManager.rotate(90.0F, 0.0F, -1.0F, 0.0F);
 			break;
 		case FIRST_PERSON_RIGHT_HAND:
 			GlStateManager.rotate(45.0F, 0.0F, 0.0F, -1.0F);
 			GlStateManager.scale(1.0D, 1.25D, 1.0D);
 			GlStateManager.translate(0.0F, -0.6F, 0.0F);
+			GlStateManager.rotate(90.0F, 0.0F, 1.0F, 0.0F);
 			break;
 		case THIRD_PERSON_LEFT_HAND:
 			GlStateManager.rotate(-8.0F, 1.0F, 0.0F, 0.0F);
@@ -127,6 +129,7 @@ public class ModelLaserBlade implements IPerspectiveAwareModel {
 			GlStateManager.scale(0.9D, 0.9D, 0.9D);
 			GlStateManager.rotate(45.0F, 0.0F, 0.0F, -1.0F);
 			GlStateManager.translate(0.0F, -0.75F, -0.04F);
+			GlStateManager.rotate(90.0F, 0.0F, -1.0F, 0.0F);
 			color = itemStack.hasEffect() ? -1 : -4144960;
 		}
 
@@ -295,7 +298,9 @@ public class ModelLaserBlade implements IPerspectiveAwareModel {
 			public IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack, World world, EntityLivingBase entity) {
 				if (originalModel instanceof ModelLaserBlade) {
 					ModelLaserBlade model = (ModelLaserBlade)originalModel;
-					ModelLaserBlade newModel = new ModelLaserBlade(model.originalModel, model.quadsBlade, model.quadsHilt, model.guiModel);
+					ModelLaserBlade newModel = new ModelLaserBlade(model.originalModel, model.guiModel, true);
+					newModel.quadsBlade = model.quadsBlade;
+					newModel.quadsHilt = model.quadsHilt;
 					newModel.handleItemState(stack, world, entity);
 					return newModel;
 				}

@@ -1,5 +1,5 @@
 
-	ToLaserBlade 0.0.1 (BETA VERSION)
+	ToLaserBlade 0.0.2 (BETA VERSION)
 
 Requirement
 	Minecraft [1.9.4]
