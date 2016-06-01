@@ -1,11 +1,16 @@
 package iunius118.mods.tolaserblade.client.model;
 
 import com.google.common.base.Function;
+import com.google.common.collect.Lists;
+
+import iunius118.mods.tolaserblade.item.ItemLaserBlade;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.vecmath.Matrix4f;
 
@@ -50,11 +55,13 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.IPerspectiveAwareModel;
 import net.minecraftforge.client.model.animation.Animation;
 import net.minecraftforge.common.model.TRSRTransformation;
+import net.minecraftforge.common.util.Constants.NBT;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
@@ -74,8 +81,7 @@ public class ModelLaserBlade implements IPerspectiveAwareModel {
 	public EnumFacing side;
 	public long rand;
 
-	public List<BakedQuad> quadsBlade;
-	public List<BakedQuad> quadsHilt;
+	public Map<String, List<BakedQuad>> mapQuads;
 	public float partialTicks;
 
 	public boolean isRenderingEffect = false;
@@ -89,8 +95,11 @@ public class ModelLaserBlade implements IPerspectiveAwareModel {
 		guiModel = bakedGUIModelIn;
 
 		if (!isInitialized) {
-			quadsBlade = getPartQuads(bakedModelIn, Arrays.asList(new String[]{"Blade"}));
-			quadsHilt = getPartQuads(bakedModelIn, Arrays.asList(new String[]{"Hilt"}));
+			mapQuads = new HashMap<String, List<BakedQuad>>();
+			mapQuads.put("Hilt", getPartQuads(bakedModelIn, Arrays.asList(new String[]{"Hilt"})));
+			mapQuads.put("Blade_core", getPartQuads(bakedModelIn, Arrays.asList(new String[]{"Blade_core"})));
+			mapQuads.put("Blade_halo_1", getPartQuads(bakedModelIn, Arrays.asList(new String[]{"Blade_halo_1"})));
+			mapQuads.put("Blade_halo_2", getPartQuads(bakedModelIn, Arrays.asList(new String[]{"Blade_halo_2"})));
 		}
 	}
 
@@ -98,9 +107,27 @@ public class ModelLaserBlade implements IPerspectiveAwareModel {
 		partialTicks = Animation.getPartialTickTime();
 
 		VertexBuffer renderer = Tessellator.getInstance().getBuffer();
-		int sizeBlade = quadsBlade.size();
+		List<BakedQuad> quadsHilt = mapQuads.get("Hilt");
+		List<BakedQuad> quadsBladeCore = mapQuads.get("Blade_core");
+		List<BakedQuad> quadsBladeHalo1 = mapQuads.get("Blade_halo_1");
+		List<BakedQuad> quadsBladeHalo2 = mapQuads.get("Blade_halo_2");
 		int sizeHilt = quadsHilt.size();
-		int color = -1;
+		int sizeBladeCore = quadsBladeCore.size();
+		int sizeBladeHalo1 = quadsBladeHalo1.size();
+		int sizeBladeHalo2 = quadsBladeHalo2.size();
+		int colorCore = 0xFFFFFFFF;
+		int colorHalo = 0xFFFF0000;
+		NBTTagCompound nbt = itemStack.getTagCompound();
+
+		if (nbt != null) {
+			if (nbt.hasKey(ItemLaserBlade.KEY_COLOR_CORE, NBT.TAG_INT)) {
+				colorCore = nbt.getInteger(ItemLaserBlade.KEY_COLOR_CORE);
+			}
+
+			if (nbt.hasKey(ItemLaserBlade.KEY_COLOR_HALO, NBT.TAG_INT)) {
+				colorHalo = nbt.getInteger(ItemLaserBlade.KEY_COLOR_HALO);
+			}
+		}
 
 		switch (cameraTransformType) {
 		case FIRST_PERSON_LEFT_HAND:
@@ -130,8 +157,10 @@ public class ModelLaserBlade implements IPerspectiveAwareModel {
 			GlStateManager.rotate(45.0F, 0.0F, 0.0F, -1.0F);
 			GlStateManager.translate(0.0F, -0.75F, -0.04F);
 			GlStateManager.rotate(90.0F, 0.0F, -1.0F, 0.0F);
-			color = itemStack.hasEffect() ? -1 : -4144960;
 		}
+
+		GlStateManager.enableCull();
+		GlStateManager.cullFace(GlStateManager.CullFace.BACK);
 
 		renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.ITEM);
 
@@ -150,8 +179,16 @@ public class ModelLaserBlade implements IPerspectiveAwareModel {
 
 		renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.ITEM);
 
-		for (int i = 0; i < sizeBlade; ++i) {
-			LightUtil.renderQuadColor(renderer, quadsBlade.get(i), color);
+		for (int i = 0; i < sizeBladeCore; ++i) {
+			LightUtil.renderQuadColor(renderer, quadsBladeCore.get(i), colorCore);
+		}
+
+		for (int i = 0; i < sizeBladeHalo1; ++i) {
+			LightUtil.renderQuadColor(renderer, quadsBladeHalo1.get(i), colorHalo);
+		}
+
+		for (int i = 0; i < sizeBladeHalo2; ++i) {
+			LightUtil.renderQuadColor(renderer, quadsBladeHalo2.get(i), colorHalo);
 		}
 
 		Tessellator.getInstance().draw();
@@ -161,6 +198,8 @@ public class ModelLaserBlade implements IPerspectiveAwareModel {
 		GL11.glPopAttrib();
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
+		GlStateManager.disableCull();
+
 		if (itemStack.hasEffect()) {
 			doRenderEffect();
 		}
@@ -168,7 +207,7 @@ public class ModelLaserBlade implements IPerspectiveAwareModel {
 
 	public void doRenderEffect() {
 		VertexBuffer renderer = Tessellator.getInstance().getBuffer();
-		int sizeBlade = quadsBlade.size();
+		List<BakedQuad> quadsHilt = mapQuads.get("Hilt");
 		int sizeHilt = quadsHilt.size();
 
 		GlStateManager.depthMask(false);
@@ -299,8 +338,7 @@ public class ModelLaserBlade implements IPerspectiveAwareModel {
 				if (originalModel instanceof ModelLaserBlade) {
 					ModelLaserBlade model = (ModelLaserBlade)originalModel;
 					ModelLaserBlade newModel = new ModelLaserBlade(model.originalModel, model.guiModel, true);
-					newModel.quadsBlade = model.quadsBlade;
-					newModel.quadsHilt = model.quadsHilt;
+					newModel.mapQuads = model.mapQuads;
 					newModel.handleItemState(stack, world, entity);
 					return newModel;
 				}

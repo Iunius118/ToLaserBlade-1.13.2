@@ -7,10 +7,14 @@ Kd 0.75000 0.75000 0.75000
 Tr 1.00000
 
 newmtl mat_Blade_core
-Kd 0.93333 0.90000 0.90000
-Tr 1.00000
+Kd 1.00000 1.00000 1.00000
+Tr 0.90000
 
-newmtl mat_Blade_halo
-Kd 1.00000 0.00000 0.00000
+newmtl mat_Blade_halo_1
+Kd 1.00000 1.00000 1.00000
+Tr 0.50000
+
+newmtl mat_Blade_halo_2
+Kd 1.00000 1.00000 1.00000
 Tr 0.25000
 

@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemStack;
@@ -16,6 +17,7 @@ import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -25,6 +27,7 @@ public class ToLaserBladeRegistry {
 
 	public static void registerItems() {
 		GameRegistry.register(ToLaserBlade.Items.itemLaserBlade);
+		MinecraftForge.EVENT_BUS.register(ToLaserBlade.Items.itemLaserBlade);
 
 		registerItemRecipes();
 	}
@@ -38,6 +41,19 @@ public class ToLaserBladeRegistry {
 				'D', Items.DIAMOND,
 				'G', Items.GLOWSTONE_DUST,
 				'R', Items.REDSTONE);
+
+		GameRegistry.addRecipe(new ItemStack(ToLaserBlade.Items.itemLaserBlade),
+				" ID",
+				"IGI",
+				"RI ",
+				'I', Items.IRON_INGOT,
+				'D', Blocks.DIAMOND_BLOCK,
+				'G', Blocks.GLOWSTONE,
+				'R', Blocks.REDSTONE_BLOCK);
+
+		GameRegistry.addRecipe(new ItemStack(ToLaserBlade.Items.itemLaserBlade),
+				"L",
+				'L', ToLaserBlade.Items.itemLaserBlade);
 	}
 
 	@SideOnly(Side.CLIENT)
