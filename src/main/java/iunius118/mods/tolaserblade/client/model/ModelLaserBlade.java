@@ -1,7 +1,9 @@
 package iunius118.mods.tolaserblade.client.model;
 
 import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
+import com.google.common.collect.UnmodifiableIterator;
 
 import iunius118.mods.tolaserblade.item.ItemLaserBlade;
 
@@ -11,6 +13,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import javax.vecmath.Matrix4f;
 
@@ -38,6 +41,9 @@ import net.minecraftforge.client.model.obj.OBJModel;
 import net.minecraftforge.client.model.obj.OBJModel.OBJBakedModel;
 import net.minecraftforge.client.model.obj.OBJModel.OBJState;
 import net.minecraftforge.client.model.pipeline.LightUtil;
+import net.minecraftforge.common.model.IModelPart;
+import net.minecraftforge.common.model.IModelState;
+import net.minecraftforge.common.model.Models;
 import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
@@ -254,13 +260,32 @@ public class ModelLaserBlade implements IPerspectiveAwareModel {
 		Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 	}
 
-	public List<BakedQuad> getPartQuads(IBakedModel bakedModelIn, List<String> visibleGroups) {
+	public List<BakedQuad> getPartQuads(IBakedModel bakedModelIn, final List<String> visibleGroups) {
 		List<BakedQuad> quads = Collections.EMPTY_LIST;
 
 		if (bakedModelIn instanceof OBJBakedModel) {
 			OBJModel obj = ((OBJBakedModel)bakedModelIn).getModel();
-			OBJState objStateBlade = new OBJState(visibleGroups, true);
-			IBakedModel bakedModel = obj.bake(objStateBlade, DefaultVertexFormats.ITEM, new Function<ResourceLocation, TextureAtlasSprite>() {
+
+			IModelState state = new IModelState() {
+
+				@Override
+				public Optional<TRSRTransformation> apply(Optional<? extends IModelPart> part) {
+					if (part.isPresent()) {
+						UnmodifiableIterator<String> parts = Models.getParts(part.get());
+
+						while (parts.hasNext()) {
+							if (visibleGroups.contains(parts.next())) {
+								return Optional.absent();
+							}
+						}
+					}
+
+					return Optional.of(TRSRTransformation.identity());
+				}
+
+			};
+
+			IBakedModel bakedModel = obj.bake(state, DefaultVertexFormats.ITEM, new Function<ResourceLocation, TextureAtlasSprite>() {
 
 				@Override
 				public TextureAtlasSprite apply(ResourceLocation location) {
@@ -269,6 +294,7 @@ public class ModelLaserBlade implements IPerspectiveAwareModel {
 				}
 
 			});
+
 			quads = bakedModel.getQuads(null, null, 0);
 		}
 
