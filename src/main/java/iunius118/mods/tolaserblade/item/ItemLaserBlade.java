@@ -1,20 +1,12 @@
 package iunius118.mods.tolaserblade.item;
 
 import iunius118.mods.tolaserblade.ToLaserBlade;
-
-import com.google.common.collect.Multimap;
-
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.nbt.NBTTagCompound;
@@ -23,10 +15,10 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeEnd;
 import net.minecraft.world.biome.BiomeHell;
-import net.minecraft.world.biome.BiomeVoid;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
+
+import com.google.common.collect.Multimap;
 
 public class ItemLaserBlade extends ItemSword {
 
@@ -60,13 +52,6 @@ public class ItemLaserBlade extends ItemSword {
 
 			if (itemSlot == null) {
 				continue;
-
-			} else if (itemSlot.getItem() == Items.DIAMOND) {
-				return;
-
-			} else if (itemSlot.getItem() == ItemBlock.getItemFromBlock(Blocks.DIAMOND_BLOCK)) {
-				stack.addEnchantment(Enchantment.getEnchantmentByLocation("smite"), 10);
-				return;
 
 			} else if (itemSlot.getItem() == ToLaserBlade.Items.itemLaserBlade) {
 				NBTTagCompound nbtNew;

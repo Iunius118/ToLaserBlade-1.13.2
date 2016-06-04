@@ -1,16 +1,11 @@
 package iunius118.mods.tolaserblade;
 
-import com.google.common.base.Function;
-
 import iunius118.mods.tolaserblade.client.model.ModelLaserBlade;
-import iunius118.mods.tolaserblade.item.ItemLaserBlade;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item.ToolMaterial;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -18,10 +13,12 @@ import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.ShapedOreRecipe;
+
+import com.google.common.base.Function;
 
 public class ToLaserBladeRegistry {
 
@@ -33,23 +30,32 @@ public class ToLaserBladeRegistry {
 	}
 
 	public static void registerItemRecipes() {
-		GameRegistry.addRecipe(new ItemStack(ToLaserBlade.Items.itemLaserBlade),
-				" ID",
-				"IGI",
-				"RI ",
-				'I', Items.IRON_INGOT,
-				'D', Items.DIAMOND,
-				'G', Items.GLOWSTONE_DUST,
-				'R', Items.REDSTONE);
+		GameRegistry.addRecipe(
+				new ShapedOreRecipe(
+						new ItemStack(ToLaserBlade.Items.itemLaserBlade),
+						" ID",
+						"IGI",
+						"RI ",
+						'I', "ingotIron",
+						'D', "gemDiamond",
+						'G', "dustGlowstone",
+						'R', "dustRedstone")
+				);
 
-		GameRegistry.addRecipe(new ItemStack(ToLaserBlade.Items.itemLaserBlade),
-				" ID",
-				"IGI",
-				"RI ",
-				'I', Items.IRON_INGOT,
-				'D', Blocks.DIAMOND_BLOCK,
-				'G', Blocks.GLOWSTONE,
-				'R', Blocks.REDSTONE_BLOCK);
+		ItemStack smiteBlade = new ItemStack(ToLaserBlade.Items.itemLaserBlade);
+		smiteBlade.addEnchantment(Enchantment.getEnchantmentByLocation("smite"), 10);
+		GameRegistry.addRecipe(
+				new ShapedOreRecipe(
+						smiteBlade,
+						" ID",
+						"IGI",
+						"RI ",
+						'I', "ingotIron",
+						'D', "blockDiamond",
+						'G', "glowstone",
+						'R', "blockRedstone")
+				);
+
 
 		GameRegistry.addRecipe(new ItemStack(ToLaserBlade.Items.itemLaserBlade),
 				"L",
