@@ -28,7 +28,7 @@ public class ToLaserBlade {
 	public static final String MOD_ID = "tolaserblade";
 	public static final String MOD_NAME = "ToLaserBlade";
 	public static final String MOD_VERSION = "0.0.3[WIP]";
-	public static final String MOD_DEPENDENCIES = "required-after:Forge@[1.9.4-12.17.0.1940,)";
+	public static final String MOD_DEPENDENCIES = "required-after:Forge@[1.9.4-12.17.0.1948,)";
 	public static final String MOD_ACCEPTED_MC_VERSIONS = "[1.9.4]";
 
 	@EventHandler
