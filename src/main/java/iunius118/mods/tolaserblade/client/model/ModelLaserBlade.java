@@ -113,14 +113,6 @@ public class ModelLaserBlade implements IPerspectiveAwareModel {
 		partialTicks = Animation.getPartialTickTime();
 
 		VertexBuffer renderer = Tessellator.getInstance().getBuffer();
-		List<BakedQuad> quadsHilt = mapQuads.get("Hilt");
-		List<BakedQuad> quadsBladeCore = mapQuads.get("Blade_core");
-		List<BakedQuad> quadsBladeHalo1 = mapQuads.get("Blade_halo_1");
-		List<BakedQuad> quadsBladeHalo2 = mapQuads.get("Blade_halo_2");
-		int sizeHilt = quadsHilt.size();
-		int sizeBladeCore = quadsBladeCore.size();
-		int sizeBladeHalo1 = quadsBladeHalo1.size();
-		int sizeBladeHalo2 = quadsBladeHalo2.size();
 		int colorCore = 0xFFFFFFFF;
 		int colorHalo = 0xFFFF0000;
 		NBTTagCompound nbt = itemStack.getTagCompound();
@@ -149,10 +141,6 @@ public class ModelLaserBlade implements IPerspectiveAwareModel {
 			GlStateManager.rotate(90.0F, 0.0F, 1.0F, 0.0F);
 			break;
 		case THIRD_PERSON_LEFT_HAND:
-			GlStateManager.rotate(-8.0F, 1.0F, 0.0F, 0.0F);
-			GlStateManager.scale(2.0D, 2.0D, 2.0D);
-			GlStateManager.translate(0.0F, -0.45F, 0.0F);
-			break;
 		case THIRD_PERSON_RIGHT_HAND:
 			GlStateManager.rotate(-8.0F, 1.0F, 0.0F, 0.0F);
 			GlStateManager.scale(2.0D, 2.0D, 2.0D);
@@ -170,9 +158,7 @@ public class ModelLaserBlade implements IPerspectiveAwareModel {
 
 		renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.ITEM);
 
-		for (int i = 0; i < sizeHilt; ++i) {
-			LightUtil.renderQuadColor(renderer, quadsHilt.get(i), -1);
-		}
+		renderQuads(renderer, mapQuads.get("Hilt"), -1);
 
 		Tessellator.getInstance().draw();
 
@@ -185,17 +171,9 @@ public class ModelLaserBlade implements IPerspectiveAwareModel {
 
 		renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.ITEM);
 
-		for (int i = 0; i < sizeBladeCore; ++i) {
-			LightUtil.renderQuadColor(renderer, quadsBladeCore.get(i), colorCore);
-		}
-
-		for (int i = 0; i < sizeBladeHalo1; ++i) {
-			LightUtil.renderQuadColor(renderer, quadsBladeHalo1.get(i), colorHalo);
-		}
-
-		for (int i = 0; i < sizeBladeHalo2; ++i) {
-			LightUtil.renderQuadColor(renderer, quadsBladeHalo2.get(i), colorHalo);
-		}
+		renderQuads(renderer, mapQuads.get("Blade_core"), colorCore);
+		renderQuads(renderer, mapQuads.get("Blade_halo_1"), colorHalo);
+		renderQuads(renderer, mapQuads.get("Blade_halo_2"), colorHalo);
 
 		Tessellator.getInstance().draw();
 
@@ -207,14 +185,13 @@ public class ModelLaserBlade implements IPerspectiveAwareModel {
 		GlStateManager.disableCull();
 
 		if (itemStack.hasEffect()) {
-			doRenderEffect();
+			renderEffect();
 		}
 	}
 
-	public void doRenderEffect() {
+	public void renderEffect() {
 		VertexBuffer renderer = Tessellator.getInstance().getBuffer();
 		List<BakedQuad> quadsHilt = mapQuads.get("Hilt");
-		int sizeHilt = quadsHilt.size();
 
 		GlStateManager.depthMask(false);
 		GlStateManager.depthFunc(514);
@@ -230,9 +207,7 @@ public class ModelLaserBlade implements IPerspectiveAwareModel {
 
 		renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.ITEM);
 
-		for (int i = 0; i < sizeHilt; ++i) {
-			LightUtil.renderQuadColor(renderer, quadsHilt.get(i), -8372020);
-		}
+		renderQuads(renderer, quadsHilt, -8372020);
 
 		Tessellator.getInstance().draw();
 
@@ -245,9 +220,7 @@ public class ModelLaserBlade implements IPerspectiveAwareModel {
 
 		renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.ITEM);
 
-		for (int i = 0; i < sizeHilt; ++i) {
-			LightUtil.renderQuadColor(renderer, quadsHilt.get(i), -8372020);
-		}
+		renderQuads(renderer, quadsHilt, -8372020);
 
 		Tessellator.getInstance().draw();
 
@@ -258,6 +231,14 @@ public class ModelLaserBlade implements IPerspectiveAwareModel {
 		GlStateManager.depthFunc(515);
 		GlStateManager.depthMask(true);
 		Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+	}
+
+	public void renderQuads(VertexBuffer renderer, List<BakedQuad> quads, int color) {
+		int size = quads.size();
+
+		for (int i = 0; i < size; ++i) {
+			LightUtil.renderQuadColor(renderer, quads.get(i), color);
+		}
 	}
 
 	public List<BakedQuad> getPartQuads(IBakedModel bakedModelIn, final List<String> visibleGroups) {
