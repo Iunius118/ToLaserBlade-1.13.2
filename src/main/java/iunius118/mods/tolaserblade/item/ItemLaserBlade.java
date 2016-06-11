@@ -25,6 +25,7 @@ public class ItemLaserBlade extends ItemSword {
 	private final Item.ToolMaterial material;
 	private final float attackDamage;
 	private final float attackSpeed;
+	// Blade color table.
 	public final int[] colors = {0xFFFF0000, 0xFFD0A000, 0xFF00E000, 0xFF0080FF, 0xFF0000FF, 0xFFA000FF, 0xFFC0C0C0, 0xFF020202};
 
 	public static final String KEY_COLOR_CORE = "colorC";
@@ -54,9 +55,11 @@ public class ItemLaserBlade extends ItemSword {
 				continue;
 
 			} else if (itemSlot.getItem() == ToLaserBlade.Items.itemLaserBlade) {
+				// Coloring blade recipe.
 				NBTTagCompound nbtNew;
 				NBTTagCompound nbtOld = itemSlot.getTagCompound();
 
+				// Copy or Create NBT.
 				if (nbtOld == null) {
 					nbtNew = new NBTTagCompound();
 				} else {
@@ -68,7 +71,7 @@ public class ItemLaserBlade extends ItemSword {
 				int colorCore = 0xFFFFFFFF;
 				int colorHalo = colors[0];
 
-
+				// Coloring by Biome or Biome temperature.
 				if (biome instanceof BiomeHell) {
 					colorHalo = colors[6];
 				} else if (biome instanceof BiomeEnd) {
@@ -90,6 +93,7 @@ public class ItemLaserBlade extends ItemSword {
 					}
 				}
 
+				// Save NBT.
 				nbtNew.setInteger(KEY_COLOR_CORE, colorCore);
 				nbtNew.setInteger(KEY_COLOR_HALO, colorHalo);
 				stack.setTagCompound(nbtNew);
