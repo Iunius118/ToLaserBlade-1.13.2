@@ -358,7 +358,7 @@ public class ModelLaserBlade implements IPerspectiveAwareModel {
 	public Pair<? extends IBakedModel, Matrix4f> handlePerspective(TransformType transformTypeIn) {
 		Matrix4f matrix;
 
-		if (bakedJSONModel != null && bakedJSONModel instanceof IPerspectiveAwareModel) {
+		if (bakedJSONModel instanceof IPerspectiveAwareModel) {
 			// Get transformation matrix from JSON item model.
 			matrix = ((IPerspectiveAwareModel) bakedJSONModel).handlePerspective(transformTypeIn).getValue();
 		} else {
