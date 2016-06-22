@@ -26,7 +26,7 @@ public class ItemLaserBlade extends ItemSword {
 	private final float attackDamage;
 	private final float attackSpeed;
 	// Blade color table.
-	public final int[] colors = {0xFFFF0000, 0xFFD0A000, 0xFF00E000, 0xFF0080FF, 0xFF0000FF, 0xFFA000FF, 0xFFC0C0C0, 0xFF020202};
+	public final int[] colors = {0xFFFF0000, 0xFFD0A000, 0xFF00E000, 0xFF0080FF, 0xFF0000FF, 0xFFA000FF, 0xFFFFFFFF, 0xFF020202};
 
 	public static final String KEY_COLOR_CORE = "colorC";
 	public static final String KEY_COLOR_HALO = "colorH";
@@ -70,8 +70,9 @@ public class ItemLaserBlade extends ItemSword {
 				Biome biome = event.player.worldObj.getBiomeForCoordsBody(pos);
 				int colorCore = 0xFFFFFFFF;
 				int colorHalo = colors[0];
+				boolean isSubColor = false;
 
-				// Coloring by Biome or Biome temperature.
+				// Coloring by Biome type or Biome temperature.
 				if (biome instanceof BiomeHell) {
 					colorHalo = colors[6];
 				} else if (biome instanceof BiomeEnd) {
@@ -101,6 +102,7 @@ public class ItemLaserBlade extends ItemSword {
 			}
 		}
 	}
+
 
 	@Override
 	public float getDamageVsEntity() {

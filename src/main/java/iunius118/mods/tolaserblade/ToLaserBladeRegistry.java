@@ -1,6 +1,8 @@
 package iunius118.mods.tolaserblade;
 
 import iunius118.mods.tolaserblade.client.model.ModelLaserBlade;
+import iunius118.mods.tolaserblade.client.renderer.RenderItemLaserBlade;
+import iunius118.mods.tolaserblade.tileentity.TileEntityRenderItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -8,11 +10,13 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -65,6 +69,9 @@ public class ToLaserBladeRegistry {
 	@SideOnly(Side.CLIENT)
 	public static void registerItemModels() {
 		ModelLoader.setCustomModelResourceLocation(ToLaserBlade.Items.itemLaserBlade, 0, ToLaserBlade.ModelLocations.mrlItemLaserBlade);
+
+		ForgeHooksClient.registerTESRItemStack(ToLaserBlade.Items.itemLaserBlade, 0, TileEntityRenderItem.class);
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRenderItem.class, new RenderItemLaserBlade());
 	}
 
 	@SideOnly(Side.CLIENT)
