@@ -7,16 +7,20 @@
 newmtl mat_Hilt
 Kd 0.75000 0.75000 0.75000
 d 1.00000
+map_Kd tolaserblade:items/laser_blade
 
 newmtl mat_Blade_core
 Kd 1.00000 1.00000 1.00000
 d 0.90000
+map_Kd tolaserblade:items/laser_blade
 
 newmtl mat_Blade_halo_1
 Kd 1.00000 1.00000 1.00000
 d 0.50000
+map_Kd tolaserblade:items/laser_blade
 
 newmtl mat_Blade_halo_2
 Kd 1.00000 1.00000 1.00000
 d 0.25000
+map_Kd tolaserblade:items/laser_blade
 
