@@ -25,6 +25,7 @@ import net.minecraftforge.client.model.pipeline.LightUtil;
 import net.minecraftforge.common.util.Constants.NBT;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL14;
 
 public class RenderItemLaserBlade extends TileEntitySpecialRenderer<TileEntityRenderItem> {
 
@@ -33,12 +34,12 @@ public class RenderItemLaserBlade extends TileEntitySpecialRenderer<TileEntityRe
 		if(te != null) return;
 
 		Minecraft mc = Minecraft.getMinecraft();
-        IBakedModel model = mc.getRenderItem().getItemModelMesher().getModelManager().getModel(ToLaserBlade.ModelLocations.mrlItemLaserBlade);
+		IBakedModel model = mc.getRenderItem().getItemModelMesher().getModelManager().getModel(ToLaserBlade.ModelLocations.mrlItemLaserBlade);
 
-        if (model instanceof ModelLaserBlade) {
-            ModelLaserBlade modelLaserBlade = (ModelLaserBlade)model;
-            doRender(modelLaserBlade);
-        }
+		if (model instanceof ModelLaserBlade) {
+			ModelLaserBlade modelLaserBlade = (ModelLaserBlade)model;
+			doRender(modelLaserBlade);
+		}
 	}
 
 	public void doRender(ModelLaserBlade model) {
@@ -47,6 +48,7 @@ public class RenderItemLaserBlade extends TileEntitySpecialRenderer<TileEntityRe
 		VertexBuffer renderer = Tessellator.getInstance().getBuffer();
 		int colorCore = 0xFFFFFFFF;
 		int colorHalo = 0xFFFF0000;
+		boolean isSubColor = false;
 		NBTTagCompound nbt = model.itemStack.getTagCompound();
 
 		// Load blade colors from ItemStack NBT.
@@ -57,6 +59,10 @@ public class RenderItemLaserBlade extends TileEntitySpecialRenderer<TileEntityRe
 
 			if (nbt.hasKey(ItemLaserBlade.KEY_COLOR_HALO, NBT.TAG_INT)) {
 				colorHalo = nbt.getInteger(ItemLaserBlade.KEY_COLOR_HALO);
+			}
+
+			if (nbt.hasKey(ItemLaserBlade.KEY_SUB_COLOR, NBT.TAG_BYTE)) {
+				isSubColor = nbt.getBoolean(ItemLaserBlade.KEY_SUB_COLOR);
 			}
 		}
 
@@ -111,7 +117,16 @@ public class RenderItemLaserBlade extends TileEntitySpecialRenderer<TileEntityRe
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
 
 		// Draw blade.
-		renderQuads(renderer, model.mapQuads.get("Blade_core"), colorCore);
+		if (isSubColor) {
+			// Draw core with Sub-color.
+			GL14.glBlendEquation(GL14.GL_FUNC_REVERSE_SUBTRACT);
+			renderQuads(renderer, model.mapQuads.get("Blade_core"), colorCore);
+			GL14.glBlendEquation(GL14.GL_FUNC_ADD);
+		} else {
+			// Draw core with Add-color.
+			renderQuads(renderer, model.mapQuads.get("Blade_core"), colorCore);
+		}
+
 		renderQuads(renderer, model.mapQuads.get("Blade_halo_1"), colorHalo);
 		renderQuads(renderer, model.mapQuads.get("Blade_halo_2"), colorHalo);
 
@@ -121,13 +136,13 @@ public class RenderItemLaserBlade extends TileEntitySpecialRenderer<TileEntityRe
 		GL11.glPopAttrib();
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
-		// Disable Culling.
-		GlStateManager.disableCull();
-
 		// Render Enchantment effect.
 		if (model.itemStack.hasEffect()) {
 			renderEffect(model.mapQuads.get("Hilt"));
 		}
+
+		// Disable Culling.
+		GlStateManager.disableCull();
 
 		GlStateManager.pushMatrix();
 	}

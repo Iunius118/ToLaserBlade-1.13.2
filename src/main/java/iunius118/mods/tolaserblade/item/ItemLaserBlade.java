@@ -15,6 +15,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeEnd;
 import net.minecraft.world.biome.BiomeHell;
+import net.minecraft.world.biome.BiomeVoid;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
 
@@ -30,6 +31,7 @@ public class ItemLaserBlade extends ItemSword {
 
 	public static final String KEY_COLOR_CORE = "colorC";
 	public static final String KEY_COLOR_HALO = "colorH";
+	public static final String KEY_SUB_COLOR = "isSubC";
 
 	public ItemLaserBlade() {
 		super(ToLaserBlade.ToolMaterials.LASER);
@@ -76,6 +78,9 @@ public class ItemLaserBlade extends ItemSword {
 				if (biome instanceof BiomeHell) {
 					colorHalo = colors[6];
 				} else if (biome instanceof BiomeEnd) {
+					colorHalo = colors[6];
+					isSubColor = true;
+				} else if (biome instanceof BiomeVoid) {
 					colorCore = colors[7];
 					colorHalo = colors[7];
 				} else {
@@ -97,6 +102,7 @@ public class ItemLaserBlade extends ItemSword {
 				// Save NBT.
 				nbtNew.setInteger(KEY_COLOR_CORE, colorCore);
 				nbtNew.setInteger(KEY_COLOR_HALO, colorHalo);
+				nbtNew.setBoolean(KEY_SUB_COLOR, isSubColor);
 				stack.setTagCompound(nbtNew);
 				break;
 			}
