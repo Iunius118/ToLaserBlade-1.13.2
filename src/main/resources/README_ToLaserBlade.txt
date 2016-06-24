@@ -1,10 +1,10 @@
 ﻿
-	ToLaserBlade 0.0.4 (BETA VERSION)
+	ToLaserBlade 0.0.5
 
 
 前提mod（必須）
 	Minecraft [1.9.4, 1.10]
-	Minecraft Forge 1.9.4-12.17.0.1980以降 または 1.10-12.18.0.1983以降
+	Minecraft Forge 1.9.4-12.17.0.1976 または 1.10-12.18.0.1983以降
 
 インストール方法
 	JARファイルをmodsフォルダ内に置く
