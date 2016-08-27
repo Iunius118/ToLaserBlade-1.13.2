@@ -76,43 +76,34 @@ public class ModelLaserBlade implements IPerspectiveAwareModel {
 		if (bakedModelIn instanceof OBJBakedModel) {
 			try {
 				OBJModel obj = ((OBJBakedModel)bakedModelIn).getModel();
+				final Function<ResourceLocation, TextureAtlasSprite> spriteGetter = resource -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(resource.toString());
 
 				// ModelState for handling visibility of each group.
-				IModelState state = new IModelState() {
+				final IModelState modelState = part -> {
+					if (part.isPresent()) {
+						UnmodifiableIterator<String> parts = Models
+								.getParts(part.get());
 
-					@Override
-					public Optional<TRSRTransformation> apply(Optional<? extends IModelPart> part) {
-						if (part.isPresent()) {
-							UnmodifiableIterator<String> parts = Models.getParts(part.get());
+						if (parts.hasNext()) {
+							String name = parts.next();
 
-							if (parts.hasNext()) {
-								String name = parts.next();
-
-								if(!parts.hasNext() && visibleGroups.contains(name)) {
-									// Return Absent for NOT invisible group.
-									return Optional.absent();
-								} else {
-									// Return Present for invisible group.
-									return Optional.of(TRSRTransformation.identity());
-								}
+							if (!parts.hasNext()
+									&& visibleGroups.contains(name)) {
+								// Return Absent for NOT invisible group.
+								return Optional.absent();
+							} else {
+								// Return Present for invisible group.
+								return Optional.of(TRSRTransformation
+										.identity());
 							}
 						}
-
-						return Optional.absent();
 					}
 
+					return Optional.absent();
 				};
 
 				// Bake model of visible groups.
-				IBakedModel bakedModel = obj.bake(state, DefaultVertexFormats.ITEM, new Function<ResourceLocation, TextureAtlasSprite>() {
-
-					@Override
-					public TextureAtlasSprite apply(ResourceLocation location) {
-						Minecraft mc = Minecraft.getMinecraft();
-						return mc.getTextureMapBlocks().getAtlasSprite(location.toString());
-					}
-
-				});
+				IBakedModel bakedModel = obj.bake(modelState, DefaultVertexFormats.ITEM, spriteGetter);
 
 				quads = bakedModel.getQuads(null, null, 0);
 			} catch (Exception e) {

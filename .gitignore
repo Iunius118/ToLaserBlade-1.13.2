@@ -10,3 +10,4 @@
 !.gitignore
 !README_*
 !LICENSE.txt
+!build.gradle
