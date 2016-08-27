@@ -86,7 +86,7 @@ public class ToLaserBladeRegistry {
 
 	@SideOnly(Side.CLIENT)
 	public static IBakedModel bakeModel(ResourceLocation location) {
-		final Function<ResourceLocation, TextureAtlasSprite> spriteGetter = resource -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(resource.toString());
+		Function<ResourceLocation, TextureAtlasSprite> spriteGetter = resource -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(resource.toString());
 
 		try {
 			IModel model = ModelLoaderRegistry.getModel(location);

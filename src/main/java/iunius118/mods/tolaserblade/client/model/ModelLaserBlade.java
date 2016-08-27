@@ -76,10 +76,10 @@ public class ModelLaserBlade implements IPerspectiveAwareModel {
 		if (bakedModelIn instanceof OBJBakedModel) {
 			try {
 				OBJModel obj = ((OBJBakedModel)bakedModelIn).getModel();
-				final Function<ResourceLocation, TextureAtlasSprite> spriteGetter = resource -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(resource.toString());
+				Function<ResourceLocation, TextureAtlasSprite> spriteGetter = resource -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(resource.toString());
 
 				// ModelState for handling visibility of each group.
-				final IModelState modelState = part -> {
+				IModelState modelState = part -> {
 					if (part.isPresent()) {
 						UnmodifiableIterator<String> parts = Models
 								.getParts(part.get());
