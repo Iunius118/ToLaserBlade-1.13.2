@@ -1,67 +1,194 @@
 package iunius118.mods.tolaserblade;
 
+import java.util.Arrays;
+import java.util.List;
+
+import com.google.common.base.Function;
+
+import iunius118.mods.tolaserblade.client.model.ModelLaserBlade;
+import iunius118.mods.tolaserblade.client.renderer.RenderItemLaserBlade;
 import iunius118.mods.tolaserblade.item.ItemLaserBlade;
+import iunius118.mods.tolaserblade.tileentity.TileEntityRenderItem;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.model.IModel;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.EnumHelper;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.RecipeSorter;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 
-@Mod(modid = ToLaserBlade.MOD_ID,
-	name = ToLaserBlade.MOD_NAME,
-	version = ToLaserBlade.MOD_VERSION,
-	dependencies = ToLaserBlade.MOD_DEPENDENCIES,
-	acceptedMinecraftVersions = ToLaserBlade.MOD_ACCEPTED_MC_VERSIONS,
-	useMetadata = true)
+@Mod(modid = ToLaserBlade.MOD_ID, name = ToLaserBlade.MOD_NAME, version = ToLaserBlade.MOD_VERSION, useMetadata = true)
+@EventBusSubscriber
 public class ToLaserBlade {
 
 	public static final String MOD_ID = "tolaserblade";
 	public static final String MOD_NAME = "ToLaserBlade";
-	public static final String MOD_VERSION = "0.0.5+WIP";
-	public static final String MOD_DEPENDENCIES = "required-after:Forge@[1.9.4-12.17.0.1976,)";
-	public static final String MOD_ACCEPTED_MC_VERSIONS = "[1.9.4,]";
+	public static final String MOD_VERSION = "%MOD_VERSION%";
+
+	public static final String NAME_ITEM_LASER_BLADE = "tolaserblade.laser_blade";
+	public static final ToolMaterial MATERIAL_LASER = EnumHelper.addToolMaterial("LASER", 3, 32767, 12.0F, 10.0F, 22).setRepairItem(new ItemStack(net.minecraft.init.Items.REDSTONE));
+	public static final ModelResourceLocation MRL_ITEM_LASER_BLADE = new ModelResourceLocation(MOD_ID + ":laser_blade", "inventory");
+	public static final ResourceLocation RL_OBJ_ITEM_LASER_BLADE = new ResourceLocation(MOD_ID + ":item/laser_blade.obj");
+
+	@SidedProxy
+	public static CommonProxy proxy;
 
 	@EventHandler
-	public void preInit(FMLPreInitializationEvent event){
-		ToLaserBladeRegistry.registerItems();
+	public void preInit(FMLPreInitializationEvent event) {
+		proxy.preInit(event);
+	}
 
-		if (event.getSide().isClient()) {
+	@ObjectHolder(MOD_ID)
+	public static class ITEMS {
+		@ObjectHolder(NAME_ITEM_LASER_BLADE)
+		public static final Item itemLaserBlade = null;
+	}
+
+	@SubscribeEvent
+	public static void registerItems(RegistryEvent.Register<Item> event) {
+		event.getRegistry().registerAll(new ItemLaserBlade().setRegistryName(NAME_ITEM_LASER_BLADE).setUnlocalizedName(NAME_ITEM_LASER_BLADE));
+	}
+
+	public static class CommonProxy {
+
+		public void preInit(FMLPreInitializationEvent event) {
+			registerItemRecipes();
+		}
+
+		public void registerItemRecipes() {
+			// Recipe Laser Blade - Basic
+			GameRegistry.addRecipe(new ShapedOreRecipe(
+					new ItemStack(ITEMS.itemLaserBlade),
+					" ID",
+					"IGI",
+					"RI ",
+					'I', "ingotIron",
+					'D', "gemDiamond",
+					'G', "dustGlowstone",
+					'R', "dustRedstone"));
+
+			// Recipe Laser Blade - Smite X
+			ItemStack smiteBlade = new ItemStack(ITEMS.itemLaserBlade);
+			smiteBlade.addEnchantment(Enchantment.getEnchantmentByLocation("smite"), 10);
+			GameRegistry.addRecipe(new ShapedOreRecipe(
+					smiteBlade,
+					" ID",
+					"IGI",
+					"RI ",
+					'I', "ingotIron",
+					'D', "blockDiamond",
+					'G', "glowstone",
+					'R', "blockRedstone"));
+
+			// Recipe Laser Blade - dyeing
+			MinecraftForge.EVENT_BUS.register(ITEMS.itemLaserBlade);
+			ShapelessRecipes recipeLaserBladeDye = new RecipeLaserBladeDye(new ItemStack(ITEMS.itemLaserBlade), Arrays.asList(new ItemStack(ITEMS.itemLaserBlade)));
+			RecipeSorter.register(MOD_ID + ":laser_blade_dye", RecipeLaserBladeDye.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
+			GameRegistry.addRecipe(recipeLaserBladeDye);
+		}
+
+		public class RecipeLaserBladeDye extends ShapelessRecipes {
+
+			public RecipeLaserBladeDye(ItemStack output, List<ItemStack> inputList) {
+				super(output, inputList);
+			}
+
+			@Override
+			public ItemStack getCraftingResult(InventoryCrafting inv) {
+				for (int i = 0; i < inv.getHeight(); ++i) {
+					 for (int j = 0; j < inv.getWidth(); ++j) {
+						 ItemStack itemstack = inv.getStackInRowAndColumn(j, i);
+
+						 if (itemstack.getItem() == ITEMS.itemLaserBlade) {
+							 return itemstack.copy();
+						 }
+					 }
+				}
+
+				return getRecipeOutput().copy();
+			}
+
+		}
+
+	}
+
+	@SideOnly(Side.SERVER)
+	public static class ServerProxy extends CommonProxy {
+
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static class ClientProxy extends CommonProxy {
+
+		@Override
+		public void preInit(FMLPreInitializationEvent event) {
+			super.preInit(event);
 			OBJLoader.INSTANCE.addDomain(MOD_ID);
 			MinecraftForge.EVENT_BUS.register(this);
-			ToLaserBladeRegistry.registerItemModels();
+			registerItemModels();
 		}
+
+		@SubscribeEvent
+		public void onModelBakeEvent(ModelBakeEvent event) {
+			registerBakedModels(event);
+		}
+
+		public void registerItemModels() {
+			ModelLoader.setCustomModelResourceLocation(ITEMS.itemLaserBlade, 0, MRL_ITEM_LASER_BLADE);
+
+			ForgeHooksClient.registerTESRItemStack(ITEMS.itemLaserBlade, 0, TileEntityRenderItem.class);
+			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRenderItem.class, new RenderItemLaserBlade());
+		}
+
+		public void registerBakedModels(ModelBakeEvent event) {
+			ModelLaserBlade modelLaserBlade = new ModelLaserBlade(bakeModel(RL_OBJ_ITEM_LASER_BLADE),
+					event.getModelRegistry().getObject(MRL_ITEM_LASER_BLADE));
+
+			event.getModelRegistry().putObject(MRL_ITEM_LASER_BLADE, modelLaserBlade);
+		}
+
+		public IBakedModel bakeModel(ResourceLocation location) {
+			Function<ResourceLocation, TextureAtlasSprite> spriteGetter = resource -> Minecraft.getMinecraft(). getTextureMapBlocks().getAtlasSprite(resource.toString());
+
+			try {
+				IModel model = ModelLoaderRegistry.getModel(location);
+				IBakedModel bakedModel = model.bake(model.getDefaultState(), DefaultVertexFormats.ITEM, spriteGetter);
+				return bakedModel;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			return null;
+		}
+
 	}
 
-	public static class Items {
-		public static final String NAME_ITEM_LASER_BLADE = "tolaserblade.laser_blade";
-		public static Item itemLaserBlade = new ItemLaserBlade().setRegistryName(ToLaserBlade.Items.NAME_ITEM_LASER_BLADE).setUnlocalizedName(ToLaserBlade.Items.NAME_ITEM_LASER_BLADE);
-	}
-
-	public static class ToolMaterials {
-		public static final ToolMaterial LASER = EnumHelper.addToolMaterial("LASER", 3, 32767, 12.0F, 10.0F, 22).setRepairItem(new ItemStack(net.minecraft.init.Items.REDSTONE));
-	}
-
-	@SideOnly(Side.CLIENT)
-	public static class ModelLocations {
-		public static ModelResourceLocation mrlItemLaserBlade = new ModelResourceLocation(MOD_ID + ":laser_blade", "inventory");
-
-		public static ResourceLocation rlOBJItemLaserBlade = new ResourceLocation(MOD_ID + ":item/laser_blade.obj");
-	}
-
-	@SideOnly(Side.CLIENT)
-	@SubscribeEvent
-	public void onModelBakeEvent(ModelBakeEvent event) {
-		ToLaserBladeRegistry.registerBakedModels(event);
-	}
 
 }

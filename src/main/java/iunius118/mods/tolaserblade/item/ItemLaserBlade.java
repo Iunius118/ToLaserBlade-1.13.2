@@ -1,10 +1,13 @@
 package iunius118.mods.tolaserblade.item;
 
+import com.google.common.collect.Multimap;
+
 import iunius118.mods.tolaserblade.ToLaserBlade;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -19,23 +22,22 @@ import net.minecraft.world.biome.BiomeVoid;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
 
-import com.google.common.collect.Multimap;
-
 public class ItemLaserBlade extends ItemSword {
 
 	private final Item.ToolMaterial material;
 	private final float attackDamage;
 	private final float attackSpeed;
 	// Blade color table.
-	public final int[] colors = {0xFFFF0000, 0xFFD0A000, 0xFF00E000, 0xFF0080FF, 0xFF0000FF, 0xFFA000FF, 0xFFFFFFFF, 0xFF020202};
+	public final int[] colors = { 0xFFFF0000, 0xFFD0A000, 0xFF00E000, 0xFF0080FF, 0xFF0000FF, 0xFFA000FF, 0xFFFFFFFF,
+			0xFF020202 };
 
 	public static final String KEY_COLOR_CORE = "colorC";
 	public static final String KEY_COLOR_HALO = "colorH";
-	public static final String KEY_SUB_COLOR = "isSubC";
+	public static final String KEY_IS_SUB_COLOR = "isSubC";
 
 	public ItemLaserBlade() {
-		super(ToLaserBlade.ToolMaterials.LASER);
-		material = ToLaserBlade.ToolMaterials.LASER;
+		super(ToLaserBlade.MATERIAL_LASER);
+		material = ToLaserBlade.MATERIAL_LASER;
 		attackDamage = 3.0F + material.getDamageVsEntity();
 		attackSpeed = 0.0F;
 	}
@@ -44,7 +46,7 @@ public class ItemLaserBlade extends ItemSword {
 	public void onCrafting(ItemCraftedEvent event) {
 		ItemStack stack = event.crafting;
 
-		if (stack == null || stack.getItem() != ToLaserBlade.Items.itemLaserBlade) {
+		if (stack == null || stack.getItem() != ToLaserBlade.ITEMS.itemLaserBlade) {
 			return;
 		}
 
@@ -56,7 +58,7 @@ public class ItemLaserBlade extends ItemSword {
 			if (itemSlot == null) {
 				continue;
 
-			} else if (itemSlot.getItem() == ToLaserBlade.Items.itemLaserBlade) {
+			} else if (itemSlot.getItem() == ToLaserBlade.ITEMS.itemLaserBlade) {
 				// Coloring blade recipe.
 				NBTTagCompound nbtNew;
 				NBTTagCompound nbtOld = itemSlot.getTagCompound();
@@ -65,11 +67,11 @@ public class ItemLaserBlade extends ItemSword {
 				if (nbtOld == null) {
 					nbtNew = new NBTTagCompound();
 				} else {
-					nbtNew = (NBTTagCompound)nbtOld.copy();
+					nbtNew = (NBTTagCompound) nbtOld.copy();
 				}
 
 				BlockPos pos = event.player.getPosition();
-				Biome biome = event.player.worldObj.getBiomeForCoordsBody(pos);
+				Biome biome = event.player.world.getBiomeForCoordsBody(pos);
 				int colorCore = 0xFFFFFFFF;
 				int colorHalo = colors[0];
 				boolean isSubColor = false;
@@ -102,13 +104,12 @@ public class ItemLaserBlade extends ItemSword {
 				// Save NBT.
 				nbtNew.setInteger(KEY_COLOR_CORE, colorCore);
 				nbtNew.setInteger(KEY_COLOR_HALO, colorHalo);
-				nbtNew.setBoolean(KEY_SUB_COLOR, isSubColor);
+				nbtNew.setBoolean(KEY_IS_SUB_COLOR, isSubColor);
 				stack.setTagCompound(nbtNew);
 				break;
 			}
 		}
 	}
-
 
 	@Override
 	public float getDamageVsEntity() {
@@ -121,7 +122,8 @@ public class ItemLaserBlade extends ItemSword {
 	}
 
 	@Override
-	public boolean onBlockDestroyed(ItemStack stack, World worldIn, IBlockState state, BlockPos pos, EntityLivingBase entityLiving) {
+	public boolean onBlockDestroyed(ItemStack stack, World worldIn, IBlockState state, BlockPos pos,
+			EntityLivingBase entityLiving) {
 		return true;
 	}
 
@@ -136,7 +138,7 @@ public class ItemLaserBlade extends ItemSword {
 	}
 
 	@Override
-	public int getHarvestLevel(ItemStack stack, String toolClass) {
+	public int getHarvestLevel(ItemStack stack, String toolClass, EntityPlayer player, IBlockState blockState) {
 		return material.getHarvestLevel();
 	}
 
@@ -145,10 +147,12 @@ public class ItemLaserBlade extends ItemSword {
 		Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
 
 		if (slot == EntityEquipmentSlot.MAINHAND) {
-			multimap.removeAll(SharedMonsterAttributes.ATTACK_DAMAGE.getAttributeUnlocalizedName());
-			multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getAttributeUnlocalizedName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", attackDamage, 0));
-			multimap.removeAll(SharedMonsterAttributes.ATTACK_SPEED.getAttributeUnlocalizedName());
-			multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getAttributeUnlocalizedName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", attackSpeed, 0));
+			multimap.removeAll(SharedMonsterAttributes.ATTACK_DAMAGE.getName());
+			multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(),
+					new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", attackDamage, 0));
+			multimap.removeAll(SharedMonsterAttributes.ATTACK_SPEED.getName());
+			multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(),
+					new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", attackSpeed, 0));
 		}
 
 		return multimap;

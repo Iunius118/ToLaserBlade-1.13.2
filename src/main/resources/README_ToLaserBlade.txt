@@ -1,10 +1,10 @@
 ﻿
-	ToLaserBlade 0.0.5
+	ToLaserBlade 1.11.2-0.0.6
 
 
 前提mod（必須）
-	Minecraft [1.9.4, 1.10]
-	Minecraft Forge 1.9.4-12.17.0.1976 または 1.10-12.18.0.1983以降
+	Minecraft 1.11.2
+	Minecraft Forge 1.11.2-13.20.0.2228以降
 
 インストール方法
 	JARファイルをmodsフォルダ内に置く
@@ -35,8 +35,8 @@
 				Ri 
 
 		・刃染色レシピ
-			エンチャント： クラフト前のものを保持（GUIのクラフトスロット内ではデフォルトのままだが実際にクラフトした時点で引き継がれる）
-			刃の色： クラフト時にプレイヤーがいるバイオームによって変化（GUIのクラフトスロット内ではデフォルトのままだが実際にクラフトした時点で色が変わる）
+			エンチャント： クラフト前のものを保持
+			刃の色： クラフト時にプレイヤーがいるバイオームによって変化（GUIのクラフトスロット内では元の色のままだが実際にクラフトした時点で色が変わる）
 				赤（Plains, Forest, Swampland など）
 				黄（Jungle など）
 				緑（Taiga, Extreme Hills など）
@@ -44,6 +44,7 @@
 				藍（Cold Taiga など）
 				紫（Desert, Savanna, Mesa など）
 				白（Hell)
+				？（???)
 			レシピ： L = Laser Blade
 
 				L
@@ -84,5 +85,5 @@
 	ライセンスについて詳しくは、assets/tolaserblade/LICENSE.txt または https://creativecommons.org/licenses/by-sa/4.0/deed.ja を参照のこと
 
 
-Copyright 2016 Iunius118
+Copyright 2017 Iunius118
 https://github.com/Iunius118/ToLaserBlade

@@ -1,12 +1,14 @@
 package iunius118.mods.tolaserblade.client.renderer;
 
+import java.util.List;
+
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL14;
+
 import iunius118.mods.tolaserblade.ToLaserBlade;
 import iunius118.mods.tolaserblade.client.model.ModelLaserBlade;
 import iunius118.mods.tolaserblade.item.ItemLaserBlade;
 import iunius118.mods.tolaserblade.tileentity.TileEntityRenderItem;
-
-import java.util.List;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -24,9 +26,6 @@ import net.minecraftforge.client.model.animation.Animation;
 import net.minecraftforge.client.model.pipeline.LightUtil;
 import net.minecraftforge.common.util.Constants.NBT;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL14;
-
 public class RenderItemLaserBlade extends TileEntitySpecialRenderer<TileEntityRenderItem> {
 
 	@Override
@@ -34,7 +33,7 @@ public class RenderItemLaserBlade extends TileEntitySpecialRenderer<TileEntityRe
 		if(te != null) return;
 
 		Minecraft mc = Minecraft.getMinecraft();
-		IBakedModel model = mc.getRenderItem().getItemModelMesher().getModelManager().getModel(ToLaserBlade.ModelLocations.mrlItemLaserBlade);
+		IBakedModel model = mc.getRenderItem().getItemModelMesher().getModelManager().getModel(ToLaserBlade.MRL_ITEM_LASER_BLADE);
 
 		if (model instanceof ModelLaserBlade) {
 			ModelLaserBlade modelLaserBlade = (ModelLaserBlade)model;
@@ -61,8 +60,8 @@ public class RenderItemLaserBlade extends TileEntitySpecialRenderer<TileEntityRe
 				colorHalo = nbt.getInteger(ItemLaserBlade.KEY_COLOR_HALO);
 			}
 
-			if (nbt.hasKey(ItemLaserBlade.KEY_SUB_COLOR, NBT.TAG_BYTE)) {
-				isSubColor = nbt.getBoolean(ItemLaserBlade.KEY_SUB_COLOR);
+			if (nbt.hasKey(ItemLaserBlade.KEY_IS_SUB_COLOR, NBT.TAG_BYTE)) {
+				isSubColor = nbt.getBoolean(ItemLaserBlade.KEY_IS_SUB_COLOR);
 			}
 		}
 
