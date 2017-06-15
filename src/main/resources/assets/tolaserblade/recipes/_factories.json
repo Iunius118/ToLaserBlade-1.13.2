@@ -1,0 +1,6 @@
+{
+  "recipes": {
+    "shaped_ore_enchant_smite_x": "iunius118.mods.tolaserblade.ToLaserBlade$RecipeFactoryLaserBladeX",
+    "shapeless_ore_laser_blade_dyeing": "iunius118.mods.tolaserblade.ToLaserBlade$RecipeFactoryLaserBladeDyeing"
+  }
+}

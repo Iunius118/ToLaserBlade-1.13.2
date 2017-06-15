@@ -1,0 +1,26 @@
+{
+  "type": "tolaserblade:shaped_ore_enchant_smite_x",
+  "pattern": [
+    " iD",
+    "iGi",
+    "Ri "
+  ],
+  "key": {
+    "i": {
+      "item": "minecraft:iron_ingot"
+    },
+    "D": {
+      "item": "minecraft:diamond_block"
+    },
+    "G": {
+      "item": "minecraft:glowstone"
+    },
+    "R": {
+      "item": "minecraft:redstone_block"
+    }
+  },
+  "result": {
+    "item": "tolaserblade:tolaserblade.laser_blade",
+    "data": 0
+  }
+}

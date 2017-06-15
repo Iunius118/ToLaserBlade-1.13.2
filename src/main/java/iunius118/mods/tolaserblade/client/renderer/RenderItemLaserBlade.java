@@ -10,11 +10,11 @@ import iunius118.mods.tolaserblade.client.model.ModelLaserBlade;
 import iunius118.mods.tolaserblade.item.ItemLaserBlade;
 import iunius118.mods.tolaserblade.tileentity.TileEntityRenderItem;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -29,7 +29,8 @@ import net.minecraftforge.common.util.Constants.NBT;
 public class RenderItemLaserBlade extends TileEntitySpecialRenderer<TileEntityRenderItem> {
 
 	@Override
-	public void renderTileEntityAt(TileEntityRenderItem te, double x, double y, double z, float partialTicks, int destroyStage) {
+	// renderTileEntityAt
+	public void func_192841_a(TileEntityRenderItem te, double x, double y, double z, float partialTicks, int destroyStage, float partial) {
 		if(te != null) return;
 
 		Minecraft mc = Minecraft.getMinecraft();
@@ -44,7 +45,7 @@ public class RenderItemLaserBlade extends TileEntitySpecialRenderer<TileEntityRe
 	public void doRender(ModelLaserBlade model) {
 		float partialTicks = Animation.getPartialTickTime();
 
-		VertexBuffer renderer = Tessellator.getInstance().getBuffer();
+		BufferBuilder renderer = Tessellator.getInstance().getBuffer();
 		int colorCore = 0xFFFFFFFF;
 		int colorHalo = 0xFFFF0000;
 		boolean isSubColor = false;
@@ -147,7 +148,7 @@ public class RenderItemLaserBlade extends TileEntitySpecialRenderer<TileEntityRe
 	}
 
 	public void renderEffect(List<BakedQuad> quads) {
-		VertexBuffer renderer = Tessellator.getInstance().getBuffer();
+		BufferBuilder renderer = Tessellator.getInstance().getBuffer();
 
 		// Render Enchantment effect for hilt.
 		GlStateManager.depthMask(false);
@@ -182,7 +183,7 @@ public class RenderItemLaserBlade extends TileEntitySpecialRenderer<TileEntityRe
 		Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 	}
 
-	public void renderQuads(VertexBuffer renderer, List<BakedQuad> quads, int color) {
+	public void renderQuads(BufferBuilder renderer, List<BakedQuad> quads, int color) {
 		int size = quads.size();
 
 		renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.ITEM);

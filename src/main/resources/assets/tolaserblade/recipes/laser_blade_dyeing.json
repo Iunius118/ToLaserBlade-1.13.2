@@ -1,0 +1,12 @@
+{
+  "type": "tolaserblade:shapeless_ore_laser_blade_dyeing",
+  "ingredients": [
+    {
+      "item": "tolaserblade:tolaserblade.laser_blade"
+    }
+  ],
+  "result": {
+    "item": "tolaserblade:tolaserblade.laser_blade",
+    "data": 0
+  }
+}
