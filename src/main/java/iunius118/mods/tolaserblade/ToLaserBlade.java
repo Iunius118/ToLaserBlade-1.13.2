@@ -49,168 +49,197 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 @Mod(modid = ToLaserBlade.MOD_ID, name = ToLaserBlade.MOD_NAME, version = ToLaserBlade.MOD_VERSION, useMetadata = true)
 @EventBusSubscriber
-public class ToLaserBlade {
+public class ToLaserBlade
+{
 
-	public static final String MOD_ID = "tolaserblade";
-	public static final String MOD_NAME = "ToLaserBlade";
-	public static final String MOD_VERSION = "%MOD_VERSION%";
+    public static final String MOD_ID = "tolaserblade";
+    public static final String MOD_NAME = "ToLaserBlade";
+    public static final String MOD_VERSION = "%MOD_VERSION%";
 
-	public static final String NAME_ITEM_LASER_BLADE = "tolaserblade.laser_blade";
-	public static final ToolMaterial MATERIAL_LASER = EnumHelper.addToolMaterial("LASER", 3, 32767, 12.0F, 10.0F, 22).setRepairItem(new ItemStack(net.minecraft.init.Items.REDSTONE));
-	public static final ModelResourceLocation MRL_ITEM_LASER_BLADE = new ModelResourceLocation(MOD_ID + ":laser_blade", "inventory");
-	public static final ResourceLocation RL_OBJ_ITEM_LASER_BLADE = new ResourceLocation(MOD_ID, "item/laser_blade.obj");
+    public static final String NAME_ITEM_LASER_BLADE = "tolaserblade.laser_blade";
+    public static final ToolMaterial MATERIAL_LASER = EnumHelper.addToolMaterial("LASER", 3, 32767, 12.0F, 10.0F, 22)
+            .setRepairItem(new ItemStack(net.minecraft.init.Items.REDSTONE));
+    public static final ModelResourceLocation MRL_ITEM_LASER_BLADE = new ModelResourceLocation(MOD_ID + ":laser_blade", "inventory");
+    public static final ResourceLocation RL_OBJ_ITEM_LASER_BLADE = new ResourceLocation(MOD_ID, "item/laser_blade.obj");
 
-	@SidedProxy
-	public static CommonProxy proxy;
+    @SidedProxy
+    public static CommonProxy proxy;
 
-	@EventHandler
-	public void preInit(FMLPreInitializationEvent event) {
-		proxy.preInit(event);
-	}
+    @EventHandler
+    public void preInit(FMLPreInitializationEvent event)
+    {
+        proxy.preInit(event);
+    }
 
-	@ObjectHolder(MOD_ID)
-	public static class ITEMS {
-		@ObjectHolder(NAME_ITEM_LASER_BLADE)
-		public static final Item itemLaserBlade = null;
-	}
+    @ObjectHolder(MOD_ID)
+    public static class ITEMS
+    {
+        @ObjectHolder(NAME_ITEM_LASER_BLADE)
+        public static final Item itemLaserBlade = null;
+    }
 
-	@SubscribeEvent
-	public static void registerItems(RegistryEvent.Register<Item> event) {
-		event.getRegistry().registerAll(new ItemLaserBlade().setRegistryName(NAME_ITEM_LASER_BLADE).setUnlocalizedName(NAME_ITEM_LASER_BLADE));
-	}
+    @SubscribeEvent
+    public static void registerItems(RegistryEvent.Register<Item> event)
+    {
+        event.getRegistry().registerAll(new ItemLaserBlade().setRegistryName(NAME_ITEM_LASER_BLADE).setUnlocalizedName(NAME_ITEM_LASER_BLADE));
+    }
 
+    // RecipeFactories by recipes/_factories.json
+    // shaped_ore_enchant_smite_x
+    public static class RecipeFactoryLaserBladeX implements IRecipeFactory
+    {
 
-	// RecipeFactories by recipes/_factories.json
-	// shaped_ore_enchant_smite_x
-	public static class RecipeFactoryLaserBladeX implements IRecipeFactory {
+        // Recipe Laser Blade - Smite X
+        @Override
+        public IRecipe parse(JsonContext context, JsonObject json)
+        {
+            ShapedOreRecipe recipe = RecipesShapedOreEnchantSmiteX.factory(context, json);
+            ShapedPrimer primer = new ShapedPrimer();
+            primer.width = recipe.getWidth();
+            primer.height = recipe.getHeight();
+            primer.mirrored = JsonUtils.getBoolean(json, "mirrored", true);
+            primer.input = recipe.func_192400_c();
+            return new RecipesShapedOreEnchantSmiteX(new ResourceLocation(MOD_ID, "laser_blade_x"), recipe.getRecipeOutput(), primer);
+        }
 
-		// Recipe Laser Blade - Smite X
-		@Override
-		public IRecipe parse(JsonContext context, JsonObject json) {
-			ShapedOreRecipe recipe = RecipesShapedOreEnchantSmiteX.factory(context, json);
-			ShapedPrimer primer = new ShapedPrimer();
-	        primer.width = recipe.getWidth();
-	        primer.height = recipe.getHeight();
-	        primer.mirrored = JsonUtils.getBoolean(json, "mirrored", true);
-	        primer.input = recipe.func_192400_c();
-			return new RecipesShapedOreEnchantSmiteX(recipe.getRegistryName(), recipe.getRecipeOutput(), primer);
-		}
+        public static class RecipesShapedOreEnchantSmiteX extends ShapedOreRecipe
+        {
 
-		public static class RecipesShapedOreEnchantSmiteX extends ShapedOreRecipe {
+            public RecipesShapedOreEnchantSmiteX(ResourceLocation group, ItemStack result, ShapedPrimer primer)
+            {
+                super(group, result, primer);
+            }
 
-			public RecipesShapedOreEnchantSmiteX(ResourceLocation group, ItemStack result, ShapedPrimer primer) {
-				super(group, result, primer);
-			}
+            @Override
+            public ItemStack getCraftingResult(InventoryCrafting inv)
+            {
+                ItemStack result = getRecipeOutput().copy();
+                result.addEnchantment(Enchantment.getEnchantmentByLocation("smite"), 10);
+                return result;
+            }
 
-			@Override
-			public ItemStack getCraftingResult(InventoryCrafting inv) {
-				ItemStack result = getRecipeOutput().copy();
-				result.addEnchantment(Enchantment.getEnchantmentByLocation("smite"), 10);
-				return result;
-			}
+        }
 
-		}
+    }
 
-	}
+    // shapeless_ore_laser_blade_dyeing
+    public static class RecipeFactoryLaserBladeDyeing implements IRecipeFactory
+    {
 
-	// shapeless_ore_laser_blade_dyeing
-	public static class RecipeFactoryLaserBladeDyeing implements IRecipeFactory {
+        // Recipe Laser Blade - dyeing
+        @Override
+        public IRecipe parse(JsonContext context, JsonObject json)
+        {
+            ShapelessOreRecipe recipe = ShapelessOreRecipe.factory(context, json);
+            return new RecipeLaserBladeDye(new ResourceLocation(MOD_ID, "laser_blade_dyeing"), recipe.func_192400_c(), recipe.getRecipeOutput());
+        }
 
-		// Recipe Laser Blade - dyeing
-		@Override
-		public IRecipe parse(JsonContext context, JsonObject json) {
-			ShapelessOreRecipe recipe = ShapelessOreRecipe.factory(context, json);
-			return new RecipeLaserBladeDye(recipe.getRegistryName(), recipe.func_192400_c(), recipe.getRecipeOutput());
-		}
+        public static class RecipeLaserBladeDye extends ShapelessOreRecipe
+        {
 
-		public static class RecipeLaserBladeDye extends ShapelessOreRecipe {
+            public RecipeLaserBladeDye(ResourceLocation group, NonNullList<Ingredient> input, ItemStack result)
+            {
+                super(group, input, result);
+            }
 
-			public RecipeLaserBladeDye(ResourceLocation group, NonNullList<Ingredient> input, ItemStack result) {
-				super(group, input, result);
-			}
+            @Override
+            public ItemStack getCraftingResult(InventoryCrafting inv)
+            {
+                for (int i = 0; i < inv.getHeight(); ++i)
+                {
+                    for (int j = 0; j < inv.getWidth(); ++j)
+                    {
+                        ItemStack itemstack = inv.getStackInRowAndColumn(j, i);
 
-			@Override
-			public ItemStack getCraftingResult(InventoryCrafting inv) {
-				for (int i = 0; i < inv.getHeight(); ++i) {
-					 for (int j = 0; j < inv.getWidth(); ++j) {
-						 ItemStack itemstack = inv.getStackInRowAndColumn(j, i);
+                        if (itemstack.getItem() == ITEMS.itemLaserBlade)
+                        {
+                            return itemstack.copy();
+                        }
+                    }
+                }
 
-						 if (itemstack.getItem() == ITEMS.itemLaserBlade) {
-							 return itemstack.copy();
-						 }
-					 }
-				}
+                return getRecipeOutput().copy();
+            }
 
-				return getRecipeOutput().copy();
-			}
+        }
 
-		}
+    }
 
-	}
+    // Proxy Classes
 
+    public static class CommonProxy
+    {
 
-	// Proxy Classes
+        public void preInit(FMLPreInitializationEvent event)
+        {
+            // register item event for LaserBlade dyeing
+            MinecraftForge.EVENT_BUS.register(ITEMS.itemLaserBlade);
+        }
 
-	public static class CommonProxy {
+    }
 
-		public void preInit(FMLPreInitializationEvent event) {
-			// register item event for LaserBlade dyeing
-			MinecraftForge.EVENT_BUS.register(ITEMS.itemLaserBlade);
-		}
+    @SideOnly(Side.SERVER)
+    public static class ServerProxy extends CommonProxy
+    {
 
-	}
+    }
 
-	@SideOnly(Side.SERVER)
-	public static class ServerProxy extends CommonProxy {
+    @SideOnly(Side.CLIENT)
+    public static class ClientProxy extends CommonProxy
+    {
 
-	}
+        @Override
+        public void preInit(FMLPreInitializationEvent event)
+        {
+            super.preInit(event);
 
-	@SideOnly(Side.CLIENT)
-	public static class ClientProxy extends CommonProxy {
+            OBJLoader.INSTANCE.addDomain(MOD_ID);
+            MinecraftForge.EVENT_BUS.register(this); // register onModelBakeEvent
+            registerItemModels();
+        }
 
-		@Override
-		public void preInit(FMLPreInitializationEvent event) {
-			super.preInit(event);
+        // Model
+        @SubscribeEvent
+        public void onModelBakeEvent(ModelBakeEvent event)
+        {
+            registerBakedModels(event);
+        }
 
-			OBJLoader.INSTANCE.addDomain(MOD_ID);
-			MinecraftForge.EVENT_BUS.register(this);	// register onModelBakeEvent
-			registerItemModels();
-		}
+        public void registerItemModels()
+        {
+            ModelLoader.setCustomModelResourceLocation(ITEMS.itemLaserBlade, 0, MRL_ITEM_LASER_BLADE);
 
-		// Model
-		@SubscribeEvent
-		public void onModelBakeEvent(ModelBakeEvent event) {
-			registerBakedModels(event);
-		}
+            ForgeHooksClient.registerTESRItemStack(ITEMS.itemLaserBlade, 0, TileEntityRenderItem.class);
+            ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRenderItem.class, new RenderItemLaserBlade());
+        }
 
-		public void registerItemModels() {
-			ModelLoader.setCustomModelResourceLocation(ITEMS.itemLaserBlade, 0, MRL_ITEM_LASER_BLADE);
+        public void registerBakedModels(ModelBakeEvent event)
+        {
+            ModelLaserBlade modelLaserBlade = new ModelLaserBlade(bakeModel(RL_OBJ_ITEM_LASER_BLADE),
+                    event.getModelRegistry().getObject(MRL_ITEM_LASER_BLADE));
 
-			ForgeHooksClient.registerTESRItemStack(ITEMS.itemLaserBlade, 0, TileEntityRenderItem.class);
-			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRenderItem.class, new RenderItemLaserBlade());
-		}
+            event.getModelRegistry().putObject(MRL_ITEM_LASER_BLADE, modelLaserBlade);
+        }
 
-		public void registerBakedModels(ModelBakeEvent event) {
-			ModelLaserBlade modelLaserBlade = new ModelLaserBlade(bakeModel(RL_OBJ_ITEM_LASER_BLADE),
-					event.getModelRegistry().getObject(MRL_ITEM_LASER_BLADE));
+        public IBakedModel bakeModel(ResourceLocation location)
+        {
+            Function<ResourceLocation, TextureAtlasSprite> spriteGetter = resource -> Minecraft.getMinecraft().getTextureMapBlocks()
+                    .getAtlasSprite(resource.toString());
 
-			event.getModelRegistry().putObject(MRL_ITEM_LASER_BLADE, modelLaserBlade);
-		}
+            try
+            {
+                IModel model = ModelLoaderRegistry.getModel(location);
+                IBakedModel bakedModel = model.bake(model.getDefaultState(), DefaultVertexFormats.ITEM, spriteGetter);
+                return bakedModel;
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
 
-		public IBakedModel bakeModel(ResourceLocation location) {
-			Function<ResourceLocation, TextureAtlasSprite> spriteGetter = resource -> Minecraft.getMinecraft(). getTextureMapBlocks().getAtlasSprite(resource.toString());
+            return null;
+        }
 
-			try {
-				IModel model = ModelLoaderRegistry.getModel(location);
-				IBakedModel bakedModel = model.bake(model.getDefaultState(), DefaultVertexFormats.ITEM, spriteGetter);
-				return bakedModel;
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			return null;
-		}
-
-	}
+    }
 
 }

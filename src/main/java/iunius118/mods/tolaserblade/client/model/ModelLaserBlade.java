@@ -7,6 +7,13 @@ import java.util.Map;
 
 import javax.vecmath.Matrix4f;
 
+import org.apache.commons.lang3.tuple.Pair;
+
+import com.google.common.base.Function;
+import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.UnmodifiableIterator;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -24,177 +31,203 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.model.IPerspectiveAwareModel;
 import net.minecraftforge.client.model.obj.OBJModel;
 import net.minecraftforge.client.model.obj.OBJModel.OBJBakedModel;
-import net.minecraftforge.common.model.IModelPart;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.Models;
 import net.minecraftforge.common.model.TRSRTransformation;
 
-import org.apache.commons.lang3.tuple.Pair;
+public class ModelLaserBlade implements IPerspectiveAwareModel
+{
 
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.UnmodifiableIterator;
+    public IBakedModel bakedOBJModel;
+    public IBakedModel bakedJSONModel;
 
-public class ModelLaserBlade implements IPerspectiveAwareModel {
+    public ItemStack itemStack;
+    public World world;
+    public EntityLivingBase entity;
 
-	public IBakedModel bakedOBJModel;
-	public IBakedModel bakedJSONModel;
+    public TransformType cameraTransformType = TransformType.NONE;
 
-	public ItemStack itemStack;
-	public World world;
-	public EntityLivingBase entity;
+    public IBlockState state;
+    public EnumFacing side;
+    public long rand;
 
-	public TransformType cameraTransformType = TransformType.NONE;
+    public Map<String, List<BakedQuad>> mapQuads = new HashMap<String, List<BakedQuad>>();
+    public String[] partNames = { "Hilt", "Blade_core", "Blade_halo_1", "Blade_halo_2" };
 
-	public IBlockState state;
-	public EnumFacing side;
-	public long rand;
+    public ModelLaserBlade(IBakedModel bakedOBJModelIn, IBakedModel bakedJSONModelIn)
+    {
+        this(bakedOBJModelIn, bakedJSONModelIn, false);
+    }
 
-	public Map<String, List<BakedQuad>> mapQuads = new HashMap<String, List<BakedQuad>>();
-	public String[] partNames = {"Hilt", "Blade_core", "Blade_halo_1", "Blade_halo_2"};
+    public ModelLaserBlade(IBakedModel bakedOBJModelIn, IBakedModel bakedJSONModelIn, boolean isInitialized)
+    {
+        bakedOBJModel = bakedOBJModelIn;
+        bakedJSONModel = bakedJSONModelIn;
 
-	public ModelLaserBlade(IBakedModel bakedOBJModelIn, IBakedModel bakedJSONModelIn) {
-		this(bakedOBJModelIn, bakedJSONModelIn, false);
-	}
+        if (!isInitialized)
+        {
+            // Separate Quads to each parts by OBJ Group.
+            for (String partName : partNames)
+            {
+                mapQuads.put(partName, getPartQuads(bakedOBJModelIn, ImmutableList.of(partName)));
+            }
+        }
+    }
 
-	public ModelLaserBlade(IBakedModel bakedOBJModelIn, IBakedModel bakedJSONModelIn, boolean isInitialized) {
-		bakedOBJModel = bakedOBJModelIn;
-		bakedJSONModel = bakedJSONModelIn;
+    public List<BakedQuad> getPartQuads(IBakedModel bakedModelIn, final List<String> visibleGroups)
+    {
+        List<BakedQuad> quads = Collections.EMPTY_LIST;
 
-		if (!isInitialized) {
-			// Separate Quads to each parts by OBJ Group.
-			for (String partName : partNames) {
-				mapQuads.put(partName, getPartQuads(bakedOBJModelIn, ImmutableList.of(partName)));
-			}
-		}
-	}
+        if (bakedModelIn instanceof OBJBakedModel)
+        {
+            try
+            {
+                OBJModel obj = ((OBJBakedModel) bakedModelIn).getModel();
+                Function<ResourceLocation, TextureAtlasSprite> spriteGetter = resource -> Minecraft.getMinecraft().getTextureMapBlocks()
+                        .getAtlasSprite(resource.toString());
 
-	public List<BakedQuad> getPartQuads(IBakedModel bakedModelIn, final List<String> visibleGroups) {
-		List<BakedQuad> quads = Collections.EMPTY_LIST;
+                // ModelState for handling visibility of each group.
+                IModelState modelState = part -> {
+                    if (part.isPresent())
+                    {
+                        UnmodifiableIterator<String> parts = Models
+                                .getParts(part.get());
 
-		if (bakedModelIn instanceof OBJBakedModel) {
-			try {
-				OBJModel obj = ((OBJBakedModel)bakedModelIn).getModel();
-				Function<ResourceLocation, TextureAtlasSprite> spriteGetter = resource -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(resource.toString());
+                        if (parts.hasNext())
+                        {
+                            String name = parts.next();
 
-				// ModelState for handling visibility of each group.
-				IModelState modelState = part -> {
-					if (part.isPresent()) {
-						UnmodifiableIterator<String> parts = Models
-								.getParts(part.get());
+                            if (!parts.hasNext()
+                                    && visibleGroups.contains(name))
+                            {
+                                // Return Absent for NOT invisible group.
+                                return Optional.absent();
+                            }
+                            else
+                            {
+                                // Return Present for invisible group.
+                                return Optional.of(TRSRTransformation
+                                        .identity());
+                            }
+                        }
+                    }
 
-						if (parts.hasNext()) {
-							String name = parts.next();
+                    return Optional.absent();
+                };
 
-							if (!parts.hasNext()
-									&& visibleGroups.contains(name)) {
-								// Return Absent for NOT invisible group.
-								return Optional.absent();
-							} else {
-								// Return Present for invisible group.
-								return Optional.of(TRSRTransformation
-										.identity());
-							}
-						}
-					}
+                // Bake model of visible groups.
+                IBakedModel bakedModel = obj.bake(modelState, DefaultVertexFormats.ITEM, spriteGetter);
 
-					return Optional.absent();
-				};
+                quads = bakedModel.getQuads(null, null, 0);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
 
-				// Bake model of visible groups.
-				IBakedModel bakedModel = obj.bake(modelState, DefaultVertexFormats.ITEM, spriteGetter);
+        return quads;
+    }
 
-				quads = bakedModel.getQuads(null, null, 0);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+    public void handleItemState(ItemStack itemStackIn, World worldIn, EntityLivingBase entityLivingBaseIn)
+    {
+        itemStack = itemStackIn;
+        world = worldIn;
+        entity = entityLivingBaseIn;
+    }
 
-		return quads;
-	}
+    @Override
+    public List<BakedQuad> getQuads(IBlockState blockStateIn, EnumFacing enumFacingIn, long longRand)
+    {
+        if (enumFacingIn == null)
+        {
+            state = blockStateIn;
+            side = enumFacingIn;
+            rand = longRand;
 
-	public void handleItemState(ItemStack itemStackIn, World worldIn, EntityLivingBase entityLivingBaseIn) {
-		itemStack = itemStackIn;
-		world = worldIn;
-		entity = entityLivingBaseIn;
-	}
+            if (longRand == 0)
+            {
+                return bakedOBJModel.getQuads(null, null, 0);
+            }
+            else if (longRand >= 1 && longRand <= partNames.length)
+            {
+                return mapQuads.get(partNames[(int) longRand - 1]);
+            }
+        }
 
-	@Override
-	public List<BakedQuad> getQuads(IBlockState blockStateIn, EnumFacing enumFacingIn, long longRand) {
-		if (enumFacingIn == null) {
-			state = blockStateIn;
-			side = enumFacingIn;
-			rand = longRand;
+        return Collections.emptyList();
+    }
 
-			if (longRand == 0) {
-				return bakedOBJModel.getQuads(null, null, 0);
-			} else if (longRand >= 1 && longRand <= partNames.length) {
-				return mapQuads.get(partNames[(int)longRand - 1]);
-			}
-		}
+    @Override
+    public boolean isAmbientOcclusion()
+    {
+        return true;
+    }
 
-		return Collections.emptyList();
-	}
+    @Override
+    public boolean isGui3d()
+    {
+        return true;
+    }
 
-	@Override
-	public boolean isAmbientOcclusion() {
-		return true;
-	}
+    @Override
+    public boolean isBuiltInRenderer()
+    {
+        return true;
+    }
 
-	@Override
-	public boolean isGui3d() {
-		return true;
-	}
+    @Override
+    public TextureAtlasSprite getParticleTexture()
+    {
+        return bakedJSONModel.getParticleTexture();
+    }
 
-	@Override
-	public boolean isBuiltInRenderer() {
-		return true;
-	}
+    @Override
+    public ItemCameraTransforms getItemCameraTransforms()
+    {
+        return bakedJSONModel.getItemCameraTransforms();
+    }
 
-	@Override
-	public TextureAtlasSprite getParticleTexture() {
-		return bakedJSONModel.getParticleTexture();
-	}
+    @Override
+    public ItemOverrideList getOverrides()
+    {
+        return new ItemOverrideList(Collections.EMPTY_LIST) {
 
-	@Override
-	public ItemCameraTransforms getItemCameraTransforms() {
-		return bakedJSONModel.getItemCameraTransforms();
-	}
+            @Override
+            public IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack, World world, EntityLivingBase entity)
+            {
+                // Copy ModelLaserBlade object and handle ItemStack.
+                if (originalModel instanceof ModelLaserBlade)
+                {
+                    ModelLaserBlade model = (ModelLaserBlade) originalModel;
+                    model.handleItemState(stack, world, entity);
+                    return model;
+                }
 
-	@Override
-	public ItemOverrideList getOverrides() {
-		return new ItemOverrideList(Collections.EMPTY_LIST) {
+                return originalModel;
+            }
 
-			@Override
-			public IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack, World world, EntityLivingBase entity) {
-				// Copy ModelLaserBlade object and handle ItemStack.
-				if (originalModel instanceof ModelLaserBlade) {
-					ModelLaserBlade model = (ModelLaserBlade)originalModel;
-					model.handleItemState(stack, world, entity);
-					return model;
-				}
+        };
+    }
 
-				return originalModel;
-			}
+    @Override
+    public Pair<? extends IBakedModel, Matrix4f> handlePerspective(TransformType transformTypeIn)
+    {
+        Matrix4f matrix;
 
-		};
-	}
+        if (bakedJSONModel instanceof IPerspectiveAwareModel)
+        {
+            // Get transformation matrix from JSON item model.
+            matrix = ((IPerspectiveAwareModel) bakedJSONModel).handlePerspective(transformTypeIn).getValue();
+        }
+        else
+        {
+            matrix = TRSRTransformation.identity().getMatrix();
+        }
 
-	@Override
-	public Pair<? extends IBakedModel, Matrix4f> handlePerspective(TransformType transformTypeIn) {
-		Matrix4f matrix;
+        cameraTransformType = transformTypeIn;
 
-		if (bakedJSONModel instanceof IPerspectiveAwareModel) {
-			// Get transformation matrix from JSON item model.
-			matrix = ((IPerspectiveAwareModel) bakedJSONModel).handlePerspective(transformTypeIn).getValue();
-		} else {
-			matrix = TRSRTransformation.identity().getMatrix();
-		}
-
-		cameraTransformType = transformTypeIn;
-
-		return Pair.of(this, matrix);
-	}
+        return Pair.of(this, matrix);
+    }
 
 }
