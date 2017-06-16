@@ -49,7 +49,7 @@ public class ItemLaserBlade extends ItemSword
     {
         ItemStack stack = event.crafting;
 
-        if (stack == null || stack.getItem() != ToLaserBlade.ITEMS.itemLaserBlade)
+        if (stack.getItem() != ToLaserBlade.ITEMS.itemLaserBlade)
         {
             return;
         }
@@ -60,12 +60,7 @@ public class ItemLaserBlade extends ItemSword
         {
             ItemStack itemSlot = event.craftMatrix.getStackInSlot(i);
 
-            if (itemSlot == null)
-            {
-                continue;
-
-            }
-            else if (itemSlot.getItem() == ToLaserBlade.ITEMS.itemLaserBlade)
+            if (itemSlot.getItem() == ToLaserBlade.ITEMS.itemLaserBlade)
             {
                 // Coloring blade recipe.
                 NBTTagCompound nbtNew;

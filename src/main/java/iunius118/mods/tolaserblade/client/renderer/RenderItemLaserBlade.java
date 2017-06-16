@@ -33,9 +33,6 @@ public class RenderItemLaserBlade extends TileEntitySpecialRenderer<TileEntityRe
     // renderTileEntityAt
     public void func_192841_a(TileEntityRenderItem te, double x, double y, double z, float partialTicks, int destroyStage, float partial)
     {
-        if (te != null)
-            return;
-
         Minecraft mc = Minecraft.getMinecraft();
         IBakedModel model = mc.getRenderItem().getItemModelMesher().getModelManager().getModel(ToLaserBlade.MRL_ITEM_LASER_BLADE);
 
