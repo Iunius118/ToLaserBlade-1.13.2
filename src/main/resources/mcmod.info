@@ -1,16 +1,17 @@
 [
-{
-  "modid": "tolaserblade",
-  "name": "ToLaserBlade",
-  "description": "Adds a Laser Blade.",
-  "version": "${version}",
-  "mcversion": "${mcversion}",
-  "url": "https://twitter.com/Iunius118",
-  "updateUrl": "",
-  "authorList": ["Iunius"],
-  "credits": "",
-  "logoFile": "",
-  "screenshots": [],
-  "dependencies": []
-}
+  "modListVersion": 2,
+  "modList": [{
+    "modid": "tolaserblade",
+    "name": "ToLaserBlade",
+    "description": "Adds a Laser Blade.",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "https://github.com/Iunius118/ToLaserBlade",
+    "updateUrl": "",
+    "authorList": ["Iunius"],
+    "credits": "",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": []
+  }]
 ]
