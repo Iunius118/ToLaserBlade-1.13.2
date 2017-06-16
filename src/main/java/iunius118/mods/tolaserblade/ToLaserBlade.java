@@ -93,19 +93,19 @@ public class ToLaserBlade
         @Override
         public IRecipe parse(JsonContext context, JsonObject json)
         {
-            ShapedOreRecipe recipe = RecipesShapedOreEnchantSmiteX.factory(context, json);
+            ShapedOreRecipe recipe = RecipesLaserBladeX.factory(context, json);
             ShapedPrimer primer = new ShapedPrimer();
             primer.width = recipe.getWidth();
             primer.height = recipe.getHeight();
             primer.mirrored = JsonUtils.getBoolean(json, "mirrored", true);
             primer.input = recipe.func_192400_c();
-            return new RecipesShapedOreEnchantSmiteX(new ResourceLocation(MOD_ID, "laser_blade_x"), recipe.getRecipeOutput(), primer);
+            return new RecipesLaserBladeX(new ResourceLocation(MOD_ID, "laser_blade_x"), recipe.getRecipeOutput(), primer);
         }
 
-        public static class RecipesShapedOreEnchantSmiteX extends ShapedOreRecipe
+        public static class RecipesLaserBladeX extends ShapedOreRecipe
         {
 
-            public RecipesShapedOreEnchantSmiteX(ResourceLocation group, ItemStack result, ShapedPrimer primer)
+            public RecipesLaserBladeX(ResourceLocation group, ItemStack result, ShapedPrimer primer)
             {
                 super(group, result, primer);
             }
@@ -198,7 +198,8 @@ public class ToLaserBlade
             registerItemModels();
         }
 
-        // Model
+        // Model registry and bakery
+
         @SubscribeEvent
         public void onModelBakeEvent(ModelBakeEvent event)
         {
