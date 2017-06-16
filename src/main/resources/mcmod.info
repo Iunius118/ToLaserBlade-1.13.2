@@ -1,4 +1,4 @@
-[
+{
   "modListVersion": 2,
   "modList": [{
     "modid": "tolaserblade",
@@ -14,4 +14,4 @@
     "screenshots": [],
     "dependencies": []
   }]
-]
+}
