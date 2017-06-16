@@ -1,10 +1,12 @@
 ﻿
-	ToLaserBlade 1.11.2-0.0.6
+	ToLaserBlade 1.12-0.0.6-b0
+
+	*** これはベータテスト版です。ご理解の上ご使用ください。 ***
 
 
 前提mod（必須）
-	Minecraft 1.11.2
-	Minecraft Forge 1.11.2-13.20.0.2228以降
+	Minecraft 1.12
+	Minecraft Forge 1.12-14.21.0.2331以降
 
 インストール方法
 	JARファイルをmodsフォルダ内に置く
