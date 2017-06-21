@@ -47,7 +47,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
-@Mod(modid = ToLaserBlade.MOD_ID, name = ToLaserBlade.MOD_NAME, version = ToLaserBlade.MOD_VERSION, useMetadata = true)
+@Mod(modid = ToLaserBlade.MOD_ID, name = ToLaserBlade.MOD_NAME, version = ToLaserBlade.MOD_VERSION, dependencies = ToLaserBlade.MOD_DEPENDENCIES, useMetadata = true)
 @EventBusSubscriber
 public class ToLaserBlade
 {
@@ -55,6 +55,7 @@ public class ToLaserBlade
     public static final String MOD_ID = "tolaserblade";
     public static final String MOD_NAME = "ToLaserBlade";
     public static final String MOD_VERSION = "%MOD_VERSION%";
+    public static final String MOD_DEPENDENCIES = "required-after:forge@[1.12-14.21.0.2343,)";
 
     public static final String NAME_ITEM_LASER_BLADE = "tolaserblade.laser_blade";
     public static final ToolMaterial MATERIAL_LASER = EnumHelper.addToolMaterial("LASER", 3, 32767, 12.0F, 10.0F, 22)
@@ -98,11 +99,11 @@ public class ToLaserBlade
             primer.width = recipe.getWidth();
             primer.height = recipe.getHeight();
             primer.mirrored = JsonUtils.getBoolean(json, "mirrored", true);
-            primer.input = recipe.func_192400_c();
+            primer.input = recipe.getIngredients();
             return new RecipesLaserBladeX(new ResourceLocation(MOD_ID, "laser_blade_x"), recipe.getRecipeOutput(), primer);
         }
 
-        public static class RecipesLaserBladeX extends ShapedOreRecipe
+        public class RecipesLaserBladeX extends ShapedOreRecipe
         {
 
             public RecipesLaserBladeX(ResourceLocation group, ItemStack result, ShapedPrimer primer)
@@ -131,10 +132,10 @@ public class ToLaserBlade
         public IRecipe parse(JsonContext context, JsonObject json)
         {
             ShapelessOreRecipe recipe = ShapelessOreRecipe.factory(context, json);
-            return new RecipeLaserBladeDye(new ResourceLocation(MOD_ID, "laser_blade_dyeing"), recipe.func_192400_c(), recipe.getRecipeOutput());
+            return new RecipeLaserBladeDye(new ResourceLocation(MOD_ID, "laser_blade_dyeing"), recipe.getIngredients(), recipe.getRecipeOutput());
         }
 
-        public static class RecipeLaserBladeDye extends ShapelessOreRecipe
+        public class RecipeLaserBladeDye extends ShapelessOreRecipe
         {
 
             public RecipeLaserBladeDye(ResourceLocation group, NonNullList<Ingredient> input, ItemStack result)

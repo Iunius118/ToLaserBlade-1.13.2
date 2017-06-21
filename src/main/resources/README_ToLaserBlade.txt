@@ -6,7 +6,7 @@
 
 前提mod（必須）
 	Minecraft 1.12
-	Minecraft Forge 1.12-14.21.0.2331以降
+	Minecraft Forge 1.12-14.21.0.2343以降
 
 インストール方法
 	JARファイルをmodsフォルダ内に置く
