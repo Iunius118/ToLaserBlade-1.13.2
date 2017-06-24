@@ -4,6 +4,7 @@ import com.google.common.collect.Multimap;
 
 import iunius118.mods.tolaserblade.ToLaserBlade;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -29,8 +30,7 @@ public class ItemLaserBlade extends ItemSword
     private final float attackDamage;
     private final float attackSpeed;
     // Blade color table.
-    public final int[] colors = { 0xFFFF0000, 0xFFD0A000, 0xFF00E000, 0xFF0080FF, 0xFF0000FF, 0xFFA000FF, 0xFFFFFFFF,
-            0xFF020202 };
+    public final int[] colors = { 0xFFFF0000, 0xFFD0A000, 0xFF00E000, 0xFF0080FF, 0xFF0000FF, 0xFFA000FF, 0xFFFFFFFF, 0xFF020202 };
 
     public static final String KEY_COLOR_CORE = "colorC";
     public static final String KEY_COLOR_HALO = "colorH";
@@ -39,6 +39,8 @@ public class ItemLaserBlade extends ItemSword
     public ItemLaserBlade()
     {
         super(ToLaserBlade.MATERIAL_LASER);
+
+        setCreativeTab(CreativeTabs.COMBAT);
         material = ToLaserBlade.MATERIAL_LASER;
         attackDamage = 3.0F + material.getDamageVsEntity();
         attackSpeed = 0.0F;
@@ -49,88 +51,70 @@ public class ItemLaserBlade extends ItemSword
     {
         ItemStack stack = event.crafting;
 
-        if (stack.getItem() != ToLaserBlade.ITEMS.itemLaserBlade)
+        if (!(stack.getItem() instanceof ItemLaserBlade))
         {
             return;
         }
 
-        int invSize = event.craftMatrix.getSizeInventory();
+        // Get NBT
+        NBTTagCompound nbt = stack.getTagCompound();
 
-        for (int i = 0; i < invSize; i++)
+        if (nbt == null) {
+            nbt = new NBTTagCompound();
+        }
+
+        BlockPos pos = event.player.getPosition();
+        Biome biome = event.player.world.getBiomeForCoordsBody(pos);
+        int colorCore = 0xFFFFFFFF;
+        int colorHalo = colors[0];
+        boolean isSubColor = false;
+
+        // Dyeing by Biome type or Biome temperature
+        if (biome instanceof BiomeHell)
         {
-            ItemStack itemSlot = event.craftMatrix.getStackInSlot(i);
+            colorHalo = colors[6];
+        }
+        else if (biome instanceof BiomeEnd)
+        {
+            colorHalo = colors[6];
+            isSubColor = true;
+        }
+        else if (biome instanceof BiomeVoid)
+        {
+            colorCore = colors[7];
+            colorHalo = colors[7];
+        }
+        else
+        {
+            float temp = biome.getTemperature();
 
-            if (itemSlot.getItem() == ToLaserBlade.ITEMS.itemLaserBlade)
+            if (1.0 > temp && temp >= 0.9)
             {
-                // Coloring blade recipe.
-                NBTTagCompound nbtNew;
-                NBTTagCompound nbtOld = itemSlot.getTagCompound();
-
-                // Copy or Create NBT.
-                if (nbtOld == null)
-                {
-                    nbtNew = new NBTTagCompound();
-                }
-                else
-                {
-                    nbtNew = (NBTTagCompound) nbtOld.copy();
-                }
-
-                BlockPos pos = event.player.getPosition();
-                Biome biome = event.player.world.getBiomeForCoordsBody(pos);
-                int colorCore = 0xFFFFFFFF;
-                int colorHalo = colors[0];
-                boolean isSubColor = false;
-
-                // Coloring by Biome type or Biome temperature.
-                if (biome instanceof BiomeHell)
-                {
-                    colorHalo = colors[6];
-                }
-                else if (biome instanceof BiomeEnd)
-                {
-                    colorHalo = colors[6];
-                    isSubColor = true;
-                }
-                else if (biome instanceof BiomeVoid)
-                {
-                    colorCore = colors[7];
-                    colorHalo = colors[7];
-                }
-                else
-                {
-                    float temp = biome.getTemperature();
-
-                    if (1.0 > temp && temp >= 0.9)
-                    {
-                        colorHalo = colors[1];
-                    }
-                    else if (0.5 > temp && temp >= 0.2)
-                    {
-                        colorHalo = colors[2];
-                    }
-                    else if (0.2 > temp && temp >= 0.0)
-                    {
-                        colorHalo = colors[3];
-                    }
-                    else if (0.0 > temp)
-                    {
-                        colorHalo = colors[4];
-                    }
-                    else if (temp >= 1.0)
-                    {
-                        colorHalo = colors[5];
-                    }
-                }
-
-                // Save NBT.
-                nbtNew.setInteger(KEY_COLOR_CORE, colorCore);
-                nbtNew.setInteger(KEY_COLOR_HALO, colorHalo);
-                nbtNew.setBoolean(KEY_IS_SUB_COLOR, isSubColor);
-                stack.setTagCompound(nbtNew);
-                break;
+                colorHalo = colors[1];
+            }
+            else if (0.5 > temp && temp >= 0.2)
+            {
+                colorHalo = colors[2];
+            }
+            else if (0.2 > temp && temp >= 0.0)
+            {
+                colorHalo = colors[3];
+            }
+            else if (0.0 > temp)
+            {
+                colorHalo = colors[4];
+            }
+            else if (temp >= 1.0)
+            {
+                colorHalo = colors[5];
             }
         }
+
+        // Set NBT
+        nbt.setInteger(KEY_COLOR_CORE, colorCore);
+        nbt.setInteger(KEY_COLOR_HALO, colorHalo);
+        nbt.setBoolean(KEY_IS_SUB_COLOR, isSubColor);
+        stack.setTagCompound(nbt);
     }
 
     @Override
