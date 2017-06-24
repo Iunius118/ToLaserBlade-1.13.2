@@ -59,54 +59,57 @@ public class ItemLaserBlade extends ItemSword
         // Get NBT
         NBTTagCompound nbt = stack.getTagCompound();
 
-        if (nbt == null) {
-            nbt = new NBTTagCompound();
-        }
-
         BlockPos pos = event.player.getPosition();
         Biome biome = event.player.world.getBiomeForCoordsBody(pos);
         int colorCore = 0xFFFFFFFF;
         int colorHalo = colors[0];
         boolean isSubColor = false;
 
-        // Dyeing by Biome type or Biome temperature
-        if (biome instanceof BiomeHell)
+        if (nbt == null)
         {
-            colorHalo = colors[6];
-        }
-        else if (biome instanceof BiomeEnd)
-        {
-            colorHalo = colors[6];
-            isSubColor = true;
-        }
-        else if (biome instanceof BiomeVoid)
-        {
-            colorCore = colors[7];
-            colorHalo = colors[7];
+            nbt = new NBTTagCompound();
         }
         else
         {
-            float temp = biome.getTemperature();
+            // Dyeing by Biome type or Biome temperature
+            if (biome instanceof BiomeHell)
+            {
+                colorHalo = colors[6];
+            }
+            else if (biome instanceof BiomeEnd)
+            {
+                colorHalo = colors[6];
+                isSubColor = true;
+            }
+            else if (biome instanceof BiomeVoid)
+            {
+                colorCore = colors[7];
+                colorHalo = colors[7];
+            }
+            else
+            {
+                float temp = biome.getTemperature();
 
-            if (1.0 > temp && temp >= 0.9)
-            {
-                colorHalo = colors[1];
-            }
-            else if (0.5 > temp && temp >= 0.2)
-            {
-                colorHalo = colors[2];
-            }
-            else if (0.2 > temp && temp >= 0.0)
-            {
-                colorHalo = colors[3];
-            }
-            else if (0.0 > temp)
-            {
-                colorHalo = colors[4];
-            }
-            else if (temp >= 1.0)
-            {
-                colorHalo = colors[5];
+                if (1.0 > temp && temp >= 0.9)
+                {
+                    colorHalo = colors[1];
+                }
+                else if (0.5 > temp && temp >= 0.2)
+                {
+                    colorHalo = colors[2];
+                }
+                else if (0.2 > temp && temp >= 0.0)
+                {
+                    colorHalo = colors[3];
+                }
+                else if (0.0 > temp)
+                {
+                    colorHalo = colors[4];
+                }
+                else if (temp >= 1.0)
+                {
+                    colorHalo = colors[5];
+                }
             }
         }
 
