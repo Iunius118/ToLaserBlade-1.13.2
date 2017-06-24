@@ -24,6 +24,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
@@ -39,6 +40,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
@@ -55,7 +57,7 @@ public class ToLaserBlade
     public static final String MOD_ID = "tolaserblade";
     public static final String MOD_NAME = "ToLaserBlade";
     public static final String MOD_VERSION = "%MOD_VERSION%";
-    public static final String MOD_DEPENDENCIES = "required-after:forge@[1.12-14.21.0.2343,)";
+    public static final String MOD_DEPENDENCIES = "required-after:forge@[1.12-14.21.0.2359,)";
 
     public static final String NAME_ITEM_LASER_BLADE = "tolaserblade.laser_blade";
     public static final ToolMaterial MATERIAL_LASER = EnumHelper.addToolMaterial("LASER", 3, 32767, 12.0F, 10.0F, 22)
@@ -70,6 +72,12 @@ public class ToLaserBlade
     public void preInit(FMLPreInitializationEvent event)
     {
         proxy.preInit(event);
+    }
+
+    @EventHandler
+    public void Init(FMLInitializationEvent event)
+    {
+        proxy.Init(event);
     }
 
     @ObjectHolder(MOD_ID)
@@ -173,6 +181,11 @@ public class ToLaserBlade
 
         public void preInit(FMLPreInitializationEvent event)
         {
+
+        }
+
+        public void Init(FMLInitializationEvent event)
+        {
             // register item event for LaserBlade dyeing
             MinecraftForge.EVENT_BUS.register(ITEMS.itemLaserBlade);
         }
@@ -196,18 +209,11 @@ public class ToLaserBlade
 
             OBJLoader.INSTANCE.addDomain(MOD_ID);
             MinecraftForge.EVENT_BUS.register(this); // register onModelBakeEvent
-            registerItemModels();
         }
 
         // Model registry and bakery
-
         @SubscribeEvent
-        public void onModelBakeEvent(ModelBakeEvent event)
-        {
-            registerBakedModels(event);
-        }
-
-        public void registerItemModels()
+        public void registerModels(ModelRegistryEvent event)
         {
             ModelLoader.setCustomModelResourceLocation(ITEMS.itemLaserBlade, 0, MRL_ITEM_LASER_BLADE);
 
@@ -215,7 +221,8 @@ public class ToLaserBlade
             ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRenderItem.class, new RenderItemLaserBlade());
         }
 
-        public void registerBakedModels(ModelBakeEvent event)
+        @SubscribeEvent
+        public void onModelBakeEvent(ModelBakeEvent event)
         {
             ModelLaserBlade modelLaserBlade = new ModelLaserBlade(bakeModel(RL_OBJ_ITEM_LASER_BLADE),
                     event.getModelRegistry().getObject(MRL_ITEM_LASER_BLADE));
