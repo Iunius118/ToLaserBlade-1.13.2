@@ -20,6 +20,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeEnd;
 import net.minecraft.world.biome.BiomeHell;
 import net.minecraft.world.biome.BiomeVoid;
+import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
 
@@ -68,6 +69,10 @@ public class ItemLaserBlade extends ItemSword
         if (nbt == null)
         {
             nbt = new NBTTagCompound();
+        }
+        else if (!nbt.hasKey(KEY_COLOR_HALO, NBT.TAG_INT))
+        {
+
         }
         else
         {
