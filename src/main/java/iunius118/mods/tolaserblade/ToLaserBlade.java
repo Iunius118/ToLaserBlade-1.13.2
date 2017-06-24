@@ -1,7 +1,6 @@
 package iunius118.mods.tolaserblade;
 
 import com.google.common.base.Function;
-import com.google.gson.JsonObject;
 
 import iunius118.mods.tolaserblade.client.model.ModelLaserBlade;
 import iunius118.mods.tolaserblade.client.renderer.RenderItemLaserBlade;
@@ -12,15 +11,9 @@ import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.JsonUtils;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -30,9 +23,6 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.crafting.CraftingHelper.ShapedPrimer;
-import net.minecraftforge.common.crafting.IRecipeFactory;
-import net.minecraftforge.common.crafting.JsonContext;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -46,8 +36,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.ShapedOreRecipe;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 @Mod(modid = ToLaserBlade.MOD_ID, name = ToLaserBlade.MOD_NAME, version = ToLaserBlade.MOD_VERSION, dependencies = ToLaserBlade.MOD_DEPENDENCIES, useMetadata = true)
 @EventBusSubscriber
@@ -91,87 +79,6 @@ public class ToLaserBlade
     public static void registerItems(RegistryEvent.Register<Item> event)
     {
         event.getRegistry().registerAll(new ItemLaserBlade().setRegistryName(NAME_ITEM_LASER_BLADE).setUnlocalizedName(NAME_ITEM_LASER_BLADE));
-    }
-
-    // RecipeFactories by recipes/_factories.json
-    // shaped_ore_enchant_smite_x
-    public static class RecipeFactoryLaserBladeX implements IRecipeFactory
-    {
-
-        // Recipe Laser Blade - Smite X
-        @Override
-        public IRecipe parse(JsonContext context, JsonObject json)
-        {
-            ShapedOreRecipe recipe = RecipesLaserBladeX.factory(context, json);
-            ShapedPrimer primer = new ShapedPrimer();
-            primer.width = recipe.getWidth();
-            primer.height = recipe.getHeight();
-            primer.mirrored = JsonUtils.getBoolean(json, "mirrored", true);
-            primer.input = recipe.getIngredients();
-            return new RecipesLaserBladeX(new ResourceLocation(MOD_ID, "laser_blade_x"), recipe.getRecipeOutput(), primer);
-        }
-
-        public class RecipesLaserBladeX extends ShapedOreRecipe
-        {
-
-            public RecipesLaserBladeX(ResourceLocation group, ItemStack result, ShapedPrimer primer)
-            {
-                super(group, result, primer);
-            }
-
-            @Override
-            public ItemStack getCraftingResult(InventoryCrafting inv)
-            {
-                ItemStack result = getRecipeOutput().copy();
-                result.addEnchantment(Enchantment.getEnchantmentByLocation("smite"), 10);
-                return result;
-            }
-
-        }
-
-    }
-
-    // shapeless_ore_laser_blade_dyeing
-    public static class RecipeFactoryLaserBladeDyeing implements IRecipeFactory
-    {
-
-        // Recipe Laser Blade - dyeing
-        @Override
-        public IRecipe parse(JsonContext context, JsonObject json)
-        {
-            ShapelessOreRecipe recipe = ShapelessOreRecipe.factory(context, json);
-            return new RecipeLaserBladeDye(new ResourceLocation(MOD_ID, "laser_blade_dyeing"), recipe.getIngredients(), recipe.getRecipeOutput());
-        }
-
-        public class RecipeLaserBladeDye extends ShapelessOreRecipe
-        {
-
-            public RecipeLaserBladeDye(ResourceLocation group, NonNullList<Ingredient> input, ItemStack result)
-            {
-                super(group, input, result);
-            }
-
-            @Override
-            public ItemStack getCraftingResult(InventoryCrafting inv)
-            {
-                for (int i = 0; i < inv.getHeight(); ++i)
-                {
-                    for (int j = 0; j < inv.getWidth(); ++j)
-                    {
-                        ItemStack itemstack = inv.getStackInRowAndColumn(j, i);
-
-                        if (itemstack.getItem() == ITEMS.itemLaserBlade)
-                        {
-                            return itemstack.copy();
-                        }
-                    }
-                }
-
-                return getRecipeOutput().copy();
-            }
-
-        }
-
     }
 
     // Proxy Classes
