@@ -45,7 +45,7 @@ public class ToLaserBlade
     public static final String MOD_ID = "tolaserblade";
     public static final String MOD_NAME = "ToLaserBlade";
     public static final String MOD_VERSION = "%MOD_VERSION%";
-    public static final String MOD_DEPENDENCIES = "required-after:forge@[1.12-14.21.0.2359,)";
+    public static final String MOD_DEPENDENCIES = "required-after:forge@[1.12-14.21.0.2363,)";
 
     public static final String NAME_ITEM_LASER_BLADE = "tolaserblade.laser_blade";
     public static final ToolMaterial MATERIAL_LASER = EnumHelper.addToolMaterial("LASER", 3, 32767, 12.0F, 10.0F, 22)
