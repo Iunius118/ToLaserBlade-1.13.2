@@ -96,10 +96,11 @@ public class RenderItemLaserBlade extends TileEntitySpecialRenderer<TileEntityRe
             GlStateManager.translate(0.0F, -0.45F, 0.0F);
             break;
         case FIXED:
+            GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
             GlStateManager.scale(0.9D, 0.9D, 0.9D);
             GlStateManager.rotate(45.0F, 0.0F, 0.0F, 1.0F);
-            GlStateManager.translate(0.0F, -0.75F, -0.04F);
-            GlStateManager.rotate(90.0F, 0.0F, 1.0F, 0.0F);
+            GlStateManager.translate(0.0F, -0.75F, 0.04F);
+            GlStateManager.rotate(90.0F, 0.0F, -1.0F, 0.0F);
             break;
         default:
             GlStateManager.scale(0.9D, 0.9D, 0.9D);

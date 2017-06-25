@@ -4,13 +4,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.vecmath.Matrix4f;
 
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.base.Function;
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.UnmodifiableIterator;
 
@@ -28,14 +28,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.client.model.IPerspectiveAwareModel;
 import net.minecraftforge.client.model.obj.OBJModel;
 import net.minecraftforge.client.model.obj.OBJModel.OBJBakedModel;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.Models;
 import net.minecraftforge.common.model.TRSRTransformation;
 
-public class ModelLaserBlade implements IPerspectiveAwareModel
+public class ModelLaserBlade implements IBakedModel
 {
 
     public IBakedModel bakedOBJModel;
@@ -101,18 +100,17 @@ public class ModelLaserBlade implements IPerspectiveAwareModel
                                     && visibleGroups.contains(name))
                             {
                                 // Return Absent for NOT invisible group.
-                                return Optional.absent();
+                                return Optional.empty();
                             }
                             else
                             {
                                 // Return Present for invisible group.
-                                return Optional.of(TRSRTransformation
-                                        .identity());
+                                return Optional.of(TRSRTransformation.identity());
                             }
                         }
                     }
 
-                    return Optional.absent();
+                    return Optional.empty();
                 };
 
                 // Bake model of visible groups.
@@ -215,15 +213,8 @@ public class ModelLaserBlade implements IPerspectiveAwareModel
     {
         Matrix4f matrix;
 
-        if (bakedJSONModel instanceof IPerspectiveAwareModel)
-        {
-            // Get transformation matrix from JSON item model.
-            matrix = ((IPerspectiveAwareModel) bakedJSONModel).handlePerspective(transformTypeIn).getValue();
-        }
-        else
-        {
-            matrix = TRSRTransformation.identity().getMatrix();
-        }
+        // Get transformation matrix from JSON item model.
+        matrix = bakedJSONModel.handlePerspective(transformTypeIn).getValue();
 
         cameraTransformType = transformTypeIn;
 

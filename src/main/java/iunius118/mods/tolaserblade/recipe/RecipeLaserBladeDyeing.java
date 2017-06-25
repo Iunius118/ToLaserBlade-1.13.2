@@ -42,6 +42,12 @@ public class RecipeLaserBladeDyeing extends ShapelessOreRecipe
         return getRecipeOutput().copy();
     }
 
+    @Override
+    public boolean isHidden() {
+        // Hide this recipe
+        return true;
+    }
+
     // shapeless_ore_laser_blade_dyeing
     public static class Factory implements IRecipeFactory
     {

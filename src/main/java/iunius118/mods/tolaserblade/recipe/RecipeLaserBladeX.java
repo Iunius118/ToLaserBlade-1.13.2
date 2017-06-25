@@ -4,7 +4,6 @@ import com.google.gson.JsonObject;
 
 import iunius118.mods.tolaserblade.ToLaserBlade;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.JsonUtils;
@@ -23,14 +22,6 @@ public class RecipeLaserBladeX extends ShapedOreRecipe
         super(group, result, primer);
     }
 
-    @Override
-    public ItemStack getCraftingResult(InventoryCrafting inv)
-    {
-        ItemStack result = getRecipeOutput().copy();
-        result.addEnchantment(Enchantment.getEnchantmentByLocation("smite"), 10);
-        return result;
-    }
-
     // shaped_ore_enchant_smite_x
     public static class Factory implements IRecipeFactory
     {
@@ -39,12 +30,17 @@ public class RecipeLaserBladeX extends ShapedOreRecipe
         public IRecipe parse(JsonContext context, JsonObject json)
         {
             ShapedOreRecipe recipe = ShapedOreRecipe.factory(context, json);
+            // Enchant Smite X
+            ItemStack output = recipe.getRecipeOutput();
+            output.addEnchantment(Enchantment.getEnchantmentByLocation("smite"), 10);
+
             ShapedPrimer primer = new ShapedPrimer();
             primer.width = recipe.getWidth();
             primer.height = recipe.getHeight();
             primer.mirrored = JsonUtils.getBoolean(json, "mirrored", true);
             primer.input = recipe.getIngredients();
-            return new RecipeLaserBladeX(new ResourceLocation(ToLaserBlade.MOD_ID, "laser_blade_x"), recipe.getRecipeOutput(), primer);
+
+            return new RecipeLaserBladeX(new ResourceLocation(ToLaserBlade.MOD_ID, "laser_blade_x"), output, primer);
         }
 
     }
