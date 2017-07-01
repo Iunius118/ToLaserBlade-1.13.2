@@ -1,19 +1,19 @@
 {
-  "type": "tolaserblade:laser_blade_x",
+  "type": "tolaserblade:laser_blade_v",
   "pattern": [
-    " iE",
-    "isi",
+    " iD",
+    "iGi",
     "Ri "
   ],
   "key": {
     "i": {
       "item": "minecraft:iron_ingot"
     },
-    "E": {
-      "item": "minecraft:end_crystal"
+    "D": {
+      "item": "minecraft:diamond_block"
     },
-    "s": {
-      "item": "minecraft:nether_star"
+    "G": {
+      "item": "minecraft:glowstone"
     },
     "R": {
       "item": "minecraft:redstone_block"
