@@ -2,10 +2,20 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "tolaserblade:laser_blade_dyeing"
+      "tolaserblade:laser_blade_v"
     ]
   },
   "criteria": {
+    "has_glowstone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:glowstone"
+          }
+        ]
+      }
+    },
     "has_laser_blade": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {

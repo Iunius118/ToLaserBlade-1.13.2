@@ -2,10 +2,20 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "tolaserblade:laser_blade_dyeing"
+      "tolaserblade:laser_blade_x"
     ]
   },
   "criteria": {
+    "has_nether_star": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:nether_star"
+          }
+        ]
+      }
+    },
     "has_laser_blade": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
