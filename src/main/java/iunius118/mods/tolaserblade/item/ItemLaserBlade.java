@@ -30,9 +30,11 @@ public class ItemLaserBlade extends ItemSword
     private final Item.ToolMaterial material;
     private final float attackDamage;
     private final float attackSpeed;
-    // Blade color table.
+    // Blade color table
     public final int[] colors = { 0xFFFF0000, 0xFFD0A000, 0xFF00E000, 0xFF0080FF, 0xFF0000FF, 0xFFA000FF, 0xFFFFFFFF, 0xFF020202 };
 
+    public static final String KEY_ATK = "ATK";
+    public static final String KEY_SPD = "SPD";
     public static final String KEY_COLOR_CORE = "colorC";
     public static final String KEY_COLOR_HALO = "colorH";
     public static final String KEY_IS_SUB_COLOR = "isSubC";
@@ -44,7 +46,7 @@ public class ItemLaserBlade extends ItemSword
         setCreativeTab(CreativeTabs.COMBAT);
         material = ToLaserBlade.MATERIAL_LASER;
         attackDamage = 3.0F + material.getDamageVsEntity();
-        attackSpeed = 0.0F;
+        attackSpeed = -1.2F;
     }
 
     @SubscribeEvent
@@ -138,8 +140,7 @@ public class ItemLaserBlade extends ItemSword
     }
 
     @Override
-    public boolean onBlockDestroyed(ItemStack stack, World worldIn, IBlockState state, BlockPos pos,
-            EntityLivingBase entityLiving)
+    public boolean onBlockDestroyed(ItemStack stack, World worldIn, IBlockState state, BlockPos pos, EntityLivingBase entityLiving)
     {
         return true;
     }
@@ -169,12 +170,20 @@ public class ItemLaserBlade extends ItemSword
 
         if (slot == EntityEquipmentSlot.MAINHAND)
         {
+            float modDamage = 0;
+            float modSpeed = 0;
+
+            NBTTagCompound nbt = stack.getTagCompound();
+            if (nbt != null)
+            {
+                modDamage = nbt.getFloat(KEY_ATK);
+                modSpeed = nbt.getFloat(KEY_SPD);
+            }
+
             multimap.removeAll(SharedMonsterAttributes.ATTACK_DAMAGE.getName());
-            multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(),
-                    new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", attackDamage, 0));
+            multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", attackDamage + modDamage, 0));
             multimap.removeAll(SharedMonsterAttributes.ATTACK_SPEED.getName());
-            multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(),
-                    new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", attackSpeed, 0));
+            multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", attackSpeed + modSpeed, 0));
         }
 
         return multimap;
