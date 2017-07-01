@@ -15,16 +15,16 @@ import net.minecraftforge.common.crafting.IRecipeFactory;
 import net.minecraftforge.common.crafting.JsonContext;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
-//Recipe Laser Blade - Enchant X
-public class RecipeLaserBladeX extends ShapedOreRecipe
+//Recipe Laser Blade - Enchant V
+public class RecipeLaserBladeV extends ShapedOreRecipe
 {
 
-    public RecipeLaserBladeX(ResourceLocation group, ItemStack result, ShapedPrimer primer)
+    public RecipeLaserBladeV(ResourceLocation group, ItemStack result, ShapedPrimer primer)
     {
         super(group, result, primer);
     }
 
-    // tolaserblade:laser_blade_x
+    // tolaserblade:laser_blade_v
     public static class Factory implements IRecipeFactory
     {
 
@@ -32,12 +32,11 @@ public class RecipeLaserBladeX extends ShapedOreRecipe
         public IRecipe parse(JsonContext context, JsonObject json)
         {
             ShapedOreRecipe recipe = ShapedOreRecipe.factory(context, json);
-            // Enchant X
+            // Enchant V
             ItemStack output = recipe.getRecipeOutput();
-            output.addEnchantment(Enchantment.getEnchantmentByLocation("smite"), 10);
-            output.addEnchantment(Enchantment.getEnchantmentByLocation("sweeping"), 3);
+            output.addEnchantment(Enchantment.getEnchantmentByLocation("smite"), 5);
             NBTTagCompound nbt = output.getTagCompound();
-            nbt.setFloat(ItemLaserBlade.KEY_ATK, 7.0F);
+            nbt.setFloat(ItemLaserBlade.KEY_ATK, 3.0F);
             nbt.setFloat(ItemLaserBlade.KEY_SPD, 1.2F);
 
             ShapedPrimer primer = new ShapedPrimer();
@@ -46,7 +45,7 @@ public class RecipeLaserBladeX extends ShapedOreRecipe
             primer.mirrored = JsonUtils.getBoolean(json, "mirrored", true);
             primer.input = recipe.getIngredients();
 
-            return new RecipeLaserBladeX(new ResourceLocation(ToLaserBlade.MOD_ID, "laser_blade_x"), output, primer);
+            return new RecipeLaserBladeV(new ResourceLocation(ToLaserBlade.MOD_ID, "laser_blade_v"), output, primer);
         }
 
     }

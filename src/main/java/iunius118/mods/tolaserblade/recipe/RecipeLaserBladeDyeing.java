@@ -48,7 +48,7 @@ public class RecipeLaserBladeDyeing extends ShapelessOreRecipe
         return true;
     }
 
-    // shapeless_ore_laser_blade_dyeing
+    // tolaserblade:laser_blade_dyeing
     public static class Factory implements IRecipeFactory
     {
 
