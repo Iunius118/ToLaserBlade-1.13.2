@@ -1,13 +1,13 @@
 {
   "type": "tolaserblade:laser_blade_x",
   "pattern": [
-    " iE",
-    "isi",
-    "Ri "
+    " dE",
+    "dsd",
+    "Rd "
   ],
   "key": {
-    "i": {
-      "item": "minecraft:iron_ingot"
+    "d": {
+      "item": "minecraft:diamond"
     },
     "E": {
       "item": "minecraft:end_crystal"

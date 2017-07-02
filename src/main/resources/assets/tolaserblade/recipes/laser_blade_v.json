@@ -1,13 +1,13 @@
 {
   "type": "tolaserblade:laser_blade_v",
   "pattern": [
-    " iD",
-    "iGi",
-    "Ri "
+    " ID",
+    "IGI",
+    "RI "
   ],
   "key": {
-    "i": {
-      "item": "minecraft:iron_ingot"
+    "I": {
+      "item": "minecraft:iron_block"
     },
     "D": {
       "item": "minecraft:diamond_block"
