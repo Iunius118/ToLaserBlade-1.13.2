@@ -5,6 +5,8 @@ import com.google.common.collect.Multimap;
 import iunius118.mods.tolaserblade.ToLaserBlade;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -180,6 +182,20 @@ public class ItemLaserBlade extends ItemSword
             NBTTagCompound nbt = stack.getTagCompound();
             if (nbt != null)
             {
+                // Fix attack speed for old version
+                if (!nbt.hasKey(KEY_SPD))
+                {
+                    if (EnchantmentHelper.getEnchantmentLevel(Enchantment.getEnchantmentByLocation("smite"), stack) >= 10)
+                    {
+                        nbt.setFloat(KEY_SPD, MOD_SPD_V);
+                    }
+                    else
+                    {
+                        nbt.setFloat(KEY_SPD, 0);
+                    }
+                }
+
+                // Get attack mods from NBT
                 modDamage = nbt.getFloat(KEY_ATK);
                 modSpeed = nbt.getFloat(KEY_SPD);
             }
