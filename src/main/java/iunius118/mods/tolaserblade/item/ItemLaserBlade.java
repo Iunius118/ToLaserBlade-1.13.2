@@ -39,6 +39,10 @@ public class ItemLaserBlade extends ItemSword
     public static final String KEY_COLOR_HALO = "colorH";
     public static final String KEY_IS_SUB_COLOR = "isSubC";
 
+    public static final float MOD_SPD_V = 1.2F;
+    public static final float MOD_ATK_V = 3.0F;
+    public static final float MOD_ATK_X = 7.0F;
+
     public ItemLaserBlade()
     {
         super(ToLaserBlade.MATERIAL_LASER);

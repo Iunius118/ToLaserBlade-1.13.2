@@ -37,8 +37,8 @@ public class RecipeLaserBladeX extends ShapedOreRecipe
             output.addEnchantment(Enchantment.getEnchantmentByLocation("smite"), 10);
             output.addEnchantment(Enchantment.getEnchantmentByLocation("sweeping"), 3);
             NBTTagCompound nbt = output.getTagCompound();
-            nbt.setFloat(ItemLaserBlade.KEY_ATK, 7.0F);
-            nbt.setFloat(ItemLaserBlade.KEY_SPD, 1.2F);
+            nbt.setFloat(ItemLaserBlade.KEY_ATK, ItemLaserBlade.MOD_ATK_X);
+            nbt.setFloat(ItemLaserBlade.KEY_SPD, ItemLaserBlade.MOD_SPD_V);
 
             ShapedPrimer primer = new ShapedPrimer();
             primer.width = recipe.getWidth();
