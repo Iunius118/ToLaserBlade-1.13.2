@@ -1,7 +1,11 @@
 package iunius118.mods.tolaserblade.client.renderer;
 
+import java.nio.FloatBuffer;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
 
@@ -17,6 +21,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -72,42 +77,8 @@ public class RenderItemLaserBlade extends TileEntitySpecialRenderer<TileEntityRe
             }
         }
 
-        GlStateManager.popMatrix();
-
         // Transform by Camera type.
-        switch (model.cameraTransformType)
-        {
-        case FIRST_PERSON_LEFT_HAND:
-            GlStateManager.rotate(45.0F, 0.0F, 0.0F, 1.0F);
-            GlStateManager.scale(1.0D, 1.25D, 1.0D);
-            GlStateManager.translate(0.0F, -0.6F, 0.0F);
-            GlStateManager.rotate(90.0F, 0.0F, -1.0F, 0.0F);
-            break;
-        case FIRST_PERSON_RIGHT_HAND:
-            GlStateManager.rotate(45.0F, 0.0F, 0.0F, -1.0F);
-            GlStateManager.scale(1.0D, 1.25D, 1.0D);
-            GlStateManager.translate(0.0F, -0.6F, 0.0F);
-            GlStateManager.rotate(90.0F, 0.0F, 1.0F, 0.0F);
-            break;
-        case THIRD_PERSON_LEFT_HAND:
-        case THIRD_PERSON_RIGHT_HAND:
-            GlStateManager.rotate(-8.0F, 1.0F, 0.0F, 0.0F);
-            GlStateManager.scale(2.0D, 2.0D, 2.0D);
-            GlStateManager.translate(0.0F, -0.45F, 0.0F);
-            break;
-        case FIXED:
-            GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
-            GlStateManager.scale(0.9D, 0.9D, 0.9D);
-            GlStateManager.rotate(45.0F, 0.0F, 0.0F, 1.0F);
-            GlStateManager.translate(0.0F, -0.75F, 0.04F);
-            GlStateManager.rotate(90.0F, 0.0F, -1.0F, 0.0F);
-            break;
-        default:
-            GlStateManager.scale(0.9D, 0.9D, 0.9D);
-            GlStateManager.rotate(45.0F, 0.0F, 0.0F, -1.0F);
-            GlStateManager.translate(0.0F, -0.75F, -0.04F);
-            GlStateManager.rotate(90.0F, 0.0F, -1.0F, 0.0F);
-        }
+        transform(model.cameraTransformType);
 
         // Enable Back-face Culling.
         GlStateManager.enableCull();
@@ -155,8 +126,79 @@ public class RenderItemLaserBlade extends TileEntitySpecialRenderer<TileEntityRe
 
         // Disable Culling.
         GlStateManager.disableCull();
+    }
 
+    public static final Map<TransformType, float[]> transformMatrices;
+    static {
+        transformMatrices = new HashMap();
+        transformMatrices.put(TransformType.FIRST_PERSON_LEFT_HAND,  new float[] {-3.090862E-8F, -3.090862E-8F,  1.0F, 0.0F, -0.8838835F, 0.8838835F, 0.0F, 0.0F, -0.70710677F, -0.70710677F, -4.371139E-8F, 0.0F,  1.0303302F,   -0.030330122F, 0.5F, 1.0F});
+        transformMatrices.put(TransformType.FIRST_PERSON_RIGHT_HAND, new float[] {-3.090862E-8F,  3.090862E-8F, -1.0F, 0.0F,  0.8838835F, 0.8838835F, 0.0F, 0.0F,  0.70710677F, -0.70710677F, -4.371139E-8F, 0.0F, -0.030330122F, -0.030330122F, 0.5F, 1.0F});
+        transformMatrices.put(TransformType.THIRD_PERSON_LEFT_HAND,  new float[] {2.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.9805361F, -0.2783462F, 0.0F, 0.0F, 0.2783462F, 1.9805361F, 0.0F, 0.5F, -0.39124125F, 0.6252558F, 1.0F});
+        transformMatrices.put(TransformType.THIRD_PERSON_RIGHT_HAND, new float[] {2.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.9805361F, -0.2783462F, 0.0F, 0.0F, 0.2783462F, 1.9805361F, 0.0F, 0.5F, -0.39124125F, 0.6252558F, 1.0F});
+        transformMatrices.put(TransformType.FIXED, new float[] {-5.0862745E-8F, -2.7817755E-8F, -0.9F, 0.0F, 0.63639605F, 0.63639605F, -5.5635514E-8F, 0.0F, 0.63639605F, -0.63639605F, -1.6295264E-8F, 0.0F, 0.022702962F, 0.022702962F, 0.46400005F, 1.0F});
+        transformMatrices.put(TransformType.NONE, new float[] {-2.7817755E-8F, 2.7817755E-8F, -0.9F, 0.0F, 0.63639605F, 0.63639605F, 0.0F, 0.0F, 0.63639605F, -0.63639605F, -3.934025E-8F, 0.0F, 0.022702962F, 0.022702962F, 0.5F, 1.0F});
+    }
+
+    private static final FloatBuffer matrixBuf = BufferUtils.createFloatBuffer(16);
+
+    public void transform(TransformType cameraTransformType)
+    {
+        matrixBuf.clear();
+        float[] matrix = transformMatrices.get(cameraTransformType);
+
+        if (matrix == null)
+        {
+            matrix = transformMatrices.get(TransformType.NONE);
+        }
+
+        matrixBuf.put(matrix);
+
+        /* // Calculate transformation matrix (for debugging)
         GlStateManager.pushMatrix();
+        GlStateManager.loadIdentity();
+        GlStateManager.translate(0.5F, 0.5F, 0.5F);
+        switch (cameraTransformType)
+        {
+        case FIRST_PERSON_LEFT_HAND:
+            GlStateManager.rotate(45.0F, 0.0F, 0.0F, 1.0F);
+            GlStateManager.scale(1.0D, 1.25D, 1.0D);
+            GlStateManager.translate(0.0F, -0.6F, 0.0F);
+            GlStateManager.rotate(90.0F, 0.0F, -1.0F, 0.0F);
+            break;
+        case FIRST_PERSON_RIGHT_HAND:
+            GlStateManager.rotate(45.0F, 0.0F, 0.0F, -1.0F);
+            GlStateManager.scale(1.0D, 1.25D, 1.0D);
+            GlStateManager.translate(0.0F, -0.6F, 0.0F);
+            GlStateManager.rotate(90.0F, 0.0F, 1.0F, 0.0F);
+            break;
+        case THIRD_PERSON_LEFT_HAND:
+        case THIRD_PERSON_RIGHT_HAND:
+            GlStateManager.rotate(-8.0F, 1.0F, 0.0F, 0.0F);
+            GlStateManager.scale(2.0D, 2.0D, 2.0D);
+            GlStateManager.translate(0.0F, -0.45F, 0.0F);
+            break;
+        case FIXED:
+            GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
+            GlStateManager.scale(0.9D, 0.9D, 0.9D);
+            GlStateManager.rotate(45.0F, 0.0F, 0.0F, 1.0F);
+            GlStateManager.translate(0.0F, -0.75F, 0.04F);
+            GlStateManager.rotate(90.0F, 0.0F, -1.0F, 0.0F);
+            break;
+        default:
+            GlStateManager.scale(0.9D, 0.9D, 0.9D);
+            GlStateManager.rotate(45.0F, 0.0F, 0.0F, -1.0F);
+            GlStateManager.translate(0.0F, -0.75F, 0.0F);
+            GlStateManager.rotate(90.0F, 0.0F, 1.0F, 0.0F);
+        }
+        matrixBuf.clear();
+        GlStateManager.getFloat(GL11.GL_MODELVIEW_MATRIX, matrixBuf);
+        GlStateManager.popMatrix();
+        matrix = new float[16];
+        matrixBuf.get(matrix);
+        // */
+
+        matrixBuf.flip();
+        GlStateManager.multMatrix(matrixBuf);
     }
 
     public void renderEffect(List<BakedQuad> quads)
