@@ -96,8 +96,7 @@ public class ModelLaserBlade implements IBakedModel
                         {
                             String name = parts.next();
 
-                            if (!parts.hasNext()
-                                    && visibleGroups.contains(name))
+                            if (!parts.hasNext() && visibleGroups.contains(name))
                             {
                                 // Return Absent for NOT invisible group.
                                 return Optional.empty();

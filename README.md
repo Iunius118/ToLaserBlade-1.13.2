@@ -6,7 +6,7 @@
 - v 0.0.5 for Minecraft 1.9 - 1.10.2 [[Readme](https://github.com/Iunius118/ToLaserBlade/blob/0.0.5/src/main/resources/README_ToLaserBlade.txt)]
   
 ## Downloads
-- [Releases (from Github)](https://github.com/Iunius118/ToLaserBlade/releases)
+- [Releases (from GitHub)](https://github.com/Iunius118/ToLaserBlade/releases)
 
 ### Mirror
 - [[1.12]ToLaserBlade-1.12-0.1.1.jar (from MediaFire)](http://www.mediafire.com/file/8ei165wko7e075e)
