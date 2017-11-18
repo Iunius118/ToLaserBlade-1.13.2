@@ -53,10 +53,13 @@ public class RecipeLaserBladeDyeing extends ShapelessOreRecipe
         for (int i = 0; i < inv.getSizeInventory(); ++i)
         {
             ItemStack itemstack = inv.getStackInSlot(i);
+
             if (!itemstack.isEmpty())
             {
-                ItemStack itemstackWithoutNBT = new ItemStack(itemstack.getItem(), itemstack.getCount(), itemstack.getMetadata());
                 ++ingredientCount;
+
+                // Remove NBT from ingredient ItemStack
+                ItemStack itemstackWithoutNBT = new ItemStack(itemstack.getItem(), itemstack.getCount(), itemstack.getMetadata());
                 recipeItemHelper.accountStack(itemstackWithoutNBT);
             }
         }
