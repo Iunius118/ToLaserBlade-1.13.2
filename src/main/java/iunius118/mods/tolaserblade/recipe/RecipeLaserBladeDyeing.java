@@ -4,12 +4,14 @@ import com.google.gson.JsonObject;
 
 import iunius118.mods.tolaserblade.ToLaserBlade;
 import iunius118.mods.tolaserblade.ToLaserBlade.ITEMS;
+import net.minecraft.client.util.RecipeItemHelper;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.common.crafting.IRecipeFactory;
 import net.minecraftforge.common.crafting.JsonContext;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
@@ -40,6 +42,26 @@ public class RecipeLaserBladeDyeing extends ShapelessOreRecipe
         }
 
         return getRecipeOutput().copy();
+    }
+
+    @Override
+    public boolean matches(InventoryCrafting inv, World world)
+    {
+        int ingredientCount = 0;
+        RecipeItemHelper recipeItemHelper = new RecipeItemHelper();
+
+        for (int i = 0; i < inv.getSizeInventory(); ++i)
+        {
+            ItemStack itemstack = inv.getStackInSlot(i);
+            if (!itemstack.isEmpty())
+            {
+                ItemStack itemstackWithoutNBT = new ItemStack(itemstack.getItem(), itemstack.getCount(), itemstack.getMetadata());
+                ++ingredientCount;
+                recipeItemHelper.accountStack(itemstackWithoutNBT);
+            }
+        }
+
+        return ingredientCount == this.input.size() && recipeItemHelper.canCraft(this, null);
     }
 
     @Override
