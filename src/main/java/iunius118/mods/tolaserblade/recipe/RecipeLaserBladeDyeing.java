@@ -58,7 +58,7 @@ public class RecipeLaserBladeDyeing extends ShapelessOreRecipe
             {
                 ++ingredientCount;
 
-                // Remove NBT from ingredient ItemStack
+                // Copy ItemStack to remove NBT from ingredient ItemStack
                 ItemStack itemstackWithoutNBT = new ItemStack(itemstack.getItem(), itemstack.getCount(), itemstack.getMetadata());
                 recipeItemHelper.accountStack(itemstackWithoutNBT);
             }
