@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "tolaserblade:laser_blade",
   "pattern": [
     " id",
     "igi",

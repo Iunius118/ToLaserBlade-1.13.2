@@ -2,7 +2,8 @@
   "type": "tolaserblade:laser_blade_dyeing",
   "ingredients": [
     {
-      "item": "tolaserblade:laser_blade"
+      "item": "tolaserblade:laser_blade",
+      "data": 32767
     }
   ],
   "result": {
