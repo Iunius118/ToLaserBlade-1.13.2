@@ -23,6 +23,7 @@ import net.minecraft.world.biome.BiomeEnd;
 import net.minecraft.world.biome.BiomeHell;
 import net.minecraft.world.biome.BiomeVoid;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.event.entity.player.AnvilRepairEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
 
@@ -33,7 +34,7 @@ public class ItemLaserBlade extends ItemSword
     private final float attackDamage;
     private final float attackSpeed;
     // Blade color table
-    public final int[] colors = { 0xFFFF0000, 0xFFD0A000, 0xFF00E000, 0xFF0080FF, 0xFF0000FF, 0xFFA000FF, 0xFFFFFFFF, 0xFF020202 };
+    public final static int[] colors = { 0xFFFF0000, 0xFFD0A000, 0xFF00E000, 0xFF0080FF, 0xFF0000FF, 0xFFA000FF, 0xFFFFFFFF, 0xFF020202 };
 
     public static final String KEY_ATK = "ATK";
     public static final String KEY_SPD = "SPD";
@@ -50,6 +51,7 @@ public class ItemLaserBlade extends ItemSword
         super(ToLaserBlade.MATERIAL_LASER);
 
         setCreativeTab(CreativeTabs.TOOLS);
+        setNoRepair();
         material = ToLaserBlade.MATERIAL_LASER;
         attackDamage = 3.0F + material.getDamageVsEntity();
         attackSpeed = -1.2F;
@@ -60,7 +62,7 @@ public class ItemLaserBlade extends ItemSword
     {
         ItemStack stack = event.crafting;
 
-        if (!(stack.getItem() instanceof ItemLaserBlade))
+        if (stack.getItem() != this)
         {
             return;
         }
@@ -74,55 +76,59 @@ public class ItemLaserBlade extends ItemSword
         int colorHalo = colors[0];
         boolean isSubColor = false;
 
+        boolean canTreasureCodeDyeing = false;
+        boolean canBiomeDyeing = false;
+
         if (nbt == null)
         {
+            // Got from Creative Inventory
             nbt = new NBTTagCompound();
+            nbt.setInteger(ItemLaserBlade.KEY_COLOR_HALO, ItemLaserBlade.colors[0]);
+            stack.setTagCompound(nbt);
         }
-        else if (!nbt.hasKey(KEY_COLOR_HALO, NBT.TAG_INT))
-        {
 
+        if (!nbt.hasKey(KEY_COLOR_HALO, NBT.TAG_INT))
+        {
+            // Not dye (created from materials)
+        }
+        // Dyeing by Biome type or Biome temperature
+        else if (biome instanceof BiomeHell)
+        {
+            colorHalo = colors[6];
+        }
+        else if (biome instanceof BiomeEnd)
+        {
+            colorHalo = colors[6];
+            isSubColor = true;
+        }
+        else if (biome instanceof BiomeVoid)
+        {
+            colorCore = colors[7];
+            colorHalo = colors[7];
         }
         else
         {
-            // Dyeing by Biome type or Biome temperature
-            if (biome instanceof BiomeHell)
-            {
-                colorHalo = colors[6];
-            }
-            else if (biome instanceof BiomeEnd)
-            {
-                colorHalo = colors[6];
-                isSubColor = true;
-            }
-            else if (biome instanceof BiomeVoid)
-            {
-                colorCore = colors[7];
-                colorHalo = colors[7];
-            }
-            else
-            {
-                float temp = biome.getTemperature();
+            float temp = biome.getTemperature();
 
-                if (1.0 > temp && temp >= 0.9)
-                {
-                    colorHalo = colors[1];
-                }
-                else if (0.5 > temp && temp >= 0.2)
-                {
-                    colorHalo = colors[2];
-                }
-                else if (0.2 > temp && temp >= 0.0)
-                {
-                    colorHalo = colors[3];
-                }
-                else if (0.0 > temp)
-                {
-                    colorHalo = colors[4];
-                }
-                else if (temp >= 1.0)
-                {
-                    colorHalo = colors[5];
-                }
+            if (1.0 > temp && temp >= 0.9)
+            {
+                colorHalo = colors[1];
+            }
+            else if (0.5 > temp && temp >= 0.2)
+            {
+                colorHalo = colors[2];
+            }
+            else if (0.2 > temp && temp >= 0.0)
+            {
+                colorHalo = colors[3];
+            }
+            else if (0.0 > temp)
+            {
+                colorHalo = colors[4];
+            }
+            else if (temp >= 1.0)
+            {
+                colorHalo = colors[5];
             }
         }
 
@@ -130,7 +136,30 @@ public class ItemLaserBlade extends ItemSword
         nbt.setInteger(KEY_COLOR_CORE, colorCore);
         nbt.setInteger(KEY_COLOR_HALO, colorHalo);
         nbt.setBoolean(KEY_IS_SUB_COLOR, isSubColor);
-        stack.setTagCompound(nbt);
+    }
+
+    @SubscribeEvent
+    public void onAnvilRepair(AnvilRepairEvent event)
+    {
+        ItemStack stackInput = event.getItemInput();
+
+        if (stackInput.getItem() == this && !stackInput.isItemEnchanted() && event.getIngredientInput().isEmpty())
+        {
+            ItemStack output = event.getItemResult();
+            String name = output.getDisplayName();
+
+            if ("GIFT".equals(name) || "おたから".equals(name))
+            {
+                output.addEnchantment(Enchantment.getEnchantmentByLocation("smite"), 5);
+                NBTTagCompound nbt = output.getTagCompound();
+                nbt.setFloat(KEY_ATK, MOD_ATK_V);
+                nbt.setFloat(KEY_SPD, MOD_SPD_V);
+                nbt.setInteger(KEY_COLOR_CORE, 0xFFFFFFFF);
+                nbt.setInteger(KEY_COLOR_HALO, colors[1]);
+                nbt.setBoolean(KEY_IS_SUB_COLOR, false);
+                output.clearCustomName();
+            }
+        }
     }
 
     @Override
