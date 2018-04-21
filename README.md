@@ -7,6 +7,8 @@ ToLaserBladeは、Minecraftの世界に剣タイプのツール「レーザー�
 - v 0.0.5 for Minecraft 1.9 - 1.10.2 [[Readme](https://github.com/Iunius118/ToLaserBlade/blob/0.0.5/src/main/resources/README_ToLaserBlade.txt)]
   
 ## Downloads
+Releasesページの**Assets**にある **ToLaserBlade-(Minecraftバージョン)-(modバージョン).jar** をクリックしてください。
+
 - [Releases (from GitHub)](https://github.com/Iunius118/ToLaserBlade/releases)
 
 ### Mirror
