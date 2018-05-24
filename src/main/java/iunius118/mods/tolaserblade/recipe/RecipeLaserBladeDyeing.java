@@ -34,7 +34,7 @@ public class RecipeLaserBladeDyeing extends ShapelessOreRecipe
             {
                 ItemStack itemstack = inv.getStackInRowAndColumn(j, i);
 
-                if (itemstack.getItem() == ITEMS.itemLaserBlade)
+                if (itemstack.getItem() == ITEMS.laser_blade)
                 {
                     return itemstack.copy();
                 }
@@ -68,7 +68,7 @@ public class RecipeLaserBladeDyeing extends ShapelessOreRecipe
     }
 
     @Override
-    public boolean isHidden() {
+    public boolean isDynamic() {
         // Hide this recipe
         return true;
     }

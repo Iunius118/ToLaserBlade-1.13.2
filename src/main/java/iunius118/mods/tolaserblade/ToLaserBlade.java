@@ -46,7 +46,7 @@ public class ToLaserBlade
     public static final String MOD_ID = "tolaserblade";
     public static final String MOD_NAME = "ToLaserBlade";
     public static final String MOD_VERSION = "${version}";
-    public static final String MOD_DEPENDENCIES = "required-after:forge@[1.12-14.21.1.2387,)";
+    public static final String MOD_DEPENDENCIES = "required-after:forge@[1.12.2-14.23.3.2655,)";
 
     public static final ToolMaterial MATERIAL_LASAR = EnumHelper.addToolMaterial("LASAR", 3, 255, 12.0F, 1.0F, 22).setRepairItem(new ItemStack(net.minecraft.init.Blocks.REDSTONE_TORCH));
     public static final ToolMaterial MATERIAL_LASER = EnumHelper.addToolMaterial("LASER", 3, 32767, 12.0F, 3.0F, 22).setRepairItem(new ItemStack(net.minecraft.init.Items.REDSTONE));
@@ -76,10 +76,8 @@ public class ToLaserBlade
     @ObjectHolder(MOD_ID)
     public static class ITEMS
     {
-        @ObjectHolder(NAME_ITEM_LASER_BLADE)
-        public static final Item itemLaserBlade = null;
-        @ObjectHolder(NAME_ITEM_LASAR_BLADE)
-        public static final Item itemLasarBlade = null;
+        public static final Item lasar_blade = null;
+        public static final Item laser_blade = null;
     }
 
     @SubscribeEvent
@@ -105,7 +103,7 @@ public class ToLaserBlade
             if(name.equals(MOD_ID + "." + NAME_ITEM_LASER_BLADE))
             {
                 // Replace item ID "tolaserblade:tolaserblade.laser_blade" (-1.11.2) with "tolaserblade:laser_blade" (1.12-)
-                mapping.remap(ToLaserBlade.ITEMS.itemLaserBlade);
+                mapping.remap(ToLaserBlade.ITEMS.laser_blade);
             }
         }
     }
@@ -134,7 +132,7 @@ public class ToLaserBlade
         public void Init(FMLInitializationEvent event)
         {
             // register item event for LaserBlade dyeing
-            MinecraftForge.EVENT_BUS.register(ITEMS.itemLaserBlade);
+            MinecraftForge.EVENT_BUS.register(ITEMS.laser_blade);
         }
 
     }
@@ -162,10 +160,10 @@ public class ToLaserBlade
         @SubscribeEvent
         public void registerModels(ModelRegistryEvent event)
         {
-            ModelLoader.setCustomModelResourceLocation(ITEMS.itemLasarBlade, 0, MRL_ITEM_LASAR_BLADE);
+            ModelLoader.setCustomModelResourceLocation(ITEMS.lasar_blade, 0, MRL_ITEM_LASAR_BLADE);
 
-            ModelLoader.setCustomModelResourceLocation(ITEMS.itemLaserBlade, 0, MRL_ITEM_LASER_BLADE);
-            ForgeHooksClient.registerTESRItemStack(ITEMS.itemLaserBlade, 0, TileEntityRenderItem.class);
+            ModelLoader.setCustomModelResourceLocation(ITEMS.laser_blade, 0, MRL_ITEM_LASER_BLADE);
+            ForgeHooksClient.registerTESRItemStack(ITEMS.laser_blade, 0, TileEntityRenderItem.class);
             ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRenderItem.class, new RenderItemLaserBlade());
         }
 

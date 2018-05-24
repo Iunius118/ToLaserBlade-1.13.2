@@ -38,7 +38,7 @@ public class ItemLasarBlade extends ItemSword
 
         setCreativeTab(CreativeTabs.TOOLS);
         material = ToLaserBlade.MATERIAL_LASAR;
-        attackDamage = 3.0F + material.getDamageVsEntity();
+        attackDamage = 3.0F + material.getAttackDamage();
         attackSpeed = -1.2F;
     }
 
