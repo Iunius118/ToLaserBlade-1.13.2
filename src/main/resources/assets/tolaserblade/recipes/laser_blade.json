@@ -1,5 +1,6 @@
 {
   "type": "tolaserblade:laser_blade",
+  "group": "tolaserblade",
   "pattern": [
     " id",
     "igi",
@@ -7,16 +8,20 @@
   ],
   "key": {
     "i": {
-      "item": "minecraft:iron_ingot"
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
     },
     "d": {
-      "item": "minecraft:diamond"
+      "type": "forge:ore_dict",
+      "ore": "gemDiamond"
     },
     "g": {
-      "item": "minecraft:glowstone_dust"
+      "type": "forge:ore_dict",
+      "ore": "dustGlowstone"
     },
     "r": {
-      "item": "minecraft:redstone"
+      "type": "forge:ore_dict",
+      "ore": "dustRedstone"
     }
   },
   "result": {

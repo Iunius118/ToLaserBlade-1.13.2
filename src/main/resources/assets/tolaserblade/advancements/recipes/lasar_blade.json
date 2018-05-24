@@ -6,12 +6,12 @@
     ]
   },
   "criteria": {
-    "has_redstone_torch": {
+    "has_redstone": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "minecraft:redstone_torch"
+            "item": "minecraft:redstone"
           }
         ]
       }

@@ -1,5 +1,6 @@
 {
   "type": "tolaserblade:laser_blade_dyeing",
+  "group": "tolaserblade",
   "ingredients": [
     {
       "item": "tolaserblade:laser_blade",

@@ -1,22 +1,27 @@
 {
   "type": "tolaserblade:laser_blade_v",
+  "group": "tolaserblade",
   "pattern": [
-    " ID",
-    "IGI",
-    "RI "
+    " iD",
+    "iGi",
+    "Ri "
   ],
   "key": {
-    "I": {
-      "item": "minecraft:iron_block"
+    "i": {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
     },
     "D": {
-      "item": "minecraft:diamond_block"
+      "type": "forge:ore_dict",
+      "ore": "blockDiamond"
     },
     "G": {
-      "item": "minecraft:glowstone"
+      "type": "forge:ore_dict",
+      "ore": "glowstone"
     },
     "R": {
-      "item": "minecraft:redstone_block"
+      "type": "forge:ore_dict",
+      "ore": "blockRedstone"
     }
   },
   "result": {

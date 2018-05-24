@@ -16,14 +16,10 @@
         ]
       }
     },
-    "has_laser_blade": {
-      "trigger": "minecraft:inventory_changed",
+    "has_lasar_blade_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "items": [
-          {
-            "item": "tolaserblade:laser_blade"
-          }
-        ]
+        "recipe": "tolaserblade:lasar_blade"
       }
     }
   }
