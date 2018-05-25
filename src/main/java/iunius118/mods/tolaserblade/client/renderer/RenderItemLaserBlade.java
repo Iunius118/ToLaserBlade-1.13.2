@@ -77,12 +77,18 @@ public class RenderItemLaserBlade extends TileEntitySpecialRenderer<TileEntityRe
             }
         }
 
+        TransformType cameraTransformType = model.cameraTransformType;
+
         // Transform by Camera type.
-        transform(model.cameraTransformType);
+        transform(cameraTransformType);
 
         // Enable Back-face Culling.
-        GlStateManager.enableCull();
-        GlStateManager.cullFace(GlStateManager.CullFace.BACK);
+        if (cameraTransformType == TransformType.THIRD_PERSON_LEFT_HAND || cameraTransformType == TransformType.THIRD_PERSON_RIGHT_HAND)
+        {
+            GlStateManager.enableCull();
+            GlStateManager.cullFace(GlStateManager.CullFace.BACK);
+        }
+
 
         // Draw hilt.
         renderQuads(renderer, model.mapQuads.get("Hilt"), -1);
@@ -125,7 +131,10 @@ public class RenderItemLaserBlade extends TileEntitySpecialRenderer<TileEntityRe
         }
 
         // Disable Culling.
-        GlStateManager.disableCull();
+        if (cameraTransformType == TransformType.THIRD_PERSON_LEFT_HAND || cameraTransformType == TransformType.THIRD_PERSON_RIGHT_HAND)
+        {
+            GlStateManager.disableCull();
+        }
     }
 
     public static final Map<TransformType, float[]> transformMatrices;
