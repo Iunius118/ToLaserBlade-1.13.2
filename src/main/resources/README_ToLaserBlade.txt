@@ -28,7 +28,7 @@
         バニラの剣よりも攻撃速度が少し速く、石の剣並みの攻撃力と、鉄の剣並みの耐久力がある。
         右クリックでレッドストーントーチに関連した隠し機能が使用できる。
 
-        クラフト (Crafting)： r = Redstone Torch, s = Stick
+        作業台 (Crafting)： r = Redstone Torch, s = Stick
 
             r
             r
@@ -51,9 +51,9 @@
 
         作業台 (Crafting)： i = Iron Ingot, d = Diamond, S = Stained Glass, r = Redstone (dust)
 
-             id
-            iSi
-            ri
+              i d
+            i S i
+            r i
 
 
     Laser Blade / レーザーブレイド    (Normal 普通)
@@ -72,9 +72,9 @@
 
         作業台 (Crafting)： i = Iron Ingot, d = Diamond, g = Glowstone Dust, r = Redstone (dust)
 
-             id
-            igi
-            ri
+              i d
+            i g i
+            r i
 
 
     Laser Blade / レーザーブレイド    (Stronger 強い)
@@ -91,9 +91,9 @@
 
         作業台 (Crafting)： i = Iron Ingot, D = Diamond Block, G = Glowstone (block), R = Redstone Block
 
-             iD
-            iGi
-            Ri
+              i D
+            i G i
+            R i
 
 
     Laser Blade / レーザーブレイド    (Much Stronger もっと強い)
@@ -116,15 +116,15 @@
     Laser Blade / レーザーブレイド    (Dyeing 刃染色レシピ)
 
         攻撃力／攻撃速度／エンチャント： クラフト前のものを保持
-        刃の色： クラフト時にプレイヤーがいる地点のバイオームや気温によって変化
+        刃の色： クラフト時にプレイヤーがいるバイオームによって変化
 
-            赤 (暖かい所)
-            黄 (暑い所)
-            緑 (少し寒い所)
-            青 (寒い所)
-            藍 (とても寒い所)
-            紫 (とても暑い所)
-            白 (ネザー)
+            赤 (Plains, Forest, Swampland, ...）
+            黄 (Jungle, ...）
+            緑 (Taiga, Extreme Hills, ...）
+            青 (Ice Plains, ...）
+            藍 (Cold Taiga, ...）
+            紫 (Desert, Savanna, Mesa, ...）
+            白 (Hell)
             ？ (???)
 
         GUIのクラフトスロット内では元の色のままであるが実際にクラフトすると染色される。

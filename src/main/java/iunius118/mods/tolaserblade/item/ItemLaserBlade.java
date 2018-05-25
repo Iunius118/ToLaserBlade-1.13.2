@@ -134,26 +134,25 @@ public class ItemLaserBlade extends ItemSword
         }
         else
         {
-            float temp = biome.getTemperature(pos);
-            // System.out.println(biome.toString() + " " + temp); // For debugging
+            float temp = biome.getDefaultTemperature();
 
-            if (0.95 >= temp && temp >= 0.85   )
+            if (1.0 > temp && temp >= 0.9)
             {
                 colorHalo = colors[1];
             }
-            else if (0.4 > temp && temp >= 0.1)
+            else if (0.5 > temp && temp >= 0.2)
             {
                 colorHalo = colors[2];
             }
-            else if (0.1 > temp && temp >= -0.1)
+            else if (0.2 > temp && temp >= 0.0)
             {
                 colorHalo = colors[3];
             }
-            else if (-0.1 > temp)
+            else if (0.0 > temp)
             {
                 colorHalo = colors[4];
             }
-            else if (temp > 0.95)
+            else if (temp >= 1.0)
             {
                 colorHalo = colors[5];
             }
@@ -392,9 +391,11 @@ public class ItemLaserBlade extends ItemSword
                     }
                 }
 
-                // Get attack mods from NBT
+                // Get attack modifiers from NBT
                 modDamage = nbt.getFloat(KEY_ATK);
                 modSpeed = nbt.getFloat(KEY_SPD);
+            } else {
+                stack.setTagCompound(new NBTTagCompound());
             }
 
             multimap.removeAll(SharedMonsterAttributes.ATTACK_DAMAGE.getName());
