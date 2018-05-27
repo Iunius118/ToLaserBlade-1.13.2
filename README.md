@@ -5,12 +5,14 @@
 ToLaserBlade（T. o. Laser Blade）はMinecraftの世界に剣タイプのツール「レーザーブレイド」（Laser Blade）を追加するmodです。
 
 ## Versions
-- v 1.0.0 for Minecraft 1.12.2 [[Readme](https://github.com/Iunius118/ToLaserBlade/blob/1.12.2_1.0.0/src/main/resources/README_ToLaserBlade.txt)]
-  
-## Downloads
-Releasesページの**Assets**にある **ToLaserBlade-(Minecraftバージョン)-(modバージョン).jar** をクリックしてください。
 
-- [Releases (from GitHub)](https://github.com/Iunius118/ToLaserBlade/releases)
+- v 1.0.0 for Minecraft 1.12.2 and Forge 1.12.2-14.23.3.2655+ [[Readme](https://github.com/Iunius118/ToLaserBlade/blob/1.12.2_1.0.0/src/main/resources/README_ToLaserBlade.txt)]
+
+## Downloads
+
+- [ToLaserBlade-1.12.2-1.0.0.jar (from GitHub)](https://github.com/Iunius118/ToLaserBlade/releases/download/v1.12.2-1.0.0/ToLaserBlade-1.12.2-1.0.0.jar)
+
+その他のバージョンは[Releases](https://github.com/Iunius118/ToLaserBlade/releases)ページからダウンロードしてください。
 
 ## Description
 
