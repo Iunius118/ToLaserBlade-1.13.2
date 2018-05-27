@@ -6,15 +6,19 @@ ToLaserBlade（T. o. Laser Blade）はMinecraftの世界に剣タイプのツー
 
 ## Versions
 
-- v 1.0.0 for Minecraft 1.12.2 and Forge 1.12.2-14.23.3.2655+ [[Readme](https://github.com/Iunius118/ToLaserBlade/blob/1.12.2_1.0.0/src/main/resources/README_ToLaserBlade.txt)]
+- v 1.0.0 for Minecraft 1.12.2 [[Readme](https://github.com/Iunius118/ToLaserBlade/blob/1.12.2_1.0.0/src/main/resources/README_ToLaserBlade.txt)]
+- v 0.0.6 for Minecraft 1.11.2 [[Readme](https://github.com/Iunius118/ToLaserBlade/blob/1.11.2_0.0.6/src/main/resources/README_ToLaserBlade.txt)]
+- v 0.0.5 for Minecraft 1.9.4 - 1.10.2 [[Readme](https://github.com/Iunius118/ToLaserBlade/blob/0.0.5/src/main/resources/README_ToLaserBlade.txt)]
 
 ## Downloads
 
-- [ToLaserBlade-1.12.2-1.0.0.jar (from GitHub)](https://github.com/Iunius118/ToLaserBlade/releases/download/v1.12.2-1.0.0/ToLaserBlade-1.12.2-1.0.0.jar)
+- [ToLaserBlade-1.12.2-1.0.0.jar (from GitHub)](https://github.com/Iunius118/ToLaserBlade/releases/download/v1.12.2-1.0.0/ToLaserBlade-1.12.2-1.0.0.jar) for Minecraft 1.12.2 and Forge 1.12.2-14.23.3.2655+
 
 その他のバージョンは[Releases](https://github.com/Iunius118/ToLaserBlade/releases)ページからダウンロードしてください。
 
 ## Description
+
+以下の解説は、バージョン1.0.0時点での仕様に基づいて書かれています。
 
 ### Laser B1ade / レーザーブレード
 
