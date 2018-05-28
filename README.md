@@ -65,7 +65,7 @@ ToLaserBlade（T. o. Laser Blade）はMinecraftの世界に剣タイプのツー
 
 #### 金床強化 1
 
-<img src="docs/img/recipe_laserblade_gift.png" title="name GIFT or おたから">
+<img src="docs/img/recipe_laserblade_gift.png" title="Name GIFT or おたから">
 
 - 攻撃速度：4
 - 攻撃力：10
