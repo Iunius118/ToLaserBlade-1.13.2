@@ -12,7 +12,7 @@ ToLaserBlade（T. o. Laser Blade）はMinecraftの世界に剣タイプのツー
 
 ## Downloads
 
-- [ToLaserBlade-1.12.2-1.0.0.jar (from GitHub)](https://github.com/Iunius118/ToLaserBlade/releases/download/v1.12.2-1.0.0/ToLaserBlade-1.12.2-1.0.0.jar) for Minecraft 1.12.2 and Forge 1.12.2-14.23.3.2655+
+- Minecraft 1.12.2対応版は[CurseForgeのページ](https://minecraft.curseforge.com/projects/tolaserblade)よりお願いいたします
 
 その他のバージョンは[Releases](https://github.com/Iunius118/ToLaserBlade/releases)ページからダウンロードしてください。
 
