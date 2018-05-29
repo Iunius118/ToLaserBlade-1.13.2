@@ -19,11 +19,11 @@
 
 - タイプ：剣
 - 耐久度：∞
-- クラフト方法によってクラス1～4まで性能が変化する
+- クラフト方法によって性能がクラス1～4まで変化する
 
 #### クラス 1
 
-<img src="img/recipe_laserblade_o.png" title="Laser B1ade recipe 2">
+<img src="img/recipe_laserblade_o.png" title="Laser Blade recipe 1">
 
 - 攻撃速度：2.8
 - 攻撃力：6
@@ -33,7 +33,7 @@
 
 #### クラス 2
 
-<img src="img/recipe_laserblade.png" title="Laser B1ade recipe 1">
+<img src="img/recipe_laserblade.png" title="Laser Blade recipe 2">
 
 - 攻撃速度：2.8
 - 攻撃力：7
@@ -41,7 +41,7 @@
 
 #### クラス 3
 
-<img src="img/recipe_laserblade_v.png" title="Laser B1ade recipe 3">
+<img src="img/recipe_laserblade_v.png" title="Laser Blade recipe 3">
 
 - 攻撃速度：4
 - 攻撃力：10
@@ -56,7 +56,7 @@
 
 #### クラス 4
 
-<img src="img/recipe_laserblade_x.png" title="Much Stronger Laser B1ade">
+<img src="img/recipe_laserblade_x.png" title="Much Stronger Laser Blade">
 
 - 攻撃速度：4
 - 攻撃力：14
@@ -65,7 +65,7 @@
 
 #### 刃染色レシピ
 
-<img src="img/recipe_laserblade_dyeing.png" title="Laser B1ade dyeing">
+<img src="img/recipe_laserblade_dyeing.png" title="Laser Blade dyeing">
 
 - 刃の色は全部で8色
 - 刃の色はプレイヤーのいるバイオーム（多くはその基準温度）によって決定される
