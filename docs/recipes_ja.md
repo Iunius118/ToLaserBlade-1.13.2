@@ -53,6 +53,7 @@
 <img src="img/recipe_laserblade_gift.png" title="Name GIFT or おたから">
 
 - 未エンチャントのレーザーブレイドの名前を金床で特定のワードに変更する
+- ヒント：かな4文字［A5=お, T2U, A1L=か, W1R］
 
 #### クラス 4
 
