@@ -41,7 +41,7 @@ public class ItemLaserBlade extends ItemSword
     private final float attackDamage;
     private final float attackSpeed;
     // Blade color table
-    public final static int[] colors = { 0xFFFF0000, 0xFFD0A000, 0xFF00E000, 0xFF0080FF, 0xFF0000FF, 0xFFA000FF, 0xFFFFFFFF, 0xFF020202 };
+    public final static int[] colors = { 0xFFFF0000, 0xFFD0A000, 0xFF00E000, 0xFF0080FF, 0xFF0000FF, 0xFFA000FF, 0xFFFFFFFF, 0xFF020202, 0xFFA00080 };
 
     public final Enchantment enchSmite;
     public final Enchantment enchSweeping;
@@ -97,7 +97,8 @@ public class ItemLaserBlade extends ItemSword
         NBTTagCompound nbt = stack.getTagCompound();
 
         BlockPos pos = event.player.getPosition();
-        Biome biome = event.player.world.getBiomeForCoordsBody(pos);
+        World world = event.player.world;
+        Biome biome = world.getBiomeForCoordsBody(pos);
         int colorCore = 0xFFFFFFFF;
         int colorHalo = colors[0];
         boolean isSubColor = false;
@@ -118,43 +119,62 @@ public class ItemLaserBlade extends ItemSword
             // Not dye (created from materials)
         }
         // Dyeing by Biome type or Biome temperature
-        else if (biome instanceof BiomeHell)
+        else if (world.provider.getDimension() == -1 || biome instanceof BiomeHell)
         {
+            // Nether
             colorHalo = colors[6];
         }
-        else if (biome instanceof BiomeEnd)
+        else if (world.provider.getDimension() == 1 || biome instanceof BiomeEnd)
         {
+            // End
             colorHalo = colors[6];
             isSubColor = true;
         }
         else if (biome instanceof BiomeVoid)
         {
+            // Void
             colorCore = colors[7];
             colorHalo = colors[7];
         }
         else
         {
+            // Biomes on Overworld or the other dimensions
             float temp = biome.getDefaultTemperature();
 
-            if (1.0 > temp && temp >= 0.9)
+            if (temp > 1.5)
             {
+                // t > 1.5
+                colorHalo = colors[5];
+            }
+            else if (temp > 1.0)
+            {
+                // 1.5 >= t > 1.0
+                colorHalo = colors[8];
+            }
+            else if (temp > 0.8)
+            {
+                // 1.0 >= t > 0.8
                 colorHalo = colors[1];
             }
-            else if (0.5 > temp && temp >= 0.2)
+            else if (temp >= 0.5)
             {
+                // 0.8 >= t >= 0.5
+                colorHalo = colors[0];
+            }
+            else if (temp >= 0.2)
+            {
+                // 0.5 > t >= 0.2
                 colorHalo = colors[2];
             }
-            else if (0.2 > temp && temp >= 0.0)
+            else if (temp >= -0.25)
             {
+                // 0.2 > t >= -0.25
                 colorHalo = colors[3];
             }
-            else if (0.0 > temp)
+            else
             {
+                // -0.25 > t
                 colorHalo = colors[4];
-            }
-            else if (temp >= 1.0)
-            {
-                colorHalo = colors[5];
             }
         }
 

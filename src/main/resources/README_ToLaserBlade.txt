@@ -1,6 +1,6 @@
 
 
-    ToLaserBlade 1.12.2-1.0.0
+    ToLaserBlade 1.12.2-1.1.0
 
 
 動作環境
@@ -35,7 +35,7 @@
             s
 
 
-    Laser Blade / レーザーブレイド    (Weaker 弱い)
+    Laser Blade / レーザーブレイド    (Class 1)
 
         種別： 剣
         攻撃速度： 2.8
@@ -56,7 +56,7 @@
             r i
 
 
-    Laser Blade / レーザーブレイド    (Normal 普通)
+    Laser Blade / レーザーブレイド    (Class 2)
 
         種別： 剣
         攻撃速度： 2.8
@@ -77,7 +77,7 @@
             r i
 
 
-    Laser Blade / レーザーブレイド    (Stronger 強い)
+    Laser Blade / レーザーブレイド    (Class 3)
     
         種別： 剣
         攻撃速度： 4
@@ -96,7 +96,7 @@
             R i
 
 
-    Laser Blade / レーザーブレイド    (Much Stronger もっと強い)
+    Laser Blade / レーザーブレイド    (Class 4)
 
         種別： 剣
         攻撃速度： 4
@@ -110,7 +110,7 @@
 
         金床 (Anvil)：
         
-            Laser Blade (Weaker/Normal/Stronger) + Nether Star : Cost level 20
+            Laser Blade (Class 1-3) + Nether Star : Cost level 20
 
 
     Laser Blade / レーザーブレイド    (Dyeing 刃染色レシピ)
@@ -123,7 +123,8 @@
             緑 (Taiga, Extreme Hills, ...）
             青 (Ice Plains, ...）
             藍 (Cold Taiga, ...）
-            紫 (Desert, Savanna, Mesa, ...）
+            紫 (Desert, Mesa, ...）
+            茜 (Savanna, ...)
             白 (Hell)
             ？ (???)
 
