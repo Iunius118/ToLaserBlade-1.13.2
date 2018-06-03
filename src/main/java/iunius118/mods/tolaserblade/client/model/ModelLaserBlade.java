@@ -51,7 +51,7 @@ public class ModelLaserBlade implements IBakedModel
     public long rand;
 
     public Map<String, List<BakedQuad>> mapQuads = new HashMap<String, List<BakedQuad>>();
-    public String[] partNames = { "Hilt", "Blade_core", "Blade_halo_1", "Blade_halo_2" };
+    public String[] partNames = { "Hilt", "Hilt_bright", "Blade_core", "Blade_halo_1", "Blade_halo_2" };
 
     public ModelLaserBlade(IBakedModel bakedOBJModelIn, IBakedModel bakedJSONModelIn)
     {

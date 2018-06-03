@@ -50,7 +50,8 @@ public class ItemLaserBlade extends ItemSword
     public static final String KEY_SPD = "SPD";
     public static final String KEY_COLOR_CORE = "colorC";
     public static final String KEY_COLOR_HALO = "colorH";
-    public static final String KEY_IS_SUB_COLOR = "isSubC";
+    public static final String KEY_IS_SUB_COLOR_CORE = "isSubC";
+    public static final String KEY_IS_SUB_COLOR_HALO = "isSubH";
 
     public static final float MOD_SPD_V = 1.2F;
     public static final float MOD_ATK_O = -1.0F;
@@ -101,10 +102,8 @@ public class ItemLaserBlade extends ItemSword
         Biome biome = world.getBiomeForCoordsBody(pos);
         int colorCore = 0xFFFFFFFF;
         int colorHalo = colors[0];
-        boolean isSubColor = false;
-
-        boolean canTreasureCodeDyeing = false;
-        boolean canBiomeDyeing = false;
+        boolean isSubColorCore = false;
+        boolean isSubColorHalo = false;
 
         if (nbt == null)
         {
@@ -114,6 +113,28 @@ public class ItemLaserBlade extends ItemSword
             stack.setTagCompound(nbt);
         }
 
+        // Load blade colors from nbt.
+        if (nbt.hasKey(ItemLaserBlade.KEY_COLOR_CORE, NBT.TAG_INT))
+        {
+            colorCore = nbt.getInteger(ItemLaserBlade.KEY_COLOR_CORE);
+        }
+
+        if (nbt.hasKey(ItemLaserBlade.KEY_COLOR_HALO, NBT.TAG_INT))
+        {
+            colorHalo = nbt.getInteger(ItemLaserBlade.KEY_COLOR_HALO);
+        }
+
+        if (nbt.hasKey(ItemLaserBlade.KEY_IS_SUB_COLOR_CORE, NBT.TAG_BYTE))
+        {
+            isSubColorCore = nbt.getBoolean(ItemLaserBlade.KEY_IS_SUB_COLOR_CORE);
+        }
+
+        if (nbt.hasKey(ItemLaserBlade.KEY_IS_SUB_COLOR_HALO, NBT.TAG_BYTE))
+        {
+            isSubColorHalo = nbt.getBoolean(ItemLaserBlade.KEY_IS_SUB_COLOR_HALO);
+        }
+
+        // Dyeing blade
         if (!nbt.hasKey(KEY_COLOR_HALO, NBT.TAG_INT))
         {
             // Not dye (created from materials)
@@ -122,13 +143,12 @@ public class ItemLaserBlade extends ItemSword
         else if (world.provider.getDimension() == -1 || biome instanceof BiomeHell)
         {
             // Nether
-            colorHalo = colors[6];
+            isSubColorCore = !isSubColorCore;
         }
         else if (world.provider.getDimension() == 1 || biome instanceof BiomeEnd)
         {
             // End
-            colorHalo = colors[6];
-            isSubColor = true;
+            isSubColorHalo = !isSubColorHalo;
         }
         else if (biome instanceof BiomeVoid)
         {
@@ -181,7 +201,8 @@ public class ItemLaserBlade extends ItemSword
         // Set NBT
         nbt.setInteger(KEY_COLOR_CORE, colorCore);
         nbt.setInteger(KEY_COLOR_HALO, colorHalo);
-        nbt.setBoolean(KEY_IS_SUB_COLOR, isSubColor);
+        nbt.setBoolean(KEY_IS_SUB_COLOR_CORE, isSubColorCore);
+        nbt.setBoolean(KEY_IS_SUB_COLOR_HALO, isSubColorHalo);
     }
 
     @SubscribeEvent
@@ -203,7 +224,8 @@ public class ItemLaserBlade extends ItemSword
                 nbt.setFloat(KEY_SPD, MOD_SPD_V);
                 nbt.setInteger(KEY_COLOR_CORE, 0xFFFFFFFF);
                 nbt.setInteger(KEY_COLOR_HALO, colors[1]);
-                nbt.setBoolean(KEY_IS_SUB_COLOR, false);
+                nbt.setBoolean(KEY_IS_SUB_COLOR_CORE, false);
+                nbt.setBoolean(KEY_IS_SUB_COLOR_HALO, false);
                 output.clearCustomName();
             }
         }

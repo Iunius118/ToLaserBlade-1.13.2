@@ -55,7 +55,8 @@ public class RenderItemLaserBlade extends TileEntitySpecialRenderer<TileEntityRe
         BufferBuilder renderer = Tessellator.getInstance().getBuffer();
         int colorCore = 0xFFFFFFFF;
         int colorHalo = 0xFFFF0000;
-        boolean isSubColor = false;
+        boolean isSubColorCore = false;
+        boolean isSubColorHalo = false;
         NBTTagCompound nbt = model.itemStack.getTagCompound();
 
         // Load blade colors from ItemStack NBT.
@@ -71,9 +72,14 @@ public class RenderItemLaserBlade extends TileEntitySpecialRenderer<TileEntityRe
                 colorHalo = nbt.getInteger(ItemLaserBlade.KEY_COLOR_HALO);
             }
 
-            if (nbt.hasKey(ItemLaserBlade.KEY_IS_SUB_COLOR, NBT.TAG_BYTE))
+            if (nbt.hasKey(ItemLaserBlade.KEY_IS_SUB_COLOR_CORE, NBT.TAG_BYTE))
             {
-                isSubColor = nbt.getBoolean(ItemLaserBlade.KEY_IS_SUB_COLOR);
+                isSubColorCore = nbt.getBoolean(ItemLaserBlade.KEY_IS_SUB_COLOR_CORE);
+            }
+
+            if (nbt.hasKey(ItemLaserBlade.KEY_IS_SUB_COLOR_HALO, NBT.TAG_BYTE))
+            {
+                isSubColorHalo = nbt.getBoolean(ItemLaserBlade.KEY_IS_SUB_COLOR_HALO);
             }
         }
 
@@ -93,41 +99,58 @@ public class RenderItemLaserBlade extends TileEntitySpecialRenderer<TileEntityRe
         // Draw hilt.
         renderQuads(renderer, model.mapQuads.get("Hilt"), -1);
 
-        // Enable Add-color.
-        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+        // Enable bright rendering.
         GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
         RenderHelper.disableStandardItemLighting();
         float lastBrightnessX = OpenGlHelper.lastBrightnessX;
         float lastBrightnessY = OpenGlHelper.lastBrightnessY;
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
 
-        // Draw blade.
-        if (isSubColor)
+        // Draw bright part of hilt.
+        renderQuads(renderer, model.mapQuads.get("Hilt_bright"), -1);
+
+        // Enable Add-color.
+        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+
+        // Draw blade core.
+        if (isSubColorCore)
         {
             // Draw core with Sub-color.
             GL14.glBlendEquation(GL14.GL_FUNC_REVERSE_SUBTRACT);
-            renderQuads(renderer, model.mapQuads.get("Blade_core"), colorCore);
-            GL14.glBlendEquation(GL14.GL_FUNC_ADD);
         }
-        else
+
+        renderQuads(renderer, model.mapQuads.get("Blade_core"), colorCore);
+
+
+        // Draw blade halo.
+        if (isSubColorHalo && !isSubColorCore)
         {
-            // Draw core with Add-color.
-            renderQuads(renderer, model.mapQuads.get("Blade_core"), colorCore);
+            GL14.glBlendEquation(GL14.GL_FUNC_REVERSE_SUBTRACT);
+        }
+        else if (isSubColorCore)
+        {
+            GL14.glBlendEquation(GL14.GL_FUNC_ADD);
         }
 
         renderQuads(renderer, model.mapQuads.get("Blade_halo_1"), colorHalo);
         renderQuads(renderer, model.mapQuads.get("Blade_halo_2"), colorHalo);
 
-        // Disable Add-color.
+        if (isSubColorHalo)
+        {
+            GL14.glBlendEquation(GL14.GL_FUNC_ADD);
+        }
+
+        // Disable Add-color and bright rendering.
+        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
         RenderHelper.enableStandardItemLighting();
         GL11.glPopAttrib();
-        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
         // Render Enchantment effect.
         if (model.itemStack.hasEffect())
         {
             renderEffect(model.mapQuads.get("Hilt"));
+            renderEffect(model.mapQuads.get("Hilt_bright"));
         }
 
         // Disable Culling.
