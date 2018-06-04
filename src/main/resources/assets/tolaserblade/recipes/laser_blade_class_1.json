@@ -16,8 +16,8 @@
       "ore": "gemDiamond"
     },
     "S": {
-      "item": "minecraft:stained_glass",
-      "data": 32767
+      "type": "forge:ore_dict",
+      "ore": "blockGlass"
     },
     "r": {
       "type": "forge:ore_dict",
