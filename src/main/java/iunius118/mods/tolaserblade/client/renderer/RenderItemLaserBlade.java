@@ -123,11 +123,12 @@ public class RenderItemLaserBlade extends TileEntitySpecialRenderer<TileEntityRe
 
 
         // Draw blade halo.
-        if (isSubColorHalo && !isSubColorCore)
+        if (!isSubColorCore && isSubColorHalo)
         {
+         // Draw halo with Sub-color.
             GL14.glBlendEquation(GL14.GL_FUNC_REVERSE_SUBTRACT);
         }
-        else if (isSubColorCore)
+        else if (isSubColorCore && !isSubColorHalo)
         {
             GL14.glBlendEquation(GL14.GL_FUNC_ADD);
         }
