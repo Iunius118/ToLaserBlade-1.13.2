@@ -50,7 +50,7 @@
 
 クラス1～2のレーザーブレイド（ただし未エンチャントに限る）は、以下のように金床を使ってクラス3相当に強化することが可能。
 
-<img src="img/recipe_laserblade_gift_1.png" title="Name GIFT or おたから">
+<img src="img/recipe_laserblade_class_3_gift_x.png" title="Name GIFT or おたから">
 
 - 未エンチャントのレーザーブレイドの名前を金床で特定のワードに変更する
 - ヒント：かな4文字［A5=お, T2U, A1L=か, W1R］
@@ -76,12 +76,12 @@
 
 <img src="img/recipe_laserblade_anvil_dyeing_1.png" title="Laser Blade dyeing by dye">
 
-- 金床で染料と合成するとその色に応じて刃の中心部分の色を変更できる
+- 金床で染料と合成するとその色に応じて刃の中心部分の色を変更することができる
 
 
 <img src="img/recipe_laserblade_anvil_dyeing_2.png" title="Laser Blade dyeing by stained glass">
 
-- 金床で色付きガラスと合成するとその色に応じて刃の周辺部分の色を変更できる
+- 金床で色付きガラスと合成するとその色に応じて刃の周辺部分の色を変更することができる
 
 ---
 Copyright 2018 Iunius118
