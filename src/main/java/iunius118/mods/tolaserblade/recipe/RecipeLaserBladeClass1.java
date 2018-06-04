@@ -26,6 +26,29 @@ public class RecipeLaserBladeClass1 extends ShapedOreRecipe
         super(group, result, primer);
     }
 
+    @Override
+    @Nonnull
+    public ItemStack getCraftingResult(@Nonnull InventoryCrafting inv)
+    {
+        ItemStack result = getRecipeOutput().copy();
+        NBTTagCompound nbt = result.getTagCompound();
+
+        for (int i = 0; i < inv.getHeight(); ++i)
+        {
+            for (int j = 0; j < inv.getWidth(); ++j)
+            {
+                ItemStack stack = inv.getStackInRowAndColumn(j, i);
+
+                if (ItemLaserBlade.changeBladeColorByItem(nbt, stack))
+                {
+                    return result;
+                }
+            }
+        }
+
+        return result;
+    }
+
     // tolaserblade:laser_blade_class_1
     public static class Factory implements IRecipeFactory
     {

@@ -1,13 +1,14 @@
 package iunius118.mods.tolaserblade.item;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 
 import iunius118.mods.tolaserblade.ToLaserBlade;
+import net.minecraft.block.BlockStainedGlass;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
@@ -18,7 +19,10 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.nbt.NBTTagCompound;
@@ -28,7 +32,6 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeEnd;
 import net.minecraft.world.biome.BiomeHell;
 import net.minecraft.world.biome.BiomeVoid;
-import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.entity.player.AnvilRepairEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -52,6 +55,7 @@ public class ItemLaserBlade extends ItemSword
     public static final String KEY_COLOR_HALO = "colorH";
     public static final String KEY_IS_SUB_COLOR_CORE = "isSubC";
     public static final String KEY_IS_SUB_COLOR_HALO = "isSubH";
+    public static final String KEY_IS_CRAFTING = "isCrafting";
 
     public static final float MOD_SPD_CLASS_3 = 1.2F;
     public static final float MOD_ATK_CLASS_1 = -1.0F;
@@ -79,6 +83,59 @@ public class ItemLaserBlade extends ItemSword
         enchSweeping = Enchantment.getEnchantmentByLocation("sweeping");
     }
 
+    public static NBTTagCompound setPerformance(ItemStack stack, float modSpeed, float modAttack)
+    {
+        NBTTagCompound nbt = stack.getTagCompound();
+
+        if (nbt == null)
+        {
+            nbt = new NBTTagCompound();
+            stack.setTagCompound(nbt);
+        }
+
+        nbt.setFloat(KEY_SPD, modSpeed);
+        nbt.setFloat(KEY_ATK, modAttack);
+
+        return nbt;
+    }
+
+    public static NBTTagCompound setColors(ItemStack stack, int colorCore, int colorHalo, boolean isSubColorCore, boolean isSubColorHalo)
+    {
+        NBTTagCompound nbt = stack.getTagCompound();
+
+        if (nbt == null)
+        {
+            nbt = new NBTTagCompound();
+            stack.setTagCompound(nbt);
+        }
+
+        nbt.setInteger(KEY_COLOR_CORE, colorCore);
+        nbt.setInteger(KEY_COLOR_HALO, colorHalo);
+        nbt.setBoolean(KEY_IS_SUB_COLOR_CORE, isSubColorCore);
+        nbt.setBoolean(KEY_IS_SUB_COLOR_HALO, isSubColorHalo);
+
+        return nbt;
+    }
+
+    public static NBTTagCompound setPerformanceClass1(ItemStack stack, int colorHalo)
+    {
+        setPerformance(stack, 0, MOD_ATK_CLASS_1);
+        return setColors(stack, 0xFFFFFFFF, colorHalo, false, false);
+    }
+
+    public static NBTTagCompound setPerformanceClass2(ItemStack stack)
+    {
+        setPerformance(stack, 0, 0);
+        return setColors(stack, 0xFFFFFFFF, colors[0], false, false);
+    }
+
+    public static NBTTagCompound setPerformanceClass3(ItemStack stack, int colorHalo)
+    {
+        stack.addEnchantment(Enchantment.getEnchantmentByLocation("smite"), 5);
+        setPerformance(stack, MOD_SPD_CLASS_3, MOD_ATK_CLASS_3);
+        return setColors(stack, 0xFFFFFFFF, colorHalo, false, false);
+    }
+
     @SubscribeEvent
     public void onCrafting(ItemCraftedEvent event)
     {
@@ -87,122 +144,123 @@ public class ItemLaserBlade extends ItemSword
             return;
         }
 
-        ItemStack stack = event.crafting;
+        ItemStack stackOut = event.crafting;
 
-        if (stack.getItem() != this)
+        if (stackOut.getItem() != this)
         {
             return;
         }
 
         // Get NBT
-        NBTTagCompound nbt = stack.getTagCompound();
-
-        BlockPos pos = event.player.getPosition();
-        World world = event.player.world;
-        Biome biome = world.getBiomeForCoordsBody(pos);
-        int colorCore = 0xFFFFFFFF;
-        int colorHalo = colors[0];
-        boolean isSubColorCore = false;
-        boolean isSubColorHalo = false;
+        NBTTagCompound nbt = stackOut.getTagCompound();
 
         if (nbt == null)
         {
-            // Got from Creative Inventory
-            nbt = new NBTTagCompound();
-            nbt.setInteger(ItemLaserBlade.KEY_COLOR_HALO, ItemLaserBlade.colors[0]);
-            stack.setTagCompound(nbt);
+            nbt = setColors(stackOut, 0xFFFFFFFF, colors[0], false, false);
         }
 
-        // Load blade colors from nbt.
-        if (nbt.hasKey(ItemLaserBlade.KEY_COLOR_CORE, NBT.TAG_INT))
+        if (nbt.hasKey(KEY_IS_CRAFTING))
         {
-            colorCore = nbt.getInteger(ItemLaserBlade.KEY_COLOR_CORE);
+            // Crafting on crafting table
+            nbt.removeTag(KEY_IS_CRAFTING);
+            return;
         }
 
-        if (nbt.hasKey(ItemLaserBlade.KEY_COLOR_HALO, NBT.TAG_INT))
+        changeBladeColorByBiome(nbt, event.player);
+    }
+
+    public static boolean changeBladeColorByItem(NBTTagCompound nbt, ItemStack stack)
+    {
+        if (nbt == null)
         {
-            colorHalo = nbt.getInteger(ItemLaserBlade.KEY_COLOR_HALO);
+            return false;
         }
 
-        if (nbt.hasKey(ItemLaserBlade.KEY_IS_SUB_COLOR_CORE, NBT.TAG_BYTE))
+        Item item = stack.getItem();
+
+        if (item instanceof ItemDye)
         {
-            isSubColorCore = nbt.getBoolean(ItemLaserBlade.KEY_IS_SUB_COLOR_CORE);
+            int color = EnumDyeColor.byDyeDamage(stack.getItemDamage()).getColorValue() | 0xFF000000;
+            nbt.setInteger(KEY_COLOR_CORE, color);
+
+            return true;
+        }
+        else if (item instanceof ItemBlock && ((ItemBlock)item).getBlock() instanceof BlockStainedGlass)
+        {
+            int color = EnumDyeColor.byMetadata(stack.getMetadata()).getColorValue() | 0xFF000000;
+            nbt.setInteger(KEY_COLOR_HALO, color);
+
+            return true;
         }
 
-        if (nbt.hasKey(ItemLaserBlade.KEY_IS_SUB_COLOR_HALO, NBT.TAG_BYTE))
-        {
-            isSubColorHalo = nbt.getBoolean(ItemLaserBlade.KEY_IS_SUB_COLOR_HALO);
-        }
+        return false;
+    }
 
-        // Dyeing blade
-        if (!nbt.hasKey(KEY_COLOR_HALO, NBT.TAG_INT))
-        {
-            // Not dye (created from materials)
-        }
+    public static void changeBladeColorByBiome(NBTTagCompound nbt, EntityPlayer player)
+    {
+        World world = player.world;
+        Biome biome = world.getBiomeForCoordsBody(player.getPosition());
+
         // Dyeing by Biome type or Biome temperature
-        else if (world.provider.getDimension() == -1 || biome instanceof BiomeHell)
+        if (world.provider.getDimension() == -1 || biome instanceof BiomeHell)
         {
             // Nether
-            isSubColorCore = !isSubColorCore;
+            boolean isSubColorCore = nbt.getBoolean(KEY_IS_SUB_COLOR_CORE);
+            nbt.setBoolean(KEY_IS_SUB_COLOR_CORE, !isSubColorCore);
         }
         else if (world.provider.getDimension() == 1 || biome instanceof BiomeEnd)
         {
             // End
-            isSubColorHalo = !isSubColorHalo;
+            boolean isSubColorHalo = nbt.getBoolean(KEY_IS_SUB_COLOR_HALO);
+            nbt.setBoolean(KEY_IS_SUB_COLOR_HALO, !isSubColorHalo);
         }
         else if (biome instanceof BiomeVoid)
         {
             // Void
-            colorCore = colors[7];
-            colorHalo = colors[7];
+            nbt.setInteger(KEY_COLOR_CORE, colors[7]);
+            nbt.setInteger(KEY_COLOR_HALO, colors[7]);
         }
         else
         {
             // Biomes on Overworld or the other dimensions
             float temp = biome.getDefaultTemperature();
 
-            if (temp > 1.5)
+            if (temp > 1.5F)
             {
                 // t > 1.5
-                colorHalo = colors[5];
+                nbt.setInteger(KEY_COLOR_HALO, colors[5]);
             }
-            else if (temp > 1.0)
+            else if (temp > 1.0F)
             {
                 // 1.5 >= t > 1.0
-                colorHalo = colors[8];
+                nbt.setInteger(KEY_COLOR_HALO, colors[8]);
             }
-            else if (temp > 0.8)
+            else if (temp > 0.8F)
             {
                 // 1.0 >= t > 0.8
-                colorHalo = colors[1];
+                nbt.setInteger(KEY_COLOR_HALO, colors[1]);
             }
-            else if (temp >= 0.5)
+            else if (temp >= 0.5F)
             {
                 // 0.8 >= t >= 0.5
-                colorHalo = colors[0];
+                nbt.setInteger(KEY_COLOR_HALO, colors[0]);
             }
-            else if (temp >= 0.2)
+            else if (temp >= 0.2F)
             {
                 // 0.5 > t >= 0.2
-                colorHalo = colors[2];
+                nbt.setInteger(KEY_COLOR_HALO, colors[2]);
             }
-            else if (temp >= -0.25)
+            else if (temp >= -0.25F)
             {
                 // 0.2 > t >= -0.25
-                colorHalo = colors[3];
+                nbt.setInteger(KEY_COLOR_HALO, colors[3]);
             }
             else
             {
                 // -0.25 > t
-                colorHalo = colors[4];
+                nbt.setInteger(KEY_COLOR_HALO, colors[4]);
             }
         }
-
-        // Set NBT
-        nbt.setInteger(KEY_COLOR_CORE, colorCore);
-        nbt.setInteger(KEY_COLOR_HALO, colorHalo);
-        nbt.setBoolean(KEY_IS_SUB_COLOR_CORE, isSubColorCore);
-        nbt.setBoolean(KEY_IS_SUB_COLOR_HALO, isSubColorHalo);
     }
 
     @SubscribeEvent
@@ -218,14 +276,7 @@ public class ItemLaserBlade extends ItemSword
             // GIFT code
             if ("GIFT".equals(name) || "おたから".equals(name))
             {
-                output.addEnchantment(enchSmite, LVL_SMITE_V);
-                NBTTagCompound nbt = output.getTagCompound();
-                nbt.setFloat(KEY_ATK, MOD_ATK_V);
-                nbt.setFloat(KEY_SPD, MOD_SPD_V);
-                nbt.setInteger(KEY_COLOR_CORE, 0xFFFFFFFF);
-                nbt.setInteger(KEY_COLOR_HALO, colors[1]);
-                nbt.setBoolean(KEY_IS_SUB_COLOR_CORE, false);
-                nbt.setBoolean(KEY_IS_SUB_COLOR_HALO, false);
+                setPerformanceClass3(output, colors[1]);
                 output.clearCustomName();
             }
         }
@@ -238,21 +289,18 @@ public class ItemLaserBlade extends ItemSword
         ItemStack right = event.getRight();
         String name = event.getName();
 
-        // Upgrade to X
-        if (left.getItem() == this && right.getItem() == Items.NETHER_STAR)
+        if (left.getItem() != this)
         {
-            ItemStack output = left.copy();
-            NBTTagCompound nbt = output.getTagCompound();
+            return;
+        }
 
-            if (nbt == null)
+        ItemStack output = left.copy();
+
+        // Upgrade to Class 4
+        if (right.getItem() == Items.NETHER_STAR)
+        {
+            if (upgradeClass4(output))
             {
-                // Upgrade all to X
-                output.addEnchantment(enchSmite, LVL_SMITE_X);
-                output.addEnchantment(enchSweeping, LVL_SWEEPING_X);
-                nbt = output.getTagCompound();
-                nbt.setFloat(KEY_ATK, MOD_ATK_X);
-                nbt.setFloat(KEY_SPD, MOD_SPD_V);
-
                 if (StringUtils.isBlank(name))
                 {
                     if (left.hasDisplayName())
@@ -268,87 +316,16 @@ public class ItemLaserBlade extends ItemSword
                     }
                 }
 
-                event.setCost(COST_LVL_X);
-                event.setMaterialCost(COST_ITEM_X);
+                event.setCost(COST_LVL_CLASS_4);
+                event.setMaterialCost(COST_ITEM_CLASS_4);
                 event.setOutput(output);
-                return;
             }
 
-            boolean isAtkX = false;
-            boolean isSpdX = false;
-            boolean isSmiteX = false;
-            boolean isSweepingX = false;
-
-            // Upgrade Attack to X
-            if (nbt.getFloat(KEY_ATK) < MOD_ATK_X)
-            {
-                nbt.setFloat(KEY_ATK, MOD_ATK_X);
-            }
-            else
-            {
-                isAtkX = true;
-            }
-
-            // Upgrade Speed to X
-            if (nbt.getFloat(KEY_SPD) < MOD_SPD_V)
-            {
-                nbt.setFloat(KEY_SPD, MOD_SPD_V);
-            }
-            else
-            {
-                isSpdX = true;
-            }
-
-            // Upgrade Enchantment to X
-            Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments(left);
-            Integer lvlSmite = map.get(enchSmite);
-            Integer lvlSweeping = map.get(enchSweeping);
-
-            // Upgrade Smite to X
-            if (lvlSmite == null)
-            {
-                Map<Enchantment, Integer> mapNew = Maps.<Enchantment, Integer>newLinkedHashMap();
-
-                for (Map.Entry<Enchantment, Integer>entry : map.entrySet())
-                {
-                    Enchantment key = entry.getKey();
-
-                    if (key.isCompatibleWith(enchSmite))
-                    {
-                        mapNew.put(key, entry.getValue());
-                    }
-                }
-
-                map = mapNew;
-                map.put(enchSmite, LVL_SMITE_X);
-            }
-            else if (lvlSmite < LVL_SMITE_X)
-            {
-                map.put(enchSmite, LVL_SMITE_X);
-            }
-            else
-            {
-                isSmiteX = true;
-            }
-
-            // Upgrade Sweeping to X
-            if (lvlSweeping == null || lvlSweeping < LVL_SWEEPING_X)
-            {
-                map.put(enchSweeping, LVL_SWEEPING_X);
-            }
-            else
-            {
-                isSweepingX = true;
-            }
-
-            if (isAtkX && isSpdX && isSmiteX && isSweepingX)
-            {
-                return; // Already X
-            }
-
-            EnchantmentHelper.setEnchantments(map, output);
-
-            // Rename
+            return;
+        }
+        // Change blade colors
+        else if (changeBladeColorByItem(output.getTagCompound(), right))
+        {
             if (StringUtils.isBlank(name))
             {
                 if (left.hasDisplayName())
@@ -364,11 +341,105 @@ public class ItemLaserBlade extends ItemSword
                 }
             }
 
-            event.setCost(COST_LVL_X);
-            event.setMaterialCost(COST_ITEM_X);
+            event.setCost(1);
+            event.setMaterialCost(1);
             event.setOutput(output);
+
             return;
         }
+    }
+
+    public boolean upgradeClass4(ItemStack stack)
+    {
+        NBTTagCompound nbt = stack.getTagCompound();
+
+        if (nbt == null)
+        {
+            // Upgrade all to Class 4
+            stack.addEnchantment(enchSmite, LVL_SMITE_CLASS_4);
+            stack.addEnchantment(enchSweeping, LVL_SWEEPING_CLASS_4);
+            nbt = stack.getTagCompound();
+            nbt.setFloat(KEY_ATK, MOD_ATK_CLASS_4);
+            nbt.setFloat(KEY_SPD, MOD_SPD_CLASS_3);
+
+            return true;
+        }
+
+        boolean isAtkX = false;
+        boolean isSpdX = false;
+        boolean isSmiteX = false;
+        boolean isSweepingX = false;
+
+        // Upgrade Attack to Class 4
+        if (nbt.getFloat(KEY_ATK) < MOD_ATK_CLASS_4)
+        {
+            nbt.setFloat(KEY_ATK, MOD_ATK_CLASS_4);
+        }
+        else
+        {
+            isAtkX = true;
+        }
+
+        // Upgrade Speed to Class 4
+        if (nbt.getFloat(KEY_SPD) < MOD_SPD_CLASS_3)
+        {
+            nbt.setFloat(KEY_SPD, MOD_SPD_CLASS_3);
+        }
+        else
+        {
+            isSpdX = true;
+        }
+
+        // Upgrade Enchantment to Class 4
+        Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments(stack);
+        Integer lvlSmite = map.get(enchSmite);
+        Integer lvlSweeping = map.get(enchSweeping);
+
+        // Upgrade Smite to Class 4
+        if (lvlSmite == null)
+        {
+            Map<Enchantment, Integer> mapNew = new HashMap();
+
+            for (Map.Entry<Enchantment, Integer>entry : map.entrySet())
+            {
+                Enchantment key = entry.getKey();
+
+                if (key.isCompatibleWith(enchSmite))
+                {
+                    mapNew.put(key, entry.getValue());
+                }
+            }
+
+            map = mapNew;
+            map.put(enchSmite, LVL_SMITE_CLASS_4);
+        }
+        else if (lvlSmite < LVL_SMITE_CLASS_4)
+        {
+            map.put(enchSmite, LVL_SMITE_CLASS_4);
+        }
+        else
+        {
+            isSmiteX = true;
+        }
+
+        // Upgrade Sweeping to Class 4
+        if (lvlSweeping == null || lvlSweeping < LVL_SWEEPING_CLASS_4)
+        {
+            map.put(enchSweeping, LVL_SWEEPING_CLASS_4);
+        }
+        else
+        {
+            isSweepingX = true;
+        }
+
+        if (isAtkX && isSpdX && isSmiteX && isSweepingX)
+        {
+            return false; // Already Class 4
+        }
+
+        EnchantmentHelper.setEnchantments(map, stack);
+
+        return true;
     }
 
     @Override
@@ -423,7 +494,6 @@ public class ItemLaserBlade extends ItemSword
                 // Fix attack speed for old version
                 if (!nbt.hasKey(KEY_SPD))
                 {
-                    if (EnchantmentHelper.getEnchantmentLevel(enchSmite, stack) >= LVL_SMITE_X)
                     if (EnchantmentHelper.getEnchantmentLevel(enchSmite, stack) >= LVL_SMITE_CLASS_4)
                     {
                         nbt.setFloat(KEY_SPD, MOD_SPD_CLASS_3);
@@ -432,13 +502,15 @@ public class ItemLaserBlade extends ItemSword
                     {
                         nbt.setFloat(KEY_SPD, 0);
                     }
+
+                    setColors(stack, 0xFFFFFFFF, colors[0], false, false);
                 }
 
                 // Get attack modifiers from NBT
                 modDamage = nbt.getFloat(KEY_ATK);
                 modSpeed = nbt.getFloat(KEY_SPD);
             } else {
-                stack.setTagCompound(new NBTTagCompound());
+                setPerformanceClass2(stack);
             }
 
             multimap.removeAll(SharedMonsterAttributes.ATTACK_DAMAGE.getName());
