@@ -32,6 +32,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeEnd;
 import net.minecraft.world.biome.BiomeHell;
 import net.minecraft.world.biome.BiomeVoid;
+import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.entity.player.AnvilRepairEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -181,6 +182,12 @@ public class ItemLaserBlade extends ItemSword
         if (item instanceof ItemDye)
         {
             int color = EnumDyeColor.byDyeDamage(stack.getItemDamage()).getColorValue() | 0xFF000000;
+
+            if (nbt.hasKey(KEY_COLOR_CORE, NBT.TAG_INT) && nbt.getInteger(KEY_COLOR_CORE) == color)
+            {
+                return false;
+            }
+
             nbt.setInteger(KEY_COLOR_CORE, color);
 
             return true;
@@ -188,6 +195,12 @@ public class ItemLaserBlade extends ItemSword
         else if (item instanceof ItemBlock && ((ItemBlock)item).getBlock() instanceof BlockStainedGlass)
         {
             int color = EnumDyeColor.byMetadata(stack.getMetadata()).getColorValue() | 0xFF000000;
+
+            if (nbt.hasKey(KEY_COLOR_HALO, NBT.TAG_INT) && nbt.getInteger(KEY_COLOR_HALO) == color)
+            {
+                return false;
+            }
+
             nbt.setInteger(KEY_COLOR_HALO, color);
 
             return true;
