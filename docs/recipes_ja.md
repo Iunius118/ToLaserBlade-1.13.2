@@ -1,6 +1,6 @@
 ## ToLaserBlade アイテム解説
 
-以下の解説は、バージョン1.0.0時点での仕様に基づいて書かれています。
+以下の解説は、バージョン1.2.0時点での仕様に基づいて書かれています。
 
 ### Laser B1ade / レーザーブレード
 
@@ -23,17 +23,17 @@
 
 #### クラス 1
 
-<img src="img/recipe_laserblade_o.png" title="Laser Blade recipe 1">
+<img src="img/recipe_laserblade_class_1.png" title="Recipe Laser Blade class 1 A"> <img src="img/recipe_laserblade_class_1_dyeing.png" title="Recipe Laser Blade class 1 B">
 
 - 攻撃速度：2.8
 - 攻撃力：6
 - 地上（オーバーワールド）の素材のみでクラフト可能
-- 中心の色付きガラスはどの色のものでもよい
+- 中央はガラスまたは色付きガラス。色付きガラスの場合はその色に応じて刃の周辺部分の色が変わる
 - エンチャントテーブルで剣タイプのエンチャントが可能
 
 #### クラス 2
 
-<img src="img/recipe_laserblade.png" title="Laser Blade recipe 2">
+<img src="img/recipe_laserblade_class_2.png" title="Recipe Laser Blade Class 2">
 
 - 攻撃速度：2.8
 - 攻撃力：7
@@ -41,7 +41,7 @@
 
 #### クラス 3
 
-<img src="img/recipe_laserblade_v.png" title="Laser Blade recipe 3">
+<img src="img/recipe_laserblade_class_3.png" title="Recipe Laser Blade Class 3">
 
 - 攻撃速度：4
 - 攻撃力：10
@@ -50,14 +50,14 @@
 
 クラス1～2のレーザーブレイド（ただし未エンチャントに限る）は、以下のように金床を使ってクラス3相当に強化することが可能。
 
-<img src="img/recipe_laserblade_gift.png" title="Name GIFT or おたから">
+<img src="img/recipe_laserblade_gift_1.png" title="Name GIFT or おたから">
 
 - 未エンチャントのレーザーブレイドの名前を金床で特定のワードに変更する
 - ヒント：かな4文字［A5=お, T2U, A1L=か, W1R］
 
 #### クラス 4
 
-<img src="img/recipe_laserblade_x.png" title="Much Stronger Laser Blade">
+<img src="img/recipe_laserblade_class_4.png" title="Recipe Laser Blade Class 4">
 
 - 攻撃速度：4
 - 攻撃力：14
@@ -66,13 +66,22 @@
 
 #### 刃染色レシピ
 
-<img src="img/recipe_laserblade_dyeing.png" title="Laser Blade dyeing">
+<img src="img/recipe_laserblade_biome_dyeing.png" title="Laser Blade dyeing by biome">
 
+- 単体クラフトすると刃の周辺部分の色がプレイヤーのいるバイオーム（多くはその基準温度）に応じて変化する
 - 刃の色は全部で9色
-- 刃の色はプレイヤーのいるバイオーム（多くはその基準温度）によって決定される
 - クラフトスロットからはマウスでドラッグして取り出すこと（Shiftクリックの場合は染色されない）
 - クラフト後アイテムの情報が更新されるまでは何色に染色されたのかはわからない
 - 性能はクラフト前のものが引き継がれる
+
+<img src="img/recipe_laserblade_anvil_dyeing_1.png" title="Laser Blade dyeing by dye">
+
+- 金床で染料と合成するとその色に応じて刃の中心部分の色を変更できる
+
+
+<img src="img/recipe_laserblade_anvil_dyeing_2.png" title="Laser Blade dyeing by stained glass">
+
+- 金床で色付きガラスと合成するとその色に応じて刃の周辺部分の色を変更できる
 
 ---
 Copyright 2018 Iunius118

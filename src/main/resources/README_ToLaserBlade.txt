@@ -1,6 +1,6 @@
 
 
-    ToLaserBlade 1.12.2-1.1.0
+    ToLaserBlade 1.12.2-1.2.0
 
 
 動作環境
@@ -47,12 +47,13 @@
         レッドストーンの力でイオン添加ガラスを励起させ発生した光をダイヤモンドのレンズに通してレッドストーンの力場で棒状にしているという。
         なお、本来は切削用の工具であった。
 
+        中央部分に色付きガラスを用いた場合は、その色に応じて刃の色が変化する。
         ちなみに金床で、エンチャントされていないレーザーブレイドの表示名を「おたから」または「GIFT」に変更すると……
 
-        作業台 (Crafting)： i = Iron Ingot, d = Diamond, S = Stained Glass, r = Redstone (dust)
+        作業台 (Crafting)： i = Iron Ingot, d = Diamond, # = Glass/Stained Glass, r = Redstone (dust)
 
               i d
-            i S i
+            i # i
             r i
 
 
@@ -137,6 +138,19 @@
             L
 
 
+        金床で染料と合成するとその色に応じて刃の中心部分の色を変更できる。
+
+        金床 (Anvil)：
+        
+            Laser Blade + Dye : Cost level 1
+
+
+        金床で色付きガラスと合成するとその色に応じて刃の周辺部分の色を変更できる
+
+        金床 (Anvil)：
+        
+            Laser Blade + Stained Glass : Cost level 1
+
 
 リソースパックによるモデルの差し替え
 
@@ -176,4 +190,5 @@
 
 
 Copyright 2018 Iunius118
+https://minecraft.curseforge.com/projects/tolaserblade
 https://github.com/Iunius118/ToLaserBlade
