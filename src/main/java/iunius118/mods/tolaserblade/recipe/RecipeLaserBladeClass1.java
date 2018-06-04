@@ -1,10 +1,12 @@
 package iunius118.mods.tolaserblade.recipe;
 
+import javax.annotation.Nonnull;
+
 import com.google.gson.JsonObject;
 
 import iunius118.mods.tolaserblade.ToLaserBlade;
 import iunius118.mods.tolaserblade.item.ItemLaserBlade;
-import net.minecraft.enchantment.Enchantment;
+import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,16 +17,16 @@ import net.minecraftforge.common.crafting.IRecipeFactory;
 import net.minecraftforge.common.crafting.JsonContext;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
-//Recipe Laser Blade - Enchant V
-public class RecipeLaserBladeV extends ShapedOreRecipe
+//Recipe Laser Blade - Class 1
+public class RecipeLaserBladeClass1 extends ShapedOreRecipe
 {
 
-    public RecipeLaserBladeV(ResourceLocation group, ItemStack result, ShapedPrimer primer)
+    public RecipeLaserBladeClass1(ResourceLocation group, ItemStack result, ShapedPrimer primer)
     {
         super(group, result, primer);
     }
 
-    // tolaserblade:laser_blade_v
+    // tolaserblade:laser_blade_class_1
     public static class Factory implements IRecipeFactory
     {
 
@@ -32,12 +34,10 @@ public class RecipeLaserBladeV extends ShapedOreRecipe
         public IRecipe parse(JsonContext context, JsonObject json)
         {
             ShapedOreRecipe recipe = ShapedOreRecipe.factory(context, json);
-            // Enchant V
+
             ItemStack output = recipe.getRecipeOutput();
-            output.addEnchantment(Enchantment.getEnchantmentByLocation("smite"), 5);
-            NBTTagCompound nbt = output.getTagCompound();
-            nbt.setFloat(ItemLaserBlade.KEY_ATK, ItemLaserBlade.MOD_ATK_V);
-            nbt.setFloat(ItemLaserBlade.KEY_SPD, ItemLaserBlade.MOD_SPD_V);
+            NBTTagCompound nbt = ItemLaserBlade.setPerformanceClass1(output, ItemLaserBlade.colors[0]);
+            nbt.setBoolean(ItemLaserBlade.KEY_IS_CRAFTING, true);
 
             ShapedPrimer primer = new ShapedPrimer();
             primer.width = recipe.getWidth();
@@ -45,7 +45,7 @@ public class RecipeLaserBladeV extends ShapedOreRecipe
             primer.mirrored = JsonUtils.getBoolean(json, "mirrored", true);
             primer.input = recipe.getIngredients();
 
-            return new RecipeLaserBladeV(new ResourceLocation(ToLaserBlade.MOD_ID, "laser_blade_v"), output, primer);
+            return new RecipeLaserBladeClass1(new ResourceLocation(ToLaserBlade.MOD_ID, "laser_blade_class_1"), output, primer);
         }
 
     }

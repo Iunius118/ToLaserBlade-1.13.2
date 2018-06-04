@@ -2,16 +2,16 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "tolaserblade:laser_blade_o"
+      "tolaserblade:laser_blade_class_2"
     ]
   },
   "criteria": {
-    "has_diamond": {
+    "has_glowstone_dust": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "minecraft:diamond"
+            "item": "minecraft:glowstone_dust"
           }
         ]
       }

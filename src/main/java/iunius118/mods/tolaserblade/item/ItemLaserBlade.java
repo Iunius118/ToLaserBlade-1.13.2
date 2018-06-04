@@ -53,17 +53,17 @@ public class ItemLaserBlade extends ItemSword
     public static final String KEY_IS_SUB_COLOR_CORE = "isSubC";
     public static final String KEY_IS_SUB_COLOR_HALO = "isSubH";
 
-    public static final float MOD_SPD_V = 1.2F;
-    public static final float MOD_ATK_O = -1.0F;
-    public static final float MOD_ATK_V = 3.0F;
-    public static final float MOD_ATK_X = 7.0F;
+    public static final float MOD_SPD_CLASS_3 = 1.2F;
+    public static final float MOD_ATK_CLASS_1 = -1.0F;
+    public static final float MOD_ATK_CLASS_3 = 3.0F;
+    public static final float MOD_ATK_CLASS_4 = 7.0F;
 
-    public static final int LVL_SMITE_V = 5;
-    public static final int LVL_SMITE_X = 10;
-    public static final int LVL_SWEEPING_X = 3;
+    public static final int LVL_SMITE_CLASS_3 = 5;
+    public static final int LVL_SMITE_CLASS_4 = 10;
+    public static final int LVL_SWEEPING_CLASS_4 = 3;
 
-    public static final int COST_LVL_X = 20;
-    public static final int COST_ITEM_X = 1;
+    public static final int COST_LVL_CLASS_4 = 20;
+    public static final int COST_ITEM_CLASS_4 = 1;
 
     public ItemLaserBlade()
     {
@@ -424,8 +424,9 @@ public class ItemLaserBlade extends ItemSword
                 if (!nbt.hasKey(KEY_SPD))
                 {
                     if (EnchantmentHelper.getEnchantmentLevel(enchSmite, stack) >= LVL_SMITE_X)
+                    if (EnchantmentHelper.getEnchantmentLevel(enchSmite, stack) >= LVL_SMITE_CLASS_4)
                     {
-                        nbt.setFloat(KEY_SPD, MOD_SPD_V);
+                        nbt.setFloat(KEY_SPD, MOD_SPD_CLASS_3);
                     }
                     else
                     {

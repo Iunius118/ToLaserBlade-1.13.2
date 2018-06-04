@@ -1,5 +1,7 @@
 package iunius118.mods.tolaserblade.recipe;
 
+import javax.annotation.Nonnull;
+
 import com.google.gson.JsonObject;
 
 import iunius118.mods.tolaserblade.ToLaserBlade;
@@ -26,7 +28,8 @@ public class RecipeLaserBladeDyeing extends ShapelessOreRecipe
     }
 
     @Override
-    public ItemStack getCraftingResult(InventoryCrafting inv)
+    @Nonnull
+    public ItemStack getCraftingResult(@Nonnull InventoryCrafting inv)
     {
         for (int i = 0; i < inv.getHeight(); ++i)
         {

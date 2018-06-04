@@ -3,6 +3,7 @@ package iunius118.mods.tolaserblade.recipe;
 import com.google.gson.JsonObject;
 
 import iunius118.mods.tolaserblade.ToLaserBlade;
+import iunius118.mods.tolaserblade.item.ItemLaserBlade;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,15 +14,16 @@ import net.minecraftforge.common.crafting.IRecipeFactory;
 import net.minecraftforge.common.crafting.JsonContext;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
-//Recipe Laser Blade - Normal
-public class RecipeLaserBlade extends ShapedOreRecipe
+//Recipe Laser Blade - Class 3
+public class RecipeLaserBladeClass3 extends ShapedOreRecipe
 {
-    public RecipeLaserBlade(ResourceLocation group, ItemStack result, ShapedPrimer primer)
+
+    public RecipeLaserBladeClass3(ResourceLocation group, ItemStack result, ShapedPrimer primer)
     {
         super(group, result, primer);
     }
 
-    // tolaserblade:laser_blade
+    // tolaserblade:laser_blade_class_3
     public static class Factory implements IRecipeFactory
     {
 
@@ -29,14 +31,10 @@ public class RecipeLaserBlade extends ShapedOreRecipe
         public IRecipe parse(JsonContext context, JsonObject json)
         {
             ShapedOreRecipe recipe = ShapedOreRecipe.factory(context, json);
-            ItemStack output = recipe.getRecipeOutput();
-            NBTTagCompound nbt = output.getTagCompound();
 
-            if (nbt == null)
-            {
-                nbt = new NBTTagCompound();
-                output.setTagCompound(nbt);
-            }
+            ItemStack output = recipe.getRecipeOutput();
+            NBTTagCompound nbt = ItemLaserBlade.setPerformanceClass3(output, ItemLaserBlade.colors[0]);
+            nbt.setBoolean(ItemLaserBlade.KEY_IS_CRAFTING, true);
 
             ShapedPrimer primer = new ShapedPrimer();
             primer.width = recipe.getWidth();
@@ -44,7 +42,7 @@ public class RecipeLaserBlade extends ShapedOreRecipe
             primer.mirrored = JsonUtils.getBoolean(json, "mirrored", true);
             primer.input = recipe.getIngredients();
 
-            return new RecipeLaserBlade(new ResourceLocation(ToLaserBlade.MOD_ID, "laser_blade"), output, primer);
+            return new RecipeLaserBladeClass3(new ResourceLocation(ToLaserBlade.MOD_ID, "laser_blade_class_3"), output, primer);
         }
 
     }
