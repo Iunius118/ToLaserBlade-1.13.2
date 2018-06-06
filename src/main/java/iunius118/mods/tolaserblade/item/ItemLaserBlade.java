@@ -118,6 +118,59 @@ public class ItemLaserBlade extends ItemSword
         return nbt;
     }
 
+    public static boolean checkColors(ItemStack stack, int colorCore, int colorHalo, boolean isSubColorCore, boolean isSubColorHalo)
+    {
+        NBTTagCompound nbt = stack.getTagCompound();
+
+        if (nbt == null)
+        {
+            nbt = new NBTTagCompound();
+            stack.setTagCompound(nbt);
+        }
+
+        if (!nbt.hasKey(KEY_COLOR_CORE, NBT.TAG_INT))
+        {
+            nbt.setInteger(KEY_COLOR_CORE, 0xFFFFFFFF);
+        }
+
+        if (colorCore != nbt.getInteger(KEY_COLOR_CORE))
+        {
+            return false;
+        }
+
+        if (!nbt.hasKey(KEY_COLOR_HALO, NBT.TAG_INT))
+        {
+            nbt.setInteger(KEY_COLOR_HALO, colors[0]);
+        }
+
+        if (colorHalo != nbt.getInteger(KEY_COLOR_HALO))
+        {
+            return false;
+        }
+
+        if (!nbt.hasKey(KEY_IS_SUB_COLOR_CORE))
+        {
+            nbt.setBoolean(KEY_IS_SUB_COLOR_CORE, false);
+        }
+
+        if (isSubColorCore != nbt.getBoolean(KEY_IS_SUB_COLOR_CORE))
+        {
+            return false;
+        }
+
+        if (!nbt.hasKey(KEY_IS_SUB_COLOR_HALO))
+        {
+            nbt.setBoolean(KEY_IS_SUB_COLOR_HALO, false);
+        }
+
+        if (isSubColorHalo != nbt.getBoolean(KEY_IS_SUB_COLOR_HALO))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
     public static NBTTagCompound setPerformanceClass1(ItemStack stack, int colorHalo)
     {
         setPerformance(stack, 0, MOD_ATK_CLASS_1);
@@ -133,8 +186,14 @@ public class ItemLaserBlade extends ItemSword
     public static NBTTagCompound setPerformanceClass3(ItemStack stack, int colorHalo)
     {
         stack.addEnchantment(Enchantment.getEnchantmentByLocation("smite"), 5);
-        setPerformance(stack, MOD_SPD_CLASS_3, MOD_ATK_CLASS_3);
-        return setColors(stack, 0xFFFFFFFF, colorHalo, false, false);
+        NBTTagCompound nbt = setPerformance(stack, MOD_SPD_CLASS_3, MOD_ATK_CLASS_3);
+
+        if (checkColors(stack, 0xFFFFFFFF, colors[0], false, false))
+        {
+            return setColors(stack, 0xFFFFFFFF, colorHalo, false, false);
+        }
+
+        return nbt;
     }
 
     @SubscribeEvent
@@ -516,7 +575,7 @@ public class ItemLaserBlade extends ItemSword
                         nbt.setFloat(KEY_SPD, 0);
                     }
 
-                    setColors(stack, 0xFFFFFFFF, colors[0], false, false);
+                    checkColors(stack, 0xFFFFFFFF, colors[0], false, false);
                 }
 
                 // Get attack modifiers from NBT
