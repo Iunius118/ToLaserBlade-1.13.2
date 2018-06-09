@@ -3,10 +3,9 @@ package iunius118.mods.tolaserblade;
 import java.util.function.Function;
 
 import iunius118.mods.tolaserblade.client.model.ModelLaserBlade;
-import iunius118.mods.tolaserblade.client.renderer.RenderItemLaserBlade;
+import iunius118.mods.tolaserblade.client.renderer.ItemLaserBladeRenderer;
 import iunius118.mods.tolaserblade.item.ItemLasarBlade;
 import iunius118.mods.tolaserblade.item.ItemLaserBlade;
-import iunius118.mods.tolaserblade.tileentity.TileEntityRenderItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -16,7 +15,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.IModel;
@@ -26,7 +24,6 @@ import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -163,8 +160,7 @@ public class ToLaserBlade
             ModelLoader.setCustomModelResourceLocation(ITEMS.lasar_blade, 0, MRL_ITEM_LASAR_BLADE);
 
             ModelLoader.setCustomModelResourceLocation(ITEMS.laser_blade, 0, MRL_ITEM_LASER_BLADE);
-            ForgeHooksClient.registerTESRItemStack(ITEMS.laser_blade, 0, TileEntityRenderItem.class);
-            ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRenderItem.class, new RenderItemLaserBlade());
+            ITEMS.laser_blade.setTileEntityItemStackRenderer(new ItemLaserBladeRenderer());
         }
 
         @SubscribeEvent

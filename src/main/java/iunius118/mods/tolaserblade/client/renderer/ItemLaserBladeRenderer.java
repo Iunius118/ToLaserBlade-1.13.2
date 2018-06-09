@@ -12,7 +12,6 @@ import org.lwjgl.opengl.GL14;
 import iunius118.mods.tolaserblade.ToLaserBlade;
 import iunius118.mods.tolaserblade.client.model.ModelLaserBlade;
 import iunius118.mods.tolaserblade.item.ItemLaserBlade;
-import iunius118.mods.tolaserblade.tileentity.TileEntityRenderItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -23,20 +22,23 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.animation.Animation;
 import net.minecraftforge.client.model.pipeline.LightUtil;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class RenderItemLaserBlade extends TileEntitySpecialRenderer<TileEntityRenderItem>
+@SideOnly(Side.CLIENT)
+public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer
 {
 
     @Override
-    // renderTileEntityAt
-    public void render(TileEntityRenderItem te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
+    public void renderByItem(ItemStack itemStackIn, float partialTicks)
     {
         Minecraft mc = Minecraft.getMinecraft();
         IBakedModel model = mc.getRenderItem().getItemModelMesher().getModelManager().getModel(ToLaserBlade.MRL_ITEM_LASER_BLADE);
