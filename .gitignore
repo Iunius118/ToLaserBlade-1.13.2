@@ -7,11 +7,11 @@
 
 # Exclude docs
 !/docs/
-!*.md
 
 # Others
-!README.md
 !.gitignore
-!README_*
-!LICENSE.txt
+!*.md
 !build.gradle
+!LICENSE.txt
+!README_*
+!update.json
