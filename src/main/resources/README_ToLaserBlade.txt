@@ -1,6 +1,6 @@
 
 
-    ToLaserBlade 1.12.2-1.2.1
+    ToLaserBlade 1.12.2-1.2.2
 
 
 動作環境
