@@ -2,7 +2,7 @@
 
 以下の解説は、バージョン 1.12.2-1.2.2 時点での仕様に基づいて書かれています。
 
-### Laser B1ade / レーザーブレード
+### Laser Blade / レーザーブレード  (Prop / 模造品)
 
 <img src="img/recipe_laserb1ade.png" title="Laser B1ade recipe">
 
