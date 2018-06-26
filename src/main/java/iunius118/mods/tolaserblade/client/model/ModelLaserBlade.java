@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 
 import javax.vecmath.Matrix4f;
 
@@ -15,7 +14,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.UnmodifiableIterator;
 
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
@@ -26,8 +24,8 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.obj.OBJModel;
 import net.minecraftforge.client.model.obj.OBJModel.OBJBakedModel;
 import net.minecraftforge.common.model.IModelState;
@@ -82,8 +80,6 @@ public class ModelLaserBlade implements IBakedModel
             try
             {
                 OBJModel obj = ((OBJBakedModel) bakedModelIn).getModel();
-                Function<ResourceLocation, TextureAtlasSprite> spriteGetter = resource -> Minecraft.getMinecraft().getTextureMapBlocks()
-                        .getAtlasSprite(resource.toString());
 
                 // ModelState for handling visibility of each group.
                 IModelState modelState = part -> {
@@ -113,7 +109,7 @@ public class ModelLaserBlade implements IBakedModel
                 };
 
                 // Bake model of visible groups.
-                IBakedModel bakedModel = obj.bake(modelState, DefaultVertexFormats.ITEM, spriteGetter);
+                IBakedModel bakedModel = obj.bake(modelState, DefaultVertexFormats.ITEM, ModelLoader.defaultTextureGetter());
 
                 quads = bakedModel.getQuads(null, null, 0);
             }

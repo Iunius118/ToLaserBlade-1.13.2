@@ -1,7 +1,5 @@
 package iunius118.mods.tolaserblade;
 
-import java.util.function.Function;
-
 import iunius118.mods.tolaserblade.client.model.ModelLaserBlade;
 import iunius118.mods.tolaserblade.client.renderer.ItemLaserBladeRenderer;
 import iunius118.mods.tolaserblade.item.ItemLasarBlade;
@@ -9,7 +7,6 @@ import iunius118.mods.tolaserblade.item.ItemLaserBlade;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
@@ -191,12 +188,10 @@ public class ToLaserBlade
 
         public IBakedModel bakeModel(ResourceLocation location)
         {
-            Function<ResourceLocation, TextureAtlasSprite> spriteGetter = resource -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(resource.toString());
-
             try
             {
                 IModel model = ModelLoaderRegistry.getModel(location);
-                IBakedModel bakedModel = model.bake(model.getDefaultState(), DefaultVertexFormats.ITEM, spriteGetter);
+                IBakedModel bakedModel = model.bake(model.getDefaultState(), DefaultVertexFormats.ITEM, ModelLoader.defaultTextureGetter());
                 return bakedModel;
             }
             catch (Exception e)
