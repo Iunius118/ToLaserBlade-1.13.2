@@ -275,14 +275,12 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer
 
     public void renderQuads(BufferBuilder renderer, List<BakedQuad> quads, int color)
     {
-        int size = quads.size();
-
         renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.ITEM);
 
         // Render Quads.
-        for (int i = 0; i < size; ++i)
+        for (BakedQuad quad : quads)
         {
-            LightUtil.renderQuadColor(renderer, quads.get(i), color);
+            LightUtil.renderQuadColor(renderer, quad, color);
         }
 
         Tessellator.getInstance().draw();
