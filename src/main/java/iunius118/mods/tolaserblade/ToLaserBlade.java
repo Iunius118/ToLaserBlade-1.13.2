@@ -1,5 +1,7 @@
 package iunius118.mods.tolaserblade;
 
+import org.apache.logging.log4j.Logger;
+
 import iunius118.mods.tolaserblade.client.model.ModelLaserBlade;
 import iunius118.mods.tolaserblade.client.renderer.ItemLaserBladeRenderer;
 import iunius118.mods.tolaserblade.item.ItemLasarBlade;
@@ -19,6 +21,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
@@ -35,6 +38,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
@@ -59,6 +63,8 @@ public class ToLaserBlade
     public static final String MOD_DEPENDENCIES = "required-after:forge@[1.12.2-14.23.3.2655,)";
     public static final String MOD_UPDATE_JSON_URL = "https://raw.githubusercontent.com/Iunius118/ToLaserBlade/master/update.json";
 
+    public static Logger logger;
+
     public static final ToolMaterial MATERIAL_LASAR = EnumHelper.addToolMaterial("LASAR", 3, 255, 12.0F, 1.0F, 22).setRepairItem(new ItemStack(net.minecraft.init.Blocks.REDSTONE_TORCH));
     public static final ToolMaterial MATERIAL_LASER = EnumHelper.addToolMaterial("LASER", 3, 32767, 12.0F, 3.0F, 22).setRepairItem(new ItemStack(net.minecraft.init.Items.REDSTONE));
 
@@ -66,8 +72,9 @@ public class ToLaserBlade
     public static final ModelResourceLocation MRL_ITEM_LASAR_BLADE = new ModelResourceLocation(MOD_ID + ":" + NAME_ITEM_LASAR_BLADE, "inventory");
 
     public static final String NAME_ITEM_LASER_BLADE = "laser_blade";
-    public static final ModelResourceLocation MRL_ITEM_LASER_BLADE = new ModelResourceLocation(MOD_ID + ":" + NAME_ITEM_LASER_BLADE, "inventory");
+    public static final ModelResourceLocation MRL_ITEM_LASER_BLADE_2D = new ModelResourceLocation(MOD_ID + ":" + NAME_ITEM_LASER_BLADE + "_2d", "inventory");
     public static final ResourceLocation RL_OBJ_ITEM_LASER_BLADE = new ResourceLocation(MOD_ID, "item/laser_blade.obj");
+    public static final ResourceLocation RL_TEXTURE_ITEM_LASER_BLADE = new ResourceLocation(MOD_ID, "items/laser_blade");
 
     public static boolean hasShownUpdate = false;
 
@@ -77,6 +84,7 @@ public class ToLaserBlade
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
+        logger = event.getModLog();
         proxy.preInit(event);
     }
 
@@ -84,6 +92,12 @@ public class ToLaserBlade
     public void Init(FMLInitializationEvent event)
     {
         proxy.Init(event);
+    }
+
+    @EventHandler
+    public void postInit(FMLPostInitializationEvent event)
+    {
+        proxy.postInit(event);
     }
 
     @ObjectHolder(MOD_ID)
@@ -148,6 +162,11 @@ public class ToLaserBlade
             MinecraftForge.EVENT_BUS.register(ITEMS.laser_blade);
         }
 
+        public void postInit(FMLPostInitializationEvent event)
+        {
+
+        }
+
     }
 
     @SideOnly(Side.SERVER)
@@ -169,21 +188,29 @@ public class ToLaserBlade
             MinecraftForge.EVENT_BUS.register(this); // register onModelBakeEvent
         }
 
+        @Override
+        public void postInit(FMLPostInitializationEvent event)
+        {
+            // Register item color handler
+            Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemLaserBlade.ColorHandler(), ITEMS.laser_blade);
+        }
+
         // Model registry and bakery
         @SubscribeEvent
         public void registerModels(ModelRegistryEvent event)
         {
             ModelLoader.setCustomModelResourceLocation(ITEMS.lasar_blade, 0, MRL_ITEM_LASAR_BLADE);
+            ModelLoader.setCustomModelResourceLocation(ITEMS.laser_blade, 0, MRL_ITEM_LASER_BLADE_2D);
 
-            ModelLoader.setCustomModelResourceLocation(ITEMS.laser_blade, 0, MRL_ITEM_LASER_BLADE);
+            // Register LaserBlade renderer
             ITEMS.laser_blade.setTileEntityItemStackRenderer(new ItemLaserBladeRenderer());
         }
 
         @SubscribeEvent
         public void onModelBakeEvent(ModelBakeEvent event)
         {
-            ModelLaserBlade modelLaserBlade = new ModelLaserBlade(bakeModel(RL_OBJ_ITEM_LASER_BLADE), event.getModelRegistry().getObject(MRL_ITEM_LASER_BLADE));
-            event.getModelRegistry().putObject(MRL_ITEM_LASER_BLADE, modelLaserBlade);
+            ModelLaserBlade modelLaserBlade = new ModelLaserBlade(bakeModel(RL_OBJ_ITEM_LASER_BLADE), event.getModelRegistry().getObject(MRL_ITEM_LASER_BLADE_2D));
+            event.getModelRegistry().putObject(MRL_ITEM_LASER_BLADE_2D, modelLaserBlade);
         }
 
         public IBakedModel bakeModel(ResourceLocation location)
@@ -191,6 +218,7 @@ public class ToLaserBlade
             try
             {
                 IModel model = ModelLoaderRegistry.getModel(location);
+                // logger.info("Loaded obj model: " + model.hashCode());  // for debug
                 IBakedModel bakedModel = model.bake(model.getDefaultState(), DefaultVertexFormats.ITEM, ModelLoader.defaultTextureGetter());
                 return bakedModel;
             }
@@ -202,6 +230,12 @@ public class ToLaserBlade
             return null;
         }
 
+        @SubscribeEvent
+        public void onTextureStitchEvent(TextureStitchEvent.Pre event)
+        {
+            // Register texture for obj model
+            event.getMap().registerSprite(RL_TEXTURE_ITEM_LASER_BLADE);
+        }
 
         @SubscribeEvent
         public void onConnectedToServer(ClientConnectedToServerEvent event)

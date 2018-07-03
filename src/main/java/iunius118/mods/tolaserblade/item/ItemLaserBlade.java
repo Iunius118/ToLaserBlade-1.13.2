@@ -10,6 +10,7 @@ import com.google.common.collect.Multimap;
 import iunius118.mods.tolaserblade.ToLaserBlade;
 import net.minecraft.block.BlockStainedGlass;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -592,6 +593,47 @@ public class ItemLaserBlade extends ItemSword
         }
 
         return multimap;
+    }
+
+    public static class ColorHandler implements IItemColor
+    {
+
+        @Override
+        public int colorMultiplier(ItemStack stack, int tintIndex)
+        {
+
+            switch (tintIndex)
+            {
+            case 1:
+                return getColorFronNBT(stack, KEY_COLOR_HALO, KEY_IS_SUB_COLOR_HALO, colors[0]);
+
+            case 2:
+                return getColorFronNBT(stack, KEY_COLOR_CORE, KEY_IS_SUB_COLOR_CORE, 0xFFFFFFFF);
+
+            default:
+                return 0xFFFFFFFF;
+            }
+        }
+
+        public int getColorFronNBT(ItemStack stack, String keyColor, String keyIsSubColor, int defaultColor)
+        {
+            NBTTagCompound nbt = stack.getTagCompound();
+
+            if (nbt != null && nbt.hasKey(keyColor, NBT.TAG_INT))
+            {
+                int color = nbt.getInteger(keyColor);
+
+                if (nbt.getBoolean(keyIsSubColor))
+                {
+                    color = ~color | 0xFF000000;
+                }
+
+                return color;
+            }
+
+            return defaultColor;
+        }
+
     }
 
 }
