@@ -42,7 +42,7 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer
     public void renderByItem(ItemStack itemStackIn, float partialTicks)
     {
         Minecraft mc = Minecraft.getMinecraft();
-        IBakedModel model = mc.getRenderItem().getItemModelMesher().getModelManager().getModel(ToLaserBlade.MRL_ITEM_LASER_BLADE_2D);
+        IBakedModel model = mc.getRenderItem().getItemModelMesher().getModelManager().getModel(ToLaserBlade.MRL_ITEM_LASER_BLADE);
 
         if (model instanceof ModelLaserBlade)
         {

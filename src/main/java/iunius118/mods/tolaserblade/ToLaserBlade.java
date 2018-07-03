@@ -72,7 +72,7 @@ public class ToLaserBlade
     public static final ModelResourceLocation MRL_ITEM_LASAR_BLADE = new ModelResourceLocation(MOD_ID + ":" + NAME_ITEM_LASAR_BLADE, "inventory");
 
     public static final String NAME_ITEM_LASER_BLADE = "laser_blade";
-    public static final ModelResourceLocation MRL_ITEM_LASER_BLADE_2D = new ModelResourceLocation(MOD_ID + ":" + NAME_ITEM_LASER_BLADE + "_2d", "inventory");
+    public static final ModelResourceLocation MRL_ITEM_LASER_BLADE = new ModelResourceLocation(MOD_ID + ":" + NAME_ITEM_LASER_BLADE + "_2d", "inventory");
     public static final ResourceLocation RL_OBJ_ITEM_LASER_BLADE = new ResourceLocation(MOD_ID, "item/laser_blade.obj");
     public static final ResourceLocation RL_TEXTURE_ITEM_LASER_BLADE = new ResourceLocation(MOD_ID, "items/laser_blade");
 
@@ -200,7 +200,7 @@ public class ToLaserBlade
         public void registerModels(ModelRegistryEvent event)
         {
             ModelLoader.setCustomModelResourceLocation(ITEMS.lasar_blade, 0, MRL_ITEM_LASAR_BLADE);
-            ModelLoader.setCustomModelResourceLocation(ITEMS.laser_blade, 0, MRL_ITEM_LASER_BLADE_2D);
+            ModelLoader.setCustomModelResourceLocation(ITEMS.laser_blade, 0, MRL_ITEM_LASER_BLADE);
 
             // Register LaserBlade renderer
             ITEMS.laser_blade.setTileEntityItemStackRenderer(new ItemLaserBladeRenderer());
@@ -209,8 +209,8 @@ public class ToLaserBlade
         @SubscribeEvent
         public void onModelBakeEvent(ModelBakeEvent event)
         {
-            ModelLaserBlade modelLaserBlade = new ModelLaserBlade(bakeModel(RL_OBJ_ITEM_LASER_BLADE), event.getModelRegistry().getObject(MRL_ITEM_LASER_BLADE_2D));
-            event.getModelRegistry().putObject(MRL_ITEM_LASER_BLADE_2D, modelLaserBlade);
+            ModelLaserBlade modelLaserBlade = new ModelLaserBlade(bakeModel(RL_OBJ_ITEM_LASER_BLADE), event.getModelRegistry().getObject(MRL_ITEM_LASER_BLADE));
+            event.getModelRegistry().putObject(MRL_ITEM_LASER_BLADE, modelLaserBlade);
         }
 
         public IBakedModel bakeModel(ResourceLocation location)
