@@ -27,6 +27,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.client.model.animation.Animation;
 import net.minecraftforge.client.model.pipeline.LightUtil;
 import net.minecraftforge.common.util.Constants.NBT;
@@ -41,7 +42,7 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer
     public void renderByItem(ItemStack itemStackIn, float partialTicks)
     {
         Minecraft mc = Minecraft.getMinecraft();
-        IBakedModel model = mc.getRenderItem().getItemModelMesher().getModelManager().getModel(ToLaserBlade.MRL_ITEM_LASER_BLADE);
+        IBakedModel model = mc.getRenderItem().getItemModelMesher().getModelManager().getModel(ToLaserBlade.MRL_ITEM_LASER_BLADE_2D);
 
         if (model instanceof ModelLaserBlade)
         {
@@ -113,6 +114,7 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer
 
         // Enable Add-color.
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+        GL14.glBlendEquation(GL14.GL_FUNC_ADD);
 
         // Draw blade core.
         if (isSubColorCore)
@@ -166,10 +168,10 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer
     public static final Map<TransformType, float[]> transformMatrices;
     static {
         transformMatrices = new HashMap();
-        transformMatrices.put(TransformType.FIRST_PERSON_LEFT_HAND,  new float[] {-3.090862E-8F, -3.090862E-8F,  1.0F, 0.0F, -0.8838835F, 0.8838835F, 0.0F, 0.0F, -0.70710677F, -0.70710677F, -4.371139E-8F, 0.0F,  1.0303302F,   -0.030330122F, 0.5F, 1.0F});
+        transformMatrices.put(TransformType.FIRST_PERSON_LEFT_HAND,  new float[] {-3.090862E-8F,  3.090862E-8F, -1.0F, 0.0F,  0.8838835F, 0.8838835F, 0.0F, 0.0F,  0.70710677F, -0.70710677F, -4.371139E-8F, 0.0F, -0.030330122F, -0.030330122F, 0.5F, 1.0F});
         transformMatrices.put(TransformType.FIRST_PERSON_RIGHT_HAND, new float[] {-3.090862E-8F,  3.090862E-8F, -1.0F, 0.0F,  0.8838835F, 0.8838835F, 0.0F, 0.0F,  0.70710677F, -0.70710677F, -4.371139E-8F, 0.0F, -0.030330122F, -0.030330122F, 0.5F, 1.0F});
-        transformMatrices.put(TransformType.THIRD_PERSON_LEFT_HAND,  new float[] {2.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.9805361F, -0.2783462F, 0.0F, 0.0F, 0.2783462F, 1.9805361F, 0.0F, 0.5F, -0.39124125F, 0.6252558F, 1.0F});
-        transformMatrices.put(TransformType.THIRD_PERSON_RIGHT_HAND, new float[] {2.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.9805361F, -0.2783462F, 0.0F, 0.0F, 0.2783462F, 1.9805361F, 0.0F, 0.5F, -0.39124125F, 0.6252558F, 1.0F});
+        transformMatrices.put(TransformType.THIRD_PERSON_LEFT_HAND,  new float[] {-3.244294E-8F, 4.633332E-8F, -1.294F, 0.0F, 0.94637173F, 0.8825059F, 7.871984E-9F, 0.0F, 0.8825059F, -0.94637173F, -5.6012073E-8F, 0.0F, 0.035000555F, 0.030994587F, 0.5F, 1.0F});
+        transformMatrices.put(TransformType.THIRD_PERSON_RIGHT_HAND, new float[] {-3.244294E-8F, 4.633332E-8F, -1.294F, 0.0F, 0.94637173F, 0.8825059F, 7.871984E-9F, 0.0F, 0.8825059F, -0.94637173F, -5.6012073E-8F, 0.0F, 0.035000555F, 0.030994587F, 0.5F, 1.0F});
         transformMatrices.put(TransformType.FIXED, new float[] {-5.0862745E-8F, -2.7817755E-8F, -0.9F, 0.0F, 0.63639605F, 0.63639605F, -5.5635514E-8F, 0.0F, 0.63639605F, -0.63639605F, -1.6295264E-8F, 0.0F, 0.022702962F, 0.022702962F, 0.46400005F, 1.0F});
         transformMatrices.put(TransformType.NONE, new float[] {-2.7817755E-8F, 2.7817755E-8F, -0.9F, 0.0F, 0.63639605F, 0.63639605F, 0.0F, 0.0F, 0.63639605F, -0.63639605F, -3.934025E-8F, 0.0F, 0.022702962F, 0.022702962F, 0.5F, 1.0F});
     }
@@ -195,11 +197,6 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer
         switch (cameraTransformType)
         {
         case FIRST_PERSON_LEFT_HAND:
-            GlStateManager.rotate(45.0F, 0.0F, 0.0F, 1.0F);
-            GlStateManager.scale(1.0D, 1.25D, 1.0D);
-            GlStateManager.translate(0.0F, -0.6F, 0.0F);
-            GlStateManager.rotate(90.0F, 0.0F, -1.0F, 0.0F);
-            break;
         case FIRST_PERSON_RIGHT_HAND:
             GlStateManager.rotate(45.0F, 0.0F, 0.0F, -1.0F);
             GlStateManager.scale(1.0D, 1.25D, 1.0D);
@@ -208,9 +205,12 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer
             break;
         case THIRD_PERSON_LEFT_HAND:
         case THIRD_PERSON_RIGHT_HAND:
+            GlStateManager.rotate(-55.0F, 0.0F, 0.0F, 1.0F);
+            GlStateManager.rotate(90.0F, 0.0F, 1.0F, 0.0F);
             GlStateManager.rotate(-8.0F, 1.0F, 0.0F, 0.0F);
-            GlStateManager.scale(2.0D, 2.0D, 2.0D);
+            GlStateManager.scale(1.294D, 1.294D, 1.294D);
             GlStateManager.translate(0.0F, -0.45F, 0.0F);
+            GlStateManager.translate(0.0F, -0.06F, 0.02F);
             break;
         case FIXED:
             GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
@@ -281,6 +281,8 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer
         for (BakedQuad quad : quads)
         {
             LightUtil.renderQuadColor(renderer, quad, color);
+            Vec3i vec3i = quad.getFace().getDirectionVec();
+            renderer.putNormal((float)vec3i.getX(), (float)vec3i.getY(), (float)vec3i.getZ());
         }
 
         Tessellator.getInstance().draw();
