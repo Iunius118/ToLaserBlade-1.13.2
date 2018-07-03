@@ -1,6 +1,6 @@
 
 
-    ToLaserBlade 1.12.2-1.2.2
+    ToLaserBlade 1.12.2-1.3.0.0
 
 
 動作環境
@@ -150,6 +150,14 @@
         金床 (Anvil)：
         
             Laser Blade + Stained Glass : Cost level 1
+
+
+設定項目
+
+    boolean enableLaserBlade3DModel (default: true)
+
+        レーザーブレイドの描画に、true：3D（OBJ）モデルを使用するか、false：2D（JSON）モデルを使用するか。
+        クライアント側のみで使用される設定。Modオプションの設定画面でも変更可能。
 
 
 リソースパックによるモデルの差し替え
