@@ -1,6 +1,6 @@
 ## ToLaserBlade アイテム解説
 
-以下の解説は、バージョン 1.12.2-1.2.2 時点での仕様に基づいて書かれています。
+以下の解説は、バージョン 1.12.2-1.3.0.0 時点での仕様に基づいて書かれています。
 
 ### Laser Blade / レーザーブレード  (Prop / 模造品)
 
@@ -82,6 +82,14 @@
 <img src="img/recipe_laserblade_anvil_dyeing_2.png" title="Laser Blade dyeing by stained glass">
 
 - 金床で色付きガラスと合成するとその色に応じて刃の周辺部分の色を変更することができる
+
+## ToLaserBlade 設定項目
+
+- enableLaserBlade3DModel
+  - 真偽値、デフォルトは`true`
+  - レーザーブレイドの描画に、true：3D（OBJ）モデルを使用するか、false：2D（JSON）モデルを使用するか
+  - この設定はクライアント側でのみ使われる
+  - ゲーム内modオプションの設定GUIでも変更可能
 
 ---
 Copyright 2018 Iunius118
