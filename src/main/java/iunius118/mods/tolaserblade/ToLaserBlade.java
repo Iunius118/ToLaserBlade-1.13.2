@@ -32,6 +32,7 @@ import net.minecraftforge.common.ForgeVersion.Status;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -52,6 +53,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
         version = ToLaserBlade.MOD_VERSION,
         dependencies = ToLaserBlade.MOD_DEPENDENCIES,
         updateJSON = ToLaserBlade.MOD_UPDATE_JSON_URL,
+        guiFactory = "iunius118.mods.tolaserblade.client.gui.ConfigGuiFactory",
         useMetadata = true)
 @EventBusSubscriber
 public class ToLaserBlade
@@ -77,6 +79,8 @@ public class ToLaserBlade
     public static final ResourceLocation RL_TEXTURE_ITEM_LASER_BLADE = new ResourceLocation(MOD_ID, "items/laser_blade");
 
     public static boolean hasShownUpdate = false;
+
+    public static boolean isEnabledLaserBlade3DModel = true;
 
     @SidedProxy
     public static CommonProxy proxy;
@@ -153,7 +157,7 @@ public class ToLaserBlade
 
         public void preInit(FMLPreInitializationEvent event)
         {
-
+            Config.loadConfig(event);
         }
 
         public void Init(FMLInitializationEvent event)
@@ -191,8 +195,21 @@ public class ToLaserBlade
         @Override
         public void postInit(FMLPostInitializationEvent event)
         {
+            super.postInit(event);
+
             // Register item color handler
             Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemLaserBlade.ColorHandler(), ITEMS.laser_blade);
+        }
+
+        // Config
+        @SubscribeEvent
+        public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event)
+        {
+            if (event.getModID().equals(MOD_ID))
+            {
+                Config.config.save();
+                isEnabledLaserBlade3DModel = Config.propIsEnabledLaserBlade3DModel.getBoolean();
+            }
         }
 
         // Model registry and bakery

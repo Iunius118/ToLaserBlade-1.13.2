@@ -3,3 +3,5 @@ item.tolaserblade.laser_blade.name=レーザーブレイド
 item.tolaserblade.lasar_blade.name=レーザーブレード
 
 tolaserblade.message.update=%s の新しいバージョンが利用可能です
+
+tolaserblade.config.enableLaserBlade3DModel=レーザーブレイドを3Dモデルで描画する

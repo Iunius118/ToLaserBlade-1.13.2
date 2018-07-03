@@ -601,6 +601,10 @@ public class ItemLaserBlade extends ItemSword
         @Override
         public int colorMultiplier(ItemStack stack, int tintIndex)
         {
+            if (ToLaserBlade.isEnabledLaserBlade3DModel)
+            {
+                return 0xFFFFFFFF;
+            }
 
             switch (tintIndex)
             {
