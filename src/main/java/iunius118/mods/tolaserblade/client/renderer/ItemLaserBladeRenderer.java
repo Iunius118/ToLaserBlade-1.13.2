@@ -242,18 +242,18 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer
 
         // Render Enchantment effect for hilt.
         GlStateManager.depthMask(false);
-        GlStateManager.depthFunc(514);
+        GlStateManager.depthFunc(GL11.GL_EQUAL);
         GlStateManager.disableLighting();
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_COLOR, GlStateManager.DestFactor.ONE);
         Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("textures/misc/enchanted_item_glint.png"));
-        GlStateManager.matrixMode(5890);
+        GlStateManager.matrixMode(GL11.GL_TEXTURE);
         GlStateManager.pushMatrix();
         GlStateManager.scale(8.0F, 8.0F, 8.0F);
         float f = (float) (Minecraft.getSystemTime() % 3000L) / 3000.0F / 8.0F;
         GlStateManager.translate(f, 0.0F, 0.0F);
         GlStateManager.rotate(-50.0F, 0.0F, 0.0F, 1.0F);
 
-        renderQuads(renderer, quads, -8372020);
+        renderQuads(renderer, quads, 0xFF8040CC);
 
         GlStateManager.popMatrix();
         GlStateManager.pushMatrix();
@@ -262,13 +262,13 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer
         GlStateManager.translate(-f1, 0.0F, 0.0F);
         GlStateManager.rotate(10.0F, 0.0F, 0.0F, 1.0F);
 
-        renderQuads(renderer, quads, -8372020);
+        renderQuads(renderer, quads, 0xFF8040CC);
 
         GlStateManager.popMatrix();
-        GlStateManager.matrixMode(5888);
+        GlStateManager.matrixMode(GL11.GL_MODELVIEW);
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         GlStateManager.enableLighting();
-        GlStateManager.depthFunc(515);
+        GlStateManager.depthFunc(GL11.GL_LEQUAL);
         GlStateManager.depthMask(true);
         Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
     }

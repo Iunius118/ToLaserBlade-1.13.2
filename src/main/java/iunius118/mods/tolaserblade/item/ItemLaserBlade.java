@@ -60,6 +60,7 @@ public class ItemLaserBlade extends ItemSword
     public static final String KEY_IS_CRAFTING = "isCrafting";
 
     public static final float MOD_SPD_CLASS_3 = 1.2F;
+
     public static final float MOD_ATK_CLASS_1 = -1.0F;
     public static final float MOD_ATK_CLASS_3 = 3.0F;
     public static final float MOD_ATK_CLASS_4 = 7.0F;
