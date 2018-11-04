@@ -347,7 +347,7 @@ public class ItemLaserBlade extends ItemSword
             ItemStack output = event.getItemResult();
             String name = output.getDisplayName();
 
-            // GIFT code
+            // Use GIFT code
             if ("GIFT".equals(name) || "おたから".equals(name))
             {
                 setPerformanceClass3(output, colors[1]);
@@ -375,20 +375,7 @@ public class ItemLaserBlade extends ItemSword
         {
             if (upgradeClass4(output))
             {
-                if (StringUtils.isBlank(name))
-                {
-                    if (left.hasDisplayName())
-                    {
-                        output.clearCustomName();
-                    }
-                }
-                else
-                {
-                    if (!name.equals(left.getDisplayName()))
-                    {
-                        output.setStackDisplayName(name);
-                    }
-                }
+                changeDisplayNameOnAnvil(left, output, name);
 
                 event.setCost(COST_LVL_CLASS_4);
                 event.setMaterialCost(COST_ITEM_CLASS_4);
@@ -397,29 +384,57 @@ public class ItemLaserBlade extends ItemSword
 
             return;
         }
+        // Increase Attack point
+        else if (right.getItem() == Items.SKULL)
+        {
+            NBTTagCompound nbt = output.getTagCompound();
+            if (nbt != null)
+            {
+                // Only Class 4 blade
+                float atk = nbt.getFloat(KEY_ATK);
+                if (atk >= MOD_ATK_CLASS_4 && atk < 2041)
+                {
+                    changeDisplayNameOnAnvil(left, output, name);
+
+                    nbt.setFloat(KEY_ATK, atk + 1.0f);
+
+                    event.setCost((int)atk / 100 + 10);
+                    event.setMaterialCost(1);
+                    event.setOutput(output);
+
+                    return;
+                }
+            }
+        }
         // Change blade colors
         else if (changeBladeColorByItem(output.getTagCompound(), right))
         {
-            if (StringUtils.isBlank(name))
-            {
-                if (left.hasDisplayName())
-                {
-                    output.clearCustomName();
-                }
-            }
-            else
-            {
-                if (!name.equals(left.getDisplayName()))
-                {
-                    output.setStackDisplayName(name);
-                }
-            }
+            changeDisplayNameOnAnvil(left, output, name);
 
             event.setCost(1);
             event.setMaterialCost(1);
             event.setOutput(output);
 
             return;
+        }
+    }
+
+    private void changeDisplayNameOnAnvil(ItemStack left, ItemStack output, String name)
+    {
+        // Set or Clear display name
+        if (StringUtils.isBlank(name))
+        {
+            if (left.hasDisplayName())
+            {
+                output.clearCustomName();
+            }
+        }
+        else
+        {
+            if (!name.equals(left.getDisplayName()))
+            {
+                output.setStackDisplayName(name);
+            }
         }
     }
 
@@ -439,10 +454,10 @@ public class ItemLaserBlade extends ItemSword
             return true;
         }
 
-        boolean isAtkX = false;
-        boolean isSpdX = false;
-        boolean isSmiteX = false;
-        boolean isSweepingX = false;
+        boolean isAtkClass4 = false;
+        boolean isSpdClass4 = false;
+        boolean isSmiteClass4 = false;
+        boolean isSweepingClass4 = false;
 
         // Upgrade Attack to Class 4
         if (nbt.getFloat(KEY_ATK) < MOD_ATK_CLASS_4)
@@ -451,7 +466,7 @@ public class ItemLaserBlade extends ItemSword
         }
         else
         {
-            isAtkX = true;
+            isAtkClass4 = true;
         }
 
         // Upgrade Speed to Class 4
@@ -461,7 +476,7 @@ public class ItemLaserBlade extends ItemSword
         }
         else
         {
-            isSpdX = true;
+            isSpdClass4 = true;
         }
 
         // Upgrade Enchantment to Class 4
@@ -493,7 +508,7 @@ public class ItemLaserBlade extends ItemSword
         }
         else
         {
-            isSmiteX = true;
+            isSmiteClass4 = true;
         }
 
         // Upgrade Sweeping to Class 4
@@ -503,10 +518,10 @@ public class ItemLaserBlade extends ItemSword
         }
         else
         {
-            isSweepingX = true;
+            isSweepingClass4 = true;
         }
 
-        if (isAtkX && isSpdX && isSmiteX && isSweepingX)
+        if (isAtkClass4 && isSpdClass4 && isSmiteClass4 && isSweepingClass4)
         {
             return false; // Already Class 4
         }
