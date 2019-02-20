@@ -1,0 +1,9 @@
+﻿{
+	"item.tolaserblade.laser_blade": "Laser Blade",
+	"item.tolaserblade.lasar_blade": "Laser B1ade",
+
+	"tolaserblade.update.newversion": "A new %s version is available",
+
+	"tolaserblade.configgui.enableLaserBlade3DModel": "Enable Laser Blade 3D Model"
+}
+

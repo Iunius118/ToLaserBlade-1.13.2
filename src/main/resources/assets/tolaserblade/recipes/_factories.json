@@ -1,8 +1,0 @@
-{
-  "recipes": {
-    "laser_blade_class_1": "iunius118.mods.tolaserblade.recipe.RecipeLaserBladeClass1$Factory",
-    "laser_blade_class_2": "iunius118.mods.tolaserblade.recipe.RecipeLaserBladeClass2$Factory",
-    "laser_blade_class_3": "iunius118.mods.tolaserblade.recipe.RecipeLaserBladeClass3$Factory",
-    "laser_blade_dyeing": "iunius118.mods.tolaserblade.recipe.RecipeLaserBladeDyeing$Factory"
-  }
-}

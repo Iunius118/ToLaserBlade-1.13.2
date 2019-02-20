@@ -1,27 +1,31 @@
 package iunius118.mods.tolaserblade;
 
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import org.apache.commons.lang3.tuple.Pair;
+
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 
 public class Config {
+	public static class Client {
+		public final BooleanValue isEnabledLaserBlade3DModel;
 
-    public static Configuration config;
+		Client(ForgeConfigSpec.Builder builder) {
+			builder.comment("ToLaserBlade's client side settings").push("client");
 
-    public static Property propIsEnabledLaserBlade3DModel;
+			isEnabledLaserBlade3DModel = builder
+					.comment("Enable Laser Blade to use 3D Model.")
+					.translation("tolaserblade.configgui.enableLaserBlade3DModel")
+					.define("enableLaserBlade3DModel", true);
 
-    public static void loadConfig(FMLPreInitializationEvent event)
-    {
-        config = new Configuration( event.getSuggestedConfigurationFile() );
-        config.load();
+			builder.pop();
+		}
+	}
 
-        propIsEnabledLaserBlade3DModel = Config.config.get(Configuration.CATEGORY_GENERAL,
-                "enableLaserBlade3DModel", ToLaserBlade.isEnabledLaserBlade3DModel,
-                "Enable Laser Blade to use 3D Model.").setLanguageKey("tolaserblade.config.enableLaserBlade3DModel");
-
-        ToLaserBlade.isEnabledLaserBlade3DModel = propIsEnabledLaserBlade3DModel.getBoolean();
-
-        config.save();
-    }
-
- }
+	static final ForgeConfigSpec clientSpec;
+	public static final Client CLIENT;
+	static {
+		final Pair<Client, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Client::new);
+		clientSpec = specPair.getRight();
+		CLIENT = specPair.getLeft();
+	}
+}
