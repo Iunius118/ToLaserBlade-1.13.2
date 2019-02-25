@@ -46,7 +46,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLDedicatedServerSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.forgespi.Environment;
+import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.registries.ObjectHolder;
 
 @Mod(ToLaserBlade.MOD_ID)
@@ -136,7 +136,7 @@ public class ToLaserBlade {
 	public static class RegistryEvents {
 		@SubscribeEvent
 		public static void onItemsRegistry(final RegistryEvent.Register<Item> event) {
-			if (Environment.get().getDist().isClient()) {
+			if (FMLLoader.getDist().isClient()) {
 				ClientEventHandler.INSTANCE.setTEISR();
 			}
 
