@@ -7,7 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.Multimap;
 
-import iunius118.mods.tolaserblade.Config;
+import iunius118.mods.tolaserblade.ToLaserBladeConfig;
 import net.minecraft.block.BlockStainedGlass;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.color.IItemColor;
@@ -20,6 +20,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.EnumAction;
+import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.IItemTier;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -29,6 +31,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
@@ -72,11 +78,20 @@ public class ItemLaserBlade extends ItemSword {
 	public static final int COST_LVL_CLASS_4 = 20;
 	public static final int COST_ITEM_CLASS_4 = 1;
 
+	private static final IItemPropertyGetter BLOCKING_GETTER = (stack, world, entity) -> {
+		return entity != null && entity.isHandActive() && entity.getActiveItemStack() == stack ? 1.0F : 0.0F;
+	};
+
 	public ItemLaserBlade() {
 		super(new ItemLaserBlade.ItemTier(), 3, -1.2F, properties);
+
 		attackDamage = 3.0F + tier.getAttackDamage();
 		attackSpeed = -1.2F;
+
+		addPropertyOverride(new ResourceLocation("blocking"), BLOCKING_GETTER);
 	}
+
+	/* Set color and performance */
 
 	public static NBTTagCompound setPerformance(ItemStack stack, float modSpeed, float modAttack) {
 		NBTTagCompound nbt = stack.getOrCreateTag();
@@ -345,6 +360,40 @@ public class ItemLaserBlade extends ItemSword {
 		return true;
 	}
 
+	/* Shield function */
+
+	@Override
+	public EnumAction getUseAction(ItemStack stack) {
+		if (ToLaserBladeConfig.COMMON.isEnabledBlockingWithLaserBladeInServer.get()) {
+			return EnumAction.BLOCK;
+		} else {
+			return EnumAction.NONE;
+		}
+	}
+
+	@Override
+	public int getUseDuration(ItemStack stack) {
+		if (ToLaserBladeConfig.COMMON.isEnabledBlockingWithLaserBladeInServer.get()) {
+			return 72000;
+		} else {
+			return 0;
+		}
+	}
+
+	@Override
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
+		ItemStack itemstack = playerIn.getHeldItem(handIn);
+
+		if (ToLaserBladeConfig.COMMON.isEnabledBlockingWithLaserBladeInServer.get()) {
+			playerIn.setActiveHand(handIn);
+			return new ActionResult<>(EnumActionResult.PASS, itemstack);
+		} else {
+			return new ActionResult<>(EnumActionResult.PASS, itemstack);
+		}
+	}
+
+	/* Characterizing */
+
 	@Override
 	public float getAttackDamage() {
 		return attackDamage;
@@ -428,7 +477,7 @@ public class ItemLaserBlade extends ItemSword {
 	public static class ColorHandler implements IItemColor {
 		@Override
 		public int getColor(ItemStack stack, int tintIndex) {
-			if (Config.CLIENT.isEnabledLaserBlade3DModel.get()) {
+			if (ToLaserBladeConfig.CLIENT.isEnabledLaserBlade3DModel.get()) {
 				return 0xFFFFFFFF;
 			}
 

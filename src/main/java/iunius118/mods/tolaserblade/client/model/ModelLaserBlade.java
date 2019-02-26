@@ -14,7 +14,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.UnmodifiableIterator;
 
-import iunius118.mods.tolaserblade.Config;
+import iunius118.mods.tolaserblade.ToLaserBladeConfig;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
@@ -182,7 +182,7 @@ public class ModelLaserBlade implements IBakedModel {
 
 		cameraTransformType = transformTypeIn;
 
-		if (Config.CLIENT.isEnabledLaserBlade3DModel.get()) {
+		if (ToLaserBladeConfig.CLIENT.isEnabledLaserBlade3DModel.get()) {
 			return Pair.of(this, matrix);
 		} else {
 			return Pair.of(this.bakedJSONModel, matrix);

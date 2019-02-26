@@ -11,11 +11,14 @@ import iunius118.mods.tolaserblade.item.crafting.RecipeLaserBladeClass1;
 import iunius118.mods.tolaserblade.item.crafting.RecipeLaserBladeClass2;
 import iunius118.mods.tolaserblade.item.crafting.RecipeLaserBladeClass3;
 import iunius118.mods.tolaserblade.item.crafting.RecipeLaserBladeDyeing;
+import iunius118.mods.tolaserblade.network.ServerConfigHandler;
+import iunius118.mods.tolaserblade.network.ServerConfigMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.IUnbakedModel;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -40,6 +43,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -47,6 +51,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLDedicatedServerSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLLoader;
+import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.registries.ObjectHolder;
 
 @Mod(ToLaserBlade.MOD_ID)
@@ -55,9 +60,7 @@ public class ToLaserBlade {
 	public static final String MOD_NAME = "ToLaserBlade";
 	public static final String MOD_UPDATE_JSON_URL = "https://raw.githubusercontent.com/Iunius118/ToLaserBlade/master/update.json";
 
-	public static final Logger LOGGER = LogManager.getLogger();
-
-	private static ToLaserBlade INSTANCE;
+	public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
 
 	public static final String NAME_ITEM_LASAR_BLADE = "lasar_blade";
 	public static final ModelResourceLocation MRL_ITEM_LASAR_BLADE = new ModelResourceLocation(MOD_ID + ":" + NAME_ITEM_LASAR_BLADE, "inventory");
@@ -76,26 +79,23 @@ public class ToLaserBlade {
 	public static final IRecipeSerializer<ShapedRecipe> CRAFTING_LASER_BLADE_CLASS_3 = RecipeSerializers.register(new RecipeLaserBladeClass3.Serializer());
 
 	public ToLaserBlade() {
-		INSTANCE = this;
-
 		final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 		modEventBus.addListener(this::preInit);
 		modEventBus.addListener(this::initServer);
 		modEventBus.addListener(this::initClient);
 		modEventBus.addListener(this::postInit);
 
-		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.clientSpec);
+		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ToLaserBladeConfig.commonSpec);
+		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ToLaserBladeConfig.clientSpec);
 
 		MinecraftForge.EVENT_BUS.register(this);
-		MinecraftForge.EVENT_BUS.register(CommonEventHandler.INSTANCE);
+		MinecraftForge.EVENT_BUS.register(new CommonEventHandler());
 	}
 
-	public static ToLaserBlade getInstance() {
-		return INSTANCE;
-	}
 
 	public void preInit(final FMLCommonSetupEvent event) {
-
+		// Init network handler
+		ServerConfigHandler.init();
 	}
 
 	private void initServer(final FMLDedicatedServerSetupEvent event) {
@@ -103,7 +103,7 @@ public class ToLaserBlade {
 	}
 
 	private void initClient(final FMLClientSetupEvent event) {
-		MinecraftForge.EVENT_BUS.register(ClientEventHandler.INSTANCE);
+		MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
 		OBJLoader.INSTANCE.addDomain(MOD_ID);
 	}
 
@@ -137,7 +137,7 @@ public class ToLaserBlade {
 		@SubscribeEvent
 		public static void onItemsRegistry(final RegistryEvent.Register<Item> event) {
 			if (FMLLoader.getDist().isClient()) {
-				ClientEventHandler.INSTANCE.setTEISR();
+				ClientEventHandler.setTEISR();
 			}
 
 			event.getRegistry().registerAll(
@@ -148,7 +148,13 @@ public class ToLaserBlade {
 	}
 
 	public static class CommonEventHandler {
-		public static final CommonEventHandler INSTANCE = new CommonEventHandler();
+		@SubscribeEvent
+		public void onPlayerLoggedIn (PlayerLoggedInEvent event) {
+			ServerConfigHandler.channel.sendTo(
+					new ServerConfigMessage(ToLaserBladeConfig.COMMON.isEnabledBlockingWithLaserBlade.get()),
+					((EntityPlayerMP) event.getPlayer()).connection.getNetworkManager(),
+					NetworkDirection.PLAY_TO_CLIENT);
+		}
 
 		@SubscribeEvent
 		public void onCrafting(ItemCraftedEvent event) {
@@ -257,9 +263,7 @@ public class ToLaserBlade {
 	}
 
 	public static class ClientEventHandler {
-		public static final ClientEventHandler INSTANCE = new ClientEventHandler();
-
-		public void setTEISR() {
+		public static void setTEISR() {
 			ItemLaserBlade.properties = ItemLaserBlade.properties.setTEISR(() -> () -> new ItemLaserBladeRenderer());
 		}
 
