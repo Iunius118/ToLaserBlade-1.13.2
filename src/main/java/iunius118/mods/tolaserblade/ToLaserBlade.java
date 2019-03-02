@@ -89,7 +89,6 @@ public class ToLaserBlade {
 		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ToLaserBladeConfig.clientSpec);
 
 		MinecraftForge.EVENT_BUS.register(this);
-		MinecraftForge.EVENT_BUS.register(new CommonEventHandler());
 	}
 
 
@@ -117,21 +116,6 @@ public class ToLaserBlade {
 		public static final Item laser_blade = null;
 	}
 
-	@SubscribeEvent
-	public static void remapItems(RegistryEvent.MissingMappings<Item> mappings) {
-		for (RegistryEvent.MissingMappings.Mapping<Item> mapping : mappings.getAllMappings()) {
-			if (!mapping.key.getNamespace().equals(MOD_ID)) {
-				continue;
-			}
-
-			String name = mapping.key.getPath();
-			if (name.equals(MOD_ID + "." + NAME_ITEM_LASER_BLADE)) {
-				// Replace item ID "tolaserblade:tolaserblade.laser_blade" (-1.11.2) with "tolaserblade:laser_blade" (1.12-)
-				mapping.remap(ToLaserBlade.Items.laser_blade);
-			}
-		}
-	}
-
 	@Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
 	public static class RegistryEvents {
 		@SubscribeEvent
@@ -147,15 +131,30 @@ public class ToLaserBlade {
 		}
 	}
 
-	public static class CommonEventHandler {
-		@SubscribeEvent
-		public void onPlayerLoggedIn (PlayerLoggedInEvent event) {
-			ServerConfigHandler.channel.sendTo(
-					new ServerConfigMessage(ToLaserBladeConfig.COMMON.isEnabledBlockingWithLaserBlade.get()),
-					((EntityPlayerMP) event.getPlayer()).connection.getNetworkManager(),
-					NetworkDirection.PLAY_TO_CLIENT);
-		}
+	@SubscribeEvent
+	public static void remapItems(RegistryEvent.MissingMappings<Item> mappings) {
+		for (RegistryEvent.MissingMappings.Mapping<Item> mapping : mappings.getAllMappings()) {
+			if (!mapping.key.getNamespace().equals(MOD_ID)) {
+				continue;
+			}
 
+			String name = mapping.key.getPath();
+			if (name.equals(MOD_ID + "." + NAME_ITEM_LASER_BLADE)) {
+				// Replace item ID "tolaserblade:tolaserblade.laser_blade" (-1.11.2) with "tolaserblade:laser_blade" (1.12-)
+				mapping.remap(ToLaserBlade.Items.laser_blade);
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public void onPlayerLoggedIn (PlayerLoggedInEvent event) {
+		ServerConfigHandler.channel.sendTo(
+				new ServerConfigMessage(ToLaserBladeConfig.COMMON.isEnabledBlockingWithLaserBlade.get()),
+				((EntityPlayerMP) event.getPlayer()).connection.getNetworkManager(),
+				NetworkDirection.PLAY_TO_CLIENT);
+	}
+
+	public static class ItemEventHandler {
 		@SubscribeEvent
 		public void onCrafting(ItemCraftedEvent event) {
 			if (event.getPlayer().world.isRemote) {
