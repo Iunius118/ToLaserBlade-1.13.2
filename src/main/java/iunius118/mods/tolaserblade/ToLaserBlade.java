@@ -89,6 +89,7 @@ public class ToLaserBlade {
 		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ToLaserBladeConfig.clientSpec);
 
 		MinecraftForge.EVENT_BUS.register(this);
+		MinecraftForge.EVENT_BUS.register(new ItemEventHandler());
 	}
 
 
