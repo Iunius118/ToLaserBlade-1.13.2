@@ -166,6 +166,7 @@ public class ItemLaserBlade extends ItemSword {
 		NBTTagCompound nbt = setPerformance(stack, MOD_SPD_CLASS_3, MOD_ATK_CLASS_3);
 
 		if (checkColors(stack, 0xFFFFFFFF, colors[0], false, false)) {
+			// Color the blade yellow, if the blade color is default
 			return setColors(stack, 0xFFFFFFFF, colorHalo, false, false);
 		}
 
