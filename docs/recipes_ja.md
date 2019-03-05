@@ -4,7 +4,7 @@
 
 - [パージョン 1.12.2-1.3.1.0 の解説はこちら](https://github.com/Iunius118/ToLaserBlade/blob/1.12.2_1.3.1/docs/recipes_ja.md)
 
-### Laser Blade / レーザーブレード  (Prop / 模造品)
+### Laser B1ade / レーザーブレード  (Prop / 模造品)
 
 <img src="img/recipe_laserb1ade.png" title="Laser B1ade recipe">
 
