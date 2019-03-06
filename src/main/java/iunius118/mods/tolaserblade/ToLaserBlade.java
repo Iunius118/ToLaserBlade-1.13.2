@@ -11,7 +11,7 @@ import iunius118.mods.tolaserblade.item.crafting.RecipeLaserBladeClass1;
 import iunius118.mods.tolaserblade.item.crafting.RecipeLaserBladeClass2;
 import iunius118.mods.tolaserblade.item.crafting.RecipeLaserBladeClass3;
 import iunius118.mods.tolaserblade.item.crafting.RecipeLaserBladeDyeing;
-import iunius118.mods.tolaserblade.network.ServerConfigHandler;
+import iunius118.mods.tolaserblade.network.NetworkHandler;
 import iunius118.mods.tolaserblade.network.ServerConfigMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.IBakedModel;
@@ -78,6 +78,9 @@ public class ToLaserBlade {
 	public static final IRecipeSerializer<ShapedRecipe> CRAFTING_LASER_BLADE_CLASS_2 = RecipeSerializers.register(new RecipeLaserBladeClass2.Serializer());
 	public static final IRecipeSerializer<ShapedRecipe> CRAFTING_LASER_BLADE_CLASS_3 = RecipeSerializers.register(new RecipeLaserBladeClass3.Serializer());
 
+	// Init network channels
+	public static final NetworkHandler NETWORK_HANDLER = new NetworkHandler();
+
 	public ToLaserBlade() {
 		final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 		modEventBus.addListener(this::preInit);
@@ -94,8 +97,7 @@ public class ToLaserBlade {
 
 
 	public void preInit(final FMLCommonSetupEvent event) {
-		// Init network handler
-		ServerConfigHandler.init();
+
 	}
 
 	private void initServer(final FMLDedicatedServerSetupEvent event) {
@@ -149,7 +151,7 @@ public class ToLaserBlade {
 
 	@SubscribeEvent
 	public void onPlayerLoggedIn (PlayerLoggedInEvent event) {
-		ServerConfigHandler.channel.sendTo(
+		NETWORK_HANDLER.getConfigChannel().sendTo(
 				new ServerConfigMessage(ToLaserBladeConfig.COMMON.isEnabledBlockingWithLaserBlade.get()),
 				((EntityPlayerMP) event.getPlayer()).connection.getNetworkManager(),
 				NetworkDirection.PLAY_TO_CLIENT);
