@@ -1,6 +1,7 @@
-package iunius118.mods.tolaserblade.network;
+package com.github.iunius118.tolaserblade.network;
 
-import iunius118.mods.tolaserblade.ToLaserBlade;
+import com.github.iunius118.tolaserblade.ToLaserBlade;
+
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;

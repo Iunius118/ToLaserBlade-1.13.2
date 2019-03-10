@@ -1,4 +1,4 @@
-package iunius118.mods.tolaserblade.client.model;
+package com.github.iunius118.tolaserblade.client.model;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -11,10 +11,10 @@ import javax.vecmath.Matrix4f;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.github.iunius118.tolaserblade.ToLaserBladeConfig;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.UnmodifiableIterator;
 
-import iunius118.mods.tolaserblade.ToLaserBladeConfig;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;

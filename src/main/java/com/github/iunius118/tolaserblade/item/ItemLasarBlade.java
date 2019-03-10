@@ -1,4 +1,4 @@
-package iunius118.mods.tolaserblade.item;
+package com.github.iunius118.tolaserblade.item;
 
 import com.google.common.collect.Multimap;
 

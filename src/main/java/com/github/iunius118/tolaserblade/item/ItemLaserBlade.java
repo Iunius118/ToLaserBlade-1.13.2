@@ -1,13 +1,15 @@
-package iunius118.mods.tolaserblade.item;
+package com.github.iunius118.tolaserblade.item;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+
 import org.apache.commons.lang3.StringUtils;
 
+import com.github.iunius118.tolaserblade.ToLaserBladeConfig;
 import com.google.common.collect.Multimap;
 
-import iunius118.mods.tolaserblade.ToLaserBladeConfig;
 import net.minecraft.block.BlockStainedGlass;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.color.IItemColor;
@@ -285,6 +287,53 @@ public class ItemLaserBlade extends ItemSword {
 		}
 
 		return "";
+	}
+
+	/**
+	 * Give Enchantmant to ItemStack
+	 * @param stack	ItemStack to enchant
+	 * @param ench		Enchantmant to enchant
+	 * @param level	Enchantmant lavel to enchant
+	 * @param overrideLavel	If the lavel of incompatible enchantment is higher than the lavel given, higher one will be used
+	 * @return	Is a success
+	 */
+	public static boolean enchant(@Nonnull ItemStack stack, @Nonnull Enchantment ench, int level, boolean canOverrideLavel) {
+		Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments(stack);
+		int oldLevel = map.getOrDefault(Enchantments.SMITE, 0);
+		int newLevel = level;
+
+		if (oldLevel == 0) {
+			Map<Enchantment, Integer> mapNew = new HashMap<>();
+
+			for (Map.Entry<Enchantment, Integer> entry : map.entrySet()) {
+				Enchantment key = entry.getKey();
+
+				if (key.isCompatibleWith(ench)) {
+					mapNew.put(key, entry.getValue());
+
+				} else if (canOverrideLavel) {
+					int keyLevel = map.get(key);
+
+					if (keyLevel > newLevel) {
+						newLevel = keyLevel;
+					}
+				}
+			}
+
+			mapNew.put(ench, newLevel);
+			EnchantmentHelper.setEnchantments(mapNew, stack);
+			return true;
+
+		} else if (oldLevel < newLevel) {
+			map.put(ench, newLevel);
+			EnchantmentHelper.setEnchantments(map, stack);
+			return true;
+
+		} else {
+
+		}
+
+		return false;
 	}
 
 	public static boolean upgradeClass4(ItemStack stack) {

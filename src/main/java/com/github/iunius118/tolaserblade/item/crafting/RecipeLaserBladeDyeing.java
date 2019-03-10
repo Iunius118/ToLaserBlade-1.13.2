@@ -1,8 +1,8 @@
-package iunius118.mods.tolaserblade.item.crafting;
+package com.github.iunius118.tolaserblade.item.crafting;
 
+import com.github.iunius118.tolaserblade.ToLaserBlade;
 import com.google.gson.JsonObject;
 
-import iunius118.mods.tolaserblade.ToLaserBlade;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;

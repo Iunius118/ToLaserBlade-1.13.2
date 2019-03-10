@@ -1,4 +1,4 @@
-package iunius118.mods.tolaserblade.client.renderer;
+package com.github.iunius118.tolaserblade.client.renderer;
 
 import java.nio.FloatBuffer;
 import java.util.HashMap;
@@ -9,10 +9,11 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
 
-import iunius118.mods.tolaserblade.ToLaserBlade;
-import iunius118.mods.tolaserblade.ToLaserBladeConfig;
-import iunius118.mods.tolaserblade.client.model.ModelLaserBlade;
-import iunius118.mods.tolaserblade.item.ItemLaserBlade;
+import com.github.iunius118.tolaserblade.ToLaserBlade;
+import com.github.iunius118.tolaserblade.ToLaserBladeConfig;
+import com.github.iunius118.tolaserblade.client.model.ModelLaserBlade;
+import com.github.iunius118.tolaserblade.item.ItemLaserBlade;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;

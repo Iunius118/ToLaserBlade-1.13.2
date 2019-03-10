@@ -1,18 +1,19 @@
-package iunius118.mods.tolaserblade;
+package com.github.iunius118.tolaserblade;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import iunius118.mods.tolaserblade.client.model.ModelLaserBlade;
-import iunius118.mods.tolaserblade.client.renderer.ItemLaserBladeRenderer;
-import iunius118.mods.tolaserblade.item.ItemLasarBlade;
-import iunius118.mods.tolaserblade.item.ItemLaserBlade;
-import iunius118.mods.tolaserblade.item.crafting.RecipeLaserBladeClass1;
-import iunius118.mods.tolaserblade.item.crafting.RecipeLaserBladeClass2;
-import iunius118.mods.tolaserblade.item.crafting.RecipeLaserBladeClass3;
-import iunius118.mods.tolaserblade.item.crafting.RecipeLaserBladeDyeing;
-import iunius118.mods.tolaserblade.network.NetworkHandler;
-import iunius118.mods.tolaserblade.network.ServerConfigMessage;
+import com.github.iunius118.tolaserblade.client.model.ModelLaserBlade;
+import com.github.iunius118.tolaserblade.client.renderer.ItemLaserBladeRenderer;
+import com.github.iunius118.tolaserblade.item.ItemLasarBlade;
+import com.github.iunius118.tolaserblade.item.ItemLaserBlade;
+import com.github.iunius118.tolaserblade.item.crafting.RecipeLaserBladeClass1;
+import com.github.iunius118.tolaserblade.item.crafting.RecipeLaserBladeClass2;
+import com.github.iunius118.tolaserblade.item.crafting.RecipeLaserBladeClass3;
+import com.github.iunius118.tolaserblade.item.crafting.RecipeLaserBladeDyeing;
+import com.github.iunius118.tolaserblade.network.NetworkHandler;
+import com.github.iunius118.tolaserblade.network.ServerConfigMessage;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.IUnbakedModel;

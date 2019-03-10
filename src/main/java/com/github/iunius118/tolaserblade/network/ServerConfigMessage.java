@@ -1,12 +1,13 @@
-package iunius118.mods.tolaserblade.network;
+package com.github.iunius118.tolaserblade.network;
 
 import java.util.function.Supplier;
 
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 
-import iunius118.mods.tolaserblade.ToLaserBlade;
-import iunius118.mods.tolaserblade.ToLaserBladeConfig;
+import com.github.iunius118.tolaserblade.ToLaserBlade;
+import com.github.iunius118.tolaserblade.ToLaserBladeConfig;
+
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 

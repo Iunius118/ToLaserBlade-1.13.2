@@ -1,4 +1,4 @@
-package iunius118.mods.tolaserblade;
+package com.github.iunius118.tolaserblade;
 
 import java.util.function.Supplier;
 
