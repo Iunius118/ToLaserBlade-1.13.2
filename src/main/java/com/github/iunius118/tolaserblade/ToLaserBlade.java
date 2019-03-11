@@ -83,15 +83,18 @@ public class ToLaserBlade {
 	public static final NetworkHandler NETWORK_HANDLER = new NetworkHandler();
 
 	public ToLaserBlade() {
+		// Register lifecycle events
 		final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 		modEventBus.addListener(this::preInit);
 		modEventBus.addListener(this::initServer);
 		modEventBus.addListener(this::initClient);
 		modEventBus.addListener(this::postInit);
 
+		// Register config
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ToLaserBladeConfig.commonSpec);
 		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ToLaserBladeConfig.clientSpec);
 
+		// Register events
 		MinecraftForge.EVENT_BUS.register(this);
 		MinecraftForge.EVENT_BUS.register(new ItemEventHandler());
 	}
