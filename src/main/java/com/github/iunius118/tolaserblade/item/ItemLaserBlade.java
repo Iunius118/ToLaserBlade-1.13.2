@@ -124,7 +124,7 @@ public class ItemLaserBlade extends ItemSword {
 	public void onAnvilRepair(AnvilRepairEvent event) {
 		ItemStack left = event.getItemInput();
 
-		if (!left.isEnchanted() && event.getIngredientInput().isEmpty()) {
+		if (!left.isEnchanted() && event.getIngredientInput().getItem() == this) {
 			ItemStack output = event.getItemResult();
 			String name = output.getDisplayName().getString();
 
