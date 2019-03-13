@@ -7,6 +7,7 @@ import javax.annotation.Nonnull;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.github.iunius118.tolaserblade.ToLaserBlade;
 import com.github.iunius118.tolaserblade.ToLaserBladeConfig;
 import com.google.common.collect.Multimap;
 
@@ -33,6 +34,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
@@ -49,6 +51,9 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.event.AnvilUpdateEvent;
+import net.minecraftforge.event.entity.player.AnvilRepairEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
 
 public class ItemLaserBlade extends ItemSword {
 	private final IItemTier tier = new ItemLaserBlade.ItemTier();
@@ -91,6 +96,99 @@ public class ItemLaserBlade extends ItemSword {
 		attackSpeed = -1.2F;
 
 		addPropertyOverride(new ResourceLocation("blocking"), BLOCKING_GETTER);
+	}
+
+	/* Handle events */
+
+	public void onCrafting(ItemCraftedEvent event) {
+		if (event.getPlayer().world.isRemote) {
+			return;
+		}
+
+		ItemStack stackOut = event.getCrafting();
+		NBTTagCompound nbt = stackOut.getTag();
+
+		if (nbt == null) {
+			nbt = ItemLaserBlade.setColors(stackOut, 0xFFFFFFFF, ItemLaserBlade.colors[0], false, false);
+		}
+
+		if (nbt.hasKey(ItemLaserBlade.KEY_IS_CRAFTING)) {
+			// Crafting on crafting table
+			nbt.removeTag(ItemLaserBlade.KEY_IS_CRAFTING);
+			return;
+		}
+
+		ItemLaserBlade.changeBladeColorByBiome(nbt, event.getPlayer());
+	}
+
+	public void onAnvilRepair(AnvilRepairEvent event) {
+		ItemStack left = event.getItemInput();
+
+		if (!left.isEnchanted() && event.getIngredientInput().isEmpty()) {
+			ItemStack output = event.getItemResult();
+			String name = output.getDisplayName().getString();
+
+			// Use GIFT code
+			if ("GIFT".equals(name) || "おたから".equals(name)) {
+				ItemLaserBlade.setPerformanceClass3(output, ItemLaserBlade.colors[1]);
+				output.clearCustomName();
+			}
+		}
+	}
+
+	public void onAnvilUpdate(AnvilUpdateEvent event) {
+		ItemStack left = event.getLeft();
+		ItemStack right = event.getRight();
+		Item itemRight = right.getItem();
+		String name = event.getName();
+		ItemStack output = left.copy();
+
+		// Upgrade to Class 4
+		if (itemRight == net.minecraft.init.Items.NETHER_STAR) {
+			if (ItemLaserBlade.upgradeClass4(output)) {
+				ItemLaserBlade.changeDisplayNameOnAnvil(left, output, name);
+
+				event.setCost(ItemLaserBlade.COST_LVL_CLASS_4);
+				event.setMaterialCost(ItemLaserBlade.COST_ITEM_CLASS_4);
+				event.setOutput(output);
+			}
+
+			return;
+
+		} else if (ItemTags.getCollection().getOrCreate(new ResourceLocation(ToLaserBlade.MOD_ID + ":mob_head")).contains(itemRight)) {
+			// Increase Attack point
+			NBTTagCompound nbt = output.getTag();
+			if (nbt != null) {
+				// Only Class 4 blade
+				float atk = nbt.getFloat(ItemLaserBlade.KEY_ATK);
+				if (atk >= ItemLaserBlade.MOD_ATK_CLASS_4 && atk < 2041) {
+					ItemLaserBlade.changeDisplayNameOnAnvil(left, output, name);
+
+					if (ItemLaserBlade.getSkullOwnerName(right).equals("Iunius")) {
+						// For debug
+						nbt.setFloat(ItemLaserBlade.KEY_ATK, 2040.0f);
+					} else {
+						nbt.setFloat(ItemLaserBlade.KEY_ATK, atk + 1.0f);
+					}
+
+					event.setCost((int) atk / 100 + 10);
+					event.setMaterialCost(1);
+					event.setOutput(output);
+
+					return;
+				}
+			}
+		}
+		// Change blade colors
+		else if (ItemLaserBlade.changeBladeColorByItem(output.getTag(), right)) {
+			ItemLaserBlade.changeDisplayNameOnAnvil(left, output, name);
+
+			event.setCost(1);
+			event.setMaterialCost(1);
+			event.setOutput(output);
+
+			return;
+		}
 	}
 
 	/* Set color and performance */
@@ -289,14 +387,6 @@ public class ItemLaserBlade extends ItemSword {
 		return "";
 	}
 
-	/**
-	 * Give Enchantmant to ItemStack
-	 * @param stack	ItemStack to enchant
-	 * @param ench		Enchantmant to enchant
-	 * @param level	Enchantmant lavel to enchant
-	 * @param overrideLavel	If the lavel of incompatible enchantment is higher than the lavel given, higher one will be used
-	 * @return	Is a success
-	 */
 	public static boolean enchant(@Nonnull ItemStack stack, @Nonnull Enchantment ench, int level, boolean canOverrideLavel) {
 		Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments(stack);
 		int oldLevel = map.getOrDefault(Enchantments.SMITE, 0);

@@ -3,8 +3,8 @@ package com.github.iunius118.tolaserblade;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.github.iunius118.tolaserblade.client.model.ModelLaserBlade;
-import com.github.iunius118.tolaserblade.client.renderer.ItemLaserBladeRenderer;
+import com.github.iunius118.tolaserblade.client.ClientEventHandler;
+import com.github.iunius118.tolaserblade.item.ItemEventHandler;
 import com.github.iunius118.tolaserblade.item.ItemLasarBlade;
 import com.github.iunius118.tolaserblade.item.ItemLaserBlade;
 import com.github.iunius118.tolaserblade.item.crafting.RecipeLaserBladeClass1;
@@ -14,36 +14,21 @@ import com.github.iunius118.tolaserblade.item.crafting.RecipeLaserBladeDyeing;
 import com.github.iunius118.tolaserblade.network.NetworkHandler;
 import com.github.iunius118.tolaserblade.network.ServerConfigMessage;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.IUnbakedModel;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.RecipeSerializers;
 import net.minecraft.item.crafting.ShapedRecipe;
 import net.minecraft.item.crafting.ShapelessRecipe;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.event.ColorHandlerEvent;
-import net.minecraftforge.client.event.ModelBakeEvent;
-import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.entity.player.AnvilRepairEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -123,7 +108,7 @@ public class ToLaserBlade {
 		public static final Item laser_blade = null;
 	}
 
-	@Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
+	@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 	public static class RegistryEvents {
 		@SubscribeEvent
 		public static void onItemsRegistry(final RegistryEvent.Register<Item> event) {
@@ -159,150 +144,6 @@ public class ToLaserBlade {
 				new ServerConfigMessage(ToLaserBladeConfig.COMMON.isEnabledBlockingWithLaserBlade.get()),
 				((EntityPlayerMP) event.getPlayer()).connection.getNetworkManager(),
 				NetworkDirection.PLAY_TO_CLIENT);
-	}
-
-	public static class ItemEventHandler {
-		@SubscribeEvent
-		public void onCrafting(ItemCraftedEvent event) {
-			if (event.getPlayer().world.isRemote) {
-				return;
-			}
-
-			ItemStack stackOut = event.getCrafting();
-
-			if (stackOut.getItem() != Items.laser_blade) {
-				return;
-			}
-
-			// Get Tags
-			NBTTagCompound nbt = stackOut.getTag();
-
-			if (nbt == null) {
-				nbt = ItemLaserBlade.setColors(stackOut, 0xFFFFFFFF, ItemLaserBlade.colors[0], false, false);
-			}
-
-			if (nbt.hasKey(ItemLaserBlade.KEY_IS_CRAFTING)) {
-				// Crafting on crafting table
-				nbt.removeTag(ItemLaserBlade.KEY_IS_CRAFTING);
-				return;
-			}
-
-			ItemLaserBlade.changeBladeColorByBiome(nbt, event.getPlayer());
-		}
-
-		@SubscribeEvent
-		public void onAnvilRepair(AnvilRepairEvent event) {
-			ItemStack left = event.getItemInput();
-
-			if (left.getItem() == Items.laser_blade && !left.isEnchanted() && event.getIngredientInput().isEmpty()) {
-				ItemStack output = event.getItemResult();
-				String name = output.getDisplayName().getString();
-
-				// Use GIFT code
-				if ("GIFT".equals(name) || "おたから".equals(name)) {
-					ItemLaserBlade.setPerformanceClass3(output, ItemLaserBlade.colors[1]);
-					output.clearCustomName();
-				}
-			}
-		}
-
-		@SubscribeEvent
-		public void onAnvilUpdate(AnvilUpdateEvent event) {
-			ItemStack left = event.getLeft();
-			ItemStack right = event.getRight();
-			String name = event.getName();
-
-			if (left.getItem() != Items.laser_blade) {
-				return;
-			}
-
-			ItemStack output = left.copy();
-			Item itemRight = right.getItem();
-
-			// Upgrade to Class 4
-			if (itemRight == net.minecraft.init.Items.NETHER_STAR) {
-				if (ItemLaserBlade.upgradeClass4(output)) {
-					ItemLaserBlade.changeDisplayNameOnAnvil(left, output, name);
-
-					event.setCost(ItemLaserBlade.COST_LVL_CLASS_4);
-					event.setMaterialCost(ItemLaserBlade.COST_ITEM_CLASS_4);
-					event.setOutput(output);
-				}
-
-				return;
-			}
-			// Increase Attack point
-			else if (ItemTags.getCollection().getOrCreate(new ResourceLocation(ToLaserBlade.MOD_ID + ":mob_head")).contains(itemRight)) {
-				NBTTagCompound nbt = output.getTag();
-				if (nbt != null) {
-					// Only Class 4 blade
-					float atk = nbt.getFloat(ItemLaserBlade.KEY_ATK);
-					if (atk >= ItemLaserBlade.MOD_ATK_CLASS_4 && atk < 2041) {
-						ItemLaserBlade.changeDisplayNameOnAnvil(left, output, name);
-
-						if (ItemLaserBlade.getSkullOwnerName(right).equals("Iunius")) {
-							// For debug
-							nbt.setFloat(ItemLaserBlade.KEY_ATK, 2040.0f);
-						} else {
-							nbt.setFloat(ItemLaserBlade.KEY_ATK, atk + 1.0f);
-						}
-
-						event.setCost((int) atk / 100 + 10);
-						event.setMaterialCost(1);
-						event.setOutput(output);
-
-						return;
-					}
-				}
-			}
-			// Change blade colors
-			else if (ItemLaserBlade.changeBladeColorByItem(output.getTag(), right)) {
-				ItemLaserBlade.changeDisplayNameOnAnvil(left, output, name);
-
-				event.setCost(1);
-				event.setMaterialCost(1);
-				event.setOutput(output);
-
-				return;
-			}
-		}
-	}
-
-	public static class ClientEventHandler {
-		public static void setTEISR() {
-			ItemLaserBlade.properties = ItemLaserBlade.properties.setTEISR(() -> () -> new ItemLaserBladeRenderer());
-		}
-
-		// Model bakery
-		@SubscribeEvent
-		public void onModelBakeEvent(ModelBakeEvent event) {
-			ModelLaserBlade modelLaserBlade = new ModelLaserBlade(bakeModel(RL_OBJ_ITEM_LASER_BLADE), event.getModelRegistry().get(MRL_ITEM_LASER_BLADE));
-			event.getModelRegistry().put(MRL_ITEM_LASER_BLADE, modelLaserBlade);
-		}
-
-		@SubscribeEvent
-		public void onItemColorHandlerEvent(ColorHandlerEvent.Item event) {
-			event.getItemColors().register(new ItemLaserBlade.ColorHandler(), Items.laser_blade);
-		}
-
-		public IBakedModel bakeModel(ResourceLocation location) {
-			try {
-				IUnbakedModel model = ModelLoaderRegistry.getModel(location);
-				// logger.info("Loaded obj model: " + model.hashCode());  // for debug
-				IBakedModel bakedModel = model.bake(ModelLoader.defaultModelGetter(), ModelLoader.defaultTextureGetter(), model.getDefaultState(), false, DefaultVertexFormats.ITEM);
-				return bakedModel;
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			return null;
-		}
-
-		@SubscribeEvent
-		public void onTextureStitchEvent(TextureStitchEvent.Pre event) {
-			// Register texture for obj model
-			event.getMap().registerSprite(Minecraft.getInstance().getResourceManager(), RL_TEXTURE_ITEM_LASER_BLADE);
-		}
 	}
 
 	/*
