@@ -4,13 +4,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.github.iunius118.tolaserblade.ToLaserBlade;
 import com.github.iunius118.tolaserblade.ToLaserBladeConfig;
 import com.google.common.collect.Multimap;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockAbstractSkull;
 import net.minecraft.block.BlockStainedGlass;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.color.IItemColor;
@@ -34,7 +36,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
@@ -123,8 +124,9 @@ public class ItemLaserBlade extends ItemSword {
 
 	public void onAnvilRepair(AnvilRepairEvent event) {
 		ItemStack left = event.getItemInput();
+		ItemStack right = event.getIngredientInput();
 
-		if (!left.isEnchanted() && event.getIngredientInput().getItem() == this) {
+		if (!left.isEnchanted() && right.getItem() == this && !right.isEnchanted()) {
 			ItemStack output = event.getItemResult();
 			String name = output.getDisplayName().getString();
 
@@ -143,8 +145,8 @@ public class ItemLaserBlade extends ItemSword {
 		String name = event.getName();
 		ItemStack output = left.copy();
 
-		// Upgrade to Class 4
 		if (itemRight == net.minecraft.init.Items.NETHER_STAR) {
+			// Upgrade to Class 4
 			if (ItemLaserBlade.upgradeClass4(output)) {
 				ItemLaserBlade.changeDisplayNameOnAnvil(left, output, name);
 
@@ -155,7 +157,7 @@ public class ItemLaserBlade extends ItemSword {
 
 			return;
 
-		} else if (ItemTags.getCollection().getOrCreate(new ResourceLocation(ToLaserBlade.MOD_ID + ":mob_head")).contains(itemRight)) {
+		} else if (getBlockFromItem(itemRight) instanceof BlockAbstractSkull) {
 			// Increase Attack point
 			NBTTagCompound nbt = output.getTag();
 			if (nbt != null) {
@@ -178,9 +180,9 @@ public class ItemLaserBlade extends ItemSword {
 					return;
 				}
 			}
-		}
-		// Change blade colors
-		else if (ItemLaserBlade.changeBladeColorByItem(output.getTag(), right)) {
+
+		} else if (ItemLaserBlade.changeBladeColorByItem(output.getTag(), right)) {
+			// Change blade colors
 			ItemLaserBlade.changeDisplayNameOnAnvil(left, output, name);
 
 			event.setCost(1);
@@ -290,8 +292,8 @@ public class ItemLaserBlade extends ItemSword {
 			nbt.setInt(KEY_COLOR_CORE, color);
 
 			return true;
-		} else if (item instanceof ItemBlock && ((ItemBlock) item).getBlock() instanceof BlockStainedGlass) {
-			int color = ((BlockStainedGlass)((ItemBlock) item).getBlock()).getColor().getMapColor().colorValue | 0xFF000000;
+		} else if (getBlockFromItem(item) instanceof BlockStainedGlass) {
+			int color = ((BlockStainedGlass) getBlockFromItem(item)).getColor().getMapColor().colorValue | 0xFF000000;
 
 			if (nbt.contains(KEY_COLOR_HALO, NBT.TAG_INT) && nbt.getInt(KEY_COLOR_HALO) == color) {
 				return false;
@@ -304,6 +306,16 @@ public class ItemLaserBlade extends ItemSword {
 
 		return false;
 	}
+
+	@Nullable
+	public static Block getBlockFromItem(Item item) {
+		if (item instanceof ItemBlock) {
+			return ((ItemBlock) item).getBlock();
+		}
+
+		return null;
+	}
+
 
 	public static void changeBladeColorByBiome(NBTTagCompound nbt, EntityPlayer player) {
 		World world = player.world;
