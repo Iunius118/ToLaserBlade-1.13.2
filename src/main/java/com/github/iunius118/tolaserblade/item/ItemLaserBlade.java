@@ -36,6 +36,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.Tag;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
@@ -690,7 +692,13 @@ public class ItemLaserBlade extends ItemSword {
 
 		@Override
 		public Ingredient getRepairMaterial() {
-			return Ingredient.fromItems(Items.REDSTONE);
+			Tag<Item> tag = ItemTags.getCollection().get(new ResourceLocation("forge", "ingots/iron"));
+
+			if (tag != null) {
+				return Ingredient.fromTag(tag);
+			} else {
+				return Ingredient.fromItems(Items.IRON_INGOT);
+			}
 		}
 	}
 }
