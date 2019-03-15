@@ -554,12 +554,11 @@ public class ItemLaserBlade extends ItemSword {
 	}
 
 	@Override
-	public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
-		return true;
-	}
-
-	@Override
 	public boolean onBlockDestroyed(ItemStack stack, World worldIn, IBlockState state, BlockPos pos, EntityLivingBase entityLiving) {
+		if(state.getBlockHardness(worldIn, pos) != 0.0F) {
+			stack.damageItem(1, entityLiving);
+		}
+
 		return true;
 	}
 
@@ -579,13 +578,8 @@ public class ItemLaserBlade extends ItemSword {
 	}
 
 	@Override
-	public boolean isDamageable() {
-		return false;
-	}
-
-	@Override
 	public boolean isEnchantable(ItemStack stack) {
-		return true;
+		return false;
 	}
 
 	@Override
@@ -672,7 +666,7 @@ public class ItemLaserBlade extends ItemSword {
 
 		@Override
 		public int getMaxUses() {
-			return 32767;
+			return 32000;
 		}
 
 		@Override
