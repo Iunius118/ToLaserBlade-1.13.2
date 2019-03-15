@@ -3,14 +3,17 @@ package com.github.iunius118.tolaserblade.item.crafting;
 import com.github.iunius118.tolaserblade.ToLaserBlade;
 import com.google.gson.JsonObject;
 
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.item.crafting.RecipeItemHelper;
 import net.minecraft.item.crafting.RecipeSerializers;
 import net.minecraft.item.crafting.ShapelessRecipe;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 
 // Recipe Laser Blade - dyeing
 public class RecipeLaserBladeDyeing extends ShapelessRecipe {
@@ -21,6 +24,25 @@ public class RecipeLaserBladeDyeing extends ShapelessRecipe {
 	@Override
 	public IRecipeSerializer<?> getSerializer() {
 		return ToLaserBlade.CRAFTING_LASER_BLADE_DYEING;
+	}
+
+	@Override
+	public boolean matches(IInventory inv, World worldIn) {
+		// Force simple matching
+		RecipeItemHelper recipeitemhelper = new RecipeItemHelper();
+		int i = 0;
+
+		for (int j = 0; j < inv.getHeight(); ++j) {
+			for (int k = 0; k < inv.getWidth(); ++k) {
+				ItemStack itemstack = inv.getStackInSlot(k + j * inv.getWidth());
+				if (!itemstack.isEmpty()) {
+					++i;
+					recipeitemhelper.accountStack(new ItemStack(itemstack.getItem()));
+				}
+			}
+		}
+
+		return i == getIngredients().size() && recipeitemhelper.canCraft(this, (IntList) null);
 	}
 
 	@Override
