@@ -17,6 +17,7 @@ import com.github.iunius118.tolaserblade.network.ServerConfigMessage;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.RecipeSerializers;
 import net.minecraft.item.crafting.ShapedRecipe;
@@ -49,12 +50,13 @@ public class ToLaserBlade {
 	public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
 
 	public static final String NAME_ITEM_LASAR_BLADE = "lasar_blade";
-	public static final ModelResourceLocation MRL_ITEM_LASAR_BLADE = new ModelResourceLocation(MOD_ID + ":" + NAME_ITEM_LASAR_BLADE, "inventory");
 
 	public static final String NAME_ITEM_LASER_BLADE = "laser_blade";
 	public static final ModelResourceLocation MRL_ITEM_LASER_BLADE = new ModelResourceLocation(MOD_ID + ":" + NAME_ITEM_LASER_BLADE, "inventory");
 	public static final ResourceLocation RL_OBJ_ITEM_LASER_BLADE = new ResourceLocation(MOD_ID, "item/laser_blade.obj");
 	public static final ResourceLocation RL_TEXTURE_ITEM_LASER_BLADE = new ResourceLocation(MOD_ID, "item/laser_blade");
+
+	public static final String NAME_ITEM_LASER_BLADE_CORE = "laser_blade_core";
 
 	// public static boolean hasShownUpdate = false;
 
@@ -106,6 +108,7 @@ public class ToLaserBlade {
 	public static class Items {
 		public static final Item lasar_blade = null;
 		public static final Item laser_blade = null;
+		public static final Item laser_blade_core = null;
 	}
 
 	@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -118,7 +121,8 @@ public class ToLaserBlade {
 
 			event.getRegistry().registerAll(
 					new ItemLasarBlade().setRegistryName(NAME_ITEM_LASAR_BLADE),
-					new ItemLaserBlade().setRegistryName(NAME_ITEM_LASER_BLADE)
+					new ItemLaserBlade().setRegistryName(NAME_ITEM_LASER_BLADE),
+					new Item((new Item.Properties()).group(ItemGroup.MATERIALS)).setRegistryName(NAME_ITEM_LASER_BLADE_CORE)
 					);
 		}
 	}
