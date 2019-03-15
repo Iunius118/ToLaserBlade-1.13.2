@@ -133,7 +133,7 @@ public class ItemLasarBlade extends ItemSword {
 
 		@Override
 		public int getEnchantability() {
-			return 22;
+			return 15;
 		}
 
 		@Override
