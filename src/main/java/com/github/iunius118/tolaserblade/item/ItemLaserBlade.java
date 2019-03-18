@@ -657,6 +657,17 @@ public class ItemLaserBlade extends ItemSword {
 		private Map<Enchantment, Integer> mapEnch;
 		private int cost;
 
+		private static final Map<Enchantment, Integer> costLevelRates;
+		static {
+			costLevelRates = Maps.newLinkedHashMap();
+			costLevelRates.put(Enchantments.SMITE, 2);
+			costLevelRates.put(Enchantments.LOOTING, 4);
+			costLevelRates.put(Enchantments.SWEEPING, 4);
+			costLevelRates.put(Enchantments.FIRE_ASPECT, 4);
+			costLevelRates.put(Enchantments.MENDING, 8);
+			costLevelRates.put(Enchantments.VANISHING_CURSE, 8);
+		}
+
 		public LaserBlade(ItemStack itemStack) {
 			stack = itemStack.copy();
 
@@ -723,6 +734,68 @@ public class ItemLaserBlade extends ItemSword {
 
 			return stack;
 		}
+
+
+		public LaserBlade setAttack(float f) {
+			attack = Math.max(f, -1.0F);
+			return this;
+		}
+
+		public LaserBlade setSpeed(float f) {
+			if (f > 1.2F) {
+				speed = 1.2F;
+			} else {
+				speed = Math.max(f, 0.0F);
+			}
+
+			return this;
+		}
+
+		public LaserBlade setEnchantment(Enchantment enchantment, int level) {
+			mapEnch.put(enchantment, level);
+			return this;
+		}
+
+		public LaserBlade increaseAttack() {
+			attack++;
+			cost += ((int) attack + 1) * 2;
+
+			return this;
+		}
+
+		public LaserBlade increaseSpeed() {
+			if (speed < 0.0F) {
+				speed = 0.0F;
+			}
+
+			int level = (int) (speed / 0.4F);
+			level++;
+
+			if (level > 3) {
+				speed = 1.2F;
+				return this;
+			}
+
+			speed = level * 0.4F;
+			cost += level * 2;
+
+			return this;
+		}
+
+		public LaserBlade increaseEnchantmentLevel(Enchantment enchantment) {
+			int level = mapEnch.getOrDefault(enchantment, 0);
+
+			if (level >= enchantment.getMaxLevel()) {
+				return this;
+			}
+
+			level++;
+			mapEnch.put(enchantment, level);
+			cost += level * costLevelRates.get(enchantment);
+
+			return this;
+		}
+
 
 		/**
 		 * Save Laser Blade spec to a Laser Blade stack
@@ -814,12 +887,7 @@ public class ItemLaserBlade extends ItemSword {
 
 			// Mix Enchantments
 			Map<Enchantment, Integer> mapOtherEnch = other.getEnchantmentMap();
-			mixEnchantment(mapOtherEnch, Enchantments.SMITE, 2);
-			mixEnchantment(mapOtherEnch, Enchantments.LOOTING, 4);
-			mixEnchantment(mapOtherEnch, Enchantments.SWEEPING, 4);
-			mixEnchantment(mapOtherEnch, Enchantments.FIRE_ASPECT, 4);
-			mixEnchantment(mapOtherEnch, Enchantments.MENDING, 8);
-			mixEnchantment(mapOtherEnch, Enchantments.VANISHING_CURSE, 8);
+			costLevelRates.forEach((ench, rate) -> mixEnchantment(mapOtherEnch, ench, rate));
 
 			// Repair
 			int repairValue = Math.min(damage, MAX_USES - other.getDamage());
