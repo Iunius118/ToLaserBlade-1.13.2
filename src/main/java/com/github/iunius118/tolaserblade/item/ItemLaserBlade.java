@@ -724,6 +724,11 @@ public class ItemLaserBlade extends ItemSword {
 			return stack;
 		}
 
+		/**
+		 * Save Laser Blade spec to a Laser Blade stack
+		 * @param itemStack	Input Laser Blade stack
+		 * @return	Copied and saved input stack
+		 */
 		public ItemStack saveTagsToLaserBlade(ItemStack itemStack) {
 			ItemStack newStack = itemStack.copy();
 			NBTTagCompound newNBT = newStack.getOrCreateTag();
@@ -745,6 +750,11 @@ public class ItemLaserBlade extends ItemSword {
 			return newStack;
 		}
 
+		/**
+		 * Save Laser Blade spec to a item stack
+		 * @param itemStack	Input stack like Laser Blade Core
+		 * @return	Copied and saved input stack
+		 */
 		public ItemStack saveTagsToItemStack(ItemStack itemStack) {
 			ItemStack newStack = itemStack.copy();
 			NBTTagCompound newNBT = newStack.getOrCreateTag();
