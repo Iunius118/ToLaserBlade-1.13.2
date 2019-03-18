@@ -9,6 +9,8 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.StringUtils;
 
 import com.github.iunius118.tolaserblade.ToLaserBladeConfig;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 
 import net.minecraft.block.Block;
@@ -67,6 +69,9 @@ public class ItemLaserBlade extends ItemSword {
 	// Blade color table
 	public final static int[] colors = { 0xFFFF0000, 0xFFD0A000, 0xFF00E000, 0xFF0080FF, 0xFF0000FF, 0xFFA000FF, 0xFFFFFFFF, 0xFF020202, 0xFFA00080 };
 
+	public static final int DEFAULT_COLOR_CORE = 0xFFFFFFFF;
+	public static final int DEFAULT_COLOR_HALO = 0xFFFF0000;
+
 	public static final String KEY_ATK = "ATK";
 	public static final String KEY_SPD = "SPD";
 	public static final String KEY_COLOR_CORE = "colorC";
@@ -87,6 +92,8 @@ public class ItemLaserBlade extends ItemSword {
 
 	public static final int COST_LVL_CLASS_4 = 20;
 	public static final int COST_ITEM_CLASS_4 = 1;
+
+	public static final int MAX_USES = 32000;
 
 	private static final IItemPropertyGetter BLOCKING_GETTER = (stack, world, entity) -> {
 		return entity != null && entity.isHandActive() && entity.getActiveItemStack() == stack ? 1.0F : 0.0F;
@@ -556,9 +563,15 @@ public class ItemLaserBlade extends ItemSword {
 	@Override
 	public boolean onBlockDestroyed(ItemStack stack, World worldIn, IBlockState state, BlockPos pos, EntityLivingBase entityLiving) {
 		if(state.getBlockHardness(worldIn, pos) != 0.0F) {
-			stack.damageItem(1, entityLiving);
+			stack.damageItem(31999, entityLiving);
 		}
 
+		return true;
+	}
+
+	@Override
+	public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker)  {
+		stack.damageItem(1, attacker);
 		return true;
 	}
 
@@ -575,6 +588,21 @@ public class ItemLaserBlade extends ItemSword {
 	@Override
 	public int getHarvestLevel(ItemStack stack, ToolType tool, EntityPlayer player, IBlockState blockState) {
 		return tier.getHarvestLevel();
+	}
+
+	@Override
+	public boolean isDamageable() {
+		return false;
+	}
+
+	@Override
+	public boolean isRepairable() {
+		return false;
+	}
+
+	@Override
+	public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
+		return false;
 	}
 
 	@Override
@@ -619,6 +647,196 @@ public class ItemLaserBlade extends ItemSword {
 		}
 
 		return multimap;
+	}
+
+	public static class LaserBlade {
+		private ItemStack stack;
+		private int damage;
+		private float attack;
+		private float speed;
+		private Map<Enchantment, Integer> mapEnch;
+		private int cost;
+
+		public LaserBlade(ItemStack itemStack) {
+			stack = itemStack.copy();
+
+			damage = itemStack.getDamage();
+
+			NBTTagCompound nbt = stack.getOrCreateTag();
+			attack = nbt.getFloat(KEY_ATK);
+			speed = Math.min(nbt.getFloat(KEY_SPD), 1.2F);
+			mapEnch = EnchantmentHelper.getEnchantments(stack);
+
+			Integer sharpness = mapEnch.getOrDefault(Enchantments.SHARPNESS, 0);
+			attack = Math.max(attack, getAttackFromSharpness(sharpness));
+			mapEnch.remove(Enchantments.SHARPNESS);
+
+			Integer unbreaking = mapEnch.getOrDefault(Enchantments.UNBREAKING, 0);
+			speed = Math.max(speed, getSpeedFromUnbreaking(unbreaking));
+			mapEnch.remove(Enchantments.UNBREAKING);
+		}
+
+		private float getAttackFromSharpness(Integer level) {
+			if (level > 0) {
+				return attack - 1;
+			}
+
+			return -1.0F;
+		}
+
+		private float getSpeedFromUnbreaking(Integer level) {
+			if (level > 0) {
+				return ((level > 3.0F) ? 3.0F : level) * 0.4F;
+			}
+
+			return 0.0F;
+		}
+
+		public int getDamage() {
+			return damage;
+		}
+
+		public float getAttack() {
+			return attack;
+		}
+
+		public float getSpeed() {
+			return speed;
+		}
+
+		public ImmutableMap<Enchantment, Integer> getEnchantmentMap() {
+			return ImmutableMap.copyOf(mapEnch);
+		}
+
+		public int getCost() {
+			return cost;
+		}
+
+		public ItemStack getItemStack() {
+			NBTTagCompound nbt = stack.getTag();
+
+			nbt.setFloat(KEY_ATK, attack);
+			nbt.setFloat(KEY_SPD, speed);
+			EnchantmentHelper.setEnchantments(mapEnch, stack);
+
+			stack.setDamage(damage);
+
+			return stack;
+		}
+
+		public ItemStack saveTagsToLaserBlade(ItemStack itemStack) {
+			ItemStack newStack = itemStack.copy();
+			NBTTagCompound newNBT = newStack.getOrCreateTag();
+			NBTTagCompound oldNBT = stack.getTag();
+
+			newNBT.setFloat(KEY_ATK, attack);
+			newNBT.setFloat(KEY_SPD, speed);
+			copyNBTInt(newNBT, oldNBT, KEY_COLOR_CORE, DEFAULT_COLOR_CORE);
+			copyNBTInt(newNBT, oldNBT, KEY_COLOR_HALO, DEFAULT_COLOR_HALO);
+			copyNBTBoolean(newNBT, oldNBT, KEY_IS_SUB_COLOR_CORE, false);
+			copyNBTBoolean(newNBT, oldNBT, KEY_IS_SUB_COLOR_HALO, false);
+
+			Map<Enchantment, Integer> map = Maps.newLinkedHashMap();
+			mapEnch.forEach((key, value) -> map.put(key, value));
+			EnchantmentHelper.setEnchantments(map, newStack);
+
+			newStack.setDamage(damage);
+
+			return newStack;
+		}
+
+		public ItemStack saveTagsToItemStack(ItemStack itemStack) {
+			ItemStack newStack = itemStack.copy();
+			NBTTagCompound newNBT = newStack.getOrCreateTag();
+			NBTTagCompound oldNBT = stack.getTag();
+
+			copyNBTInt(newNBT, oldNBT, KEY_COLOR_CORE, DEFAULT_COLOR_CORE);
+			copyNBTInt(newNBT, oldNBT, KEY_COLOR_HALO, DEFAULT_COLOR_HALO);
+			copyNBTBoolean(newNBT, oldNBT, KEY_IS_SUB_COLOR_CORE, false);
+			copyNBTBoolean(newNBT, oldNBT, KEY_IS_SUB_COLOR_HALO, false);
+
+			Map<Enchantment, Integer> map = Maps.newLinkedHashMap();
+			setSharpnessFromAttack(map);
+			setSharpnessFromSpeed(map);
+			mapEnch.forEach((key, value) -> map.put(key, value));
+			EnchantmentHelper.setEnchantments(map, newStack);
+
+			return newStack;
+		}
+
+		private void copyNBTInt(NBTTagCompound newNBT, NBTTagCompound oldNBT, String key, int defaultValue) {
+			if (oldNBT.contains(key, NBT.TAG_INT)) {
+				newNBT.setInt(key, oldNBT.getInt(key));
+			} else {
+				newNBT.setInt(key, defaultValue);
+			}
+		}
+
+		private void copyNBTBoolean(NBTTagCompound newNBT, NBTTagCompound oldNBT, String key, boolean defaultValue) {
+			if (oldNBT.hasKey(key)) {
+				newNBT.setBoolean(key, oldNBT.getBoolean(key));
+			} else {
+				newNBT.setBoolean(key, defaultValue);
+			}
+		}
+
+		private void setSharpnessFromAttack(Map<Enchantment, Integer> map) {
+			if (attack >= 0.0F) {
+				map.put(Enchantments.SHARPNESS, (int) attack + 1);
+			}
+		}
+
+		private void setSharpnessFromSpeed(Map<Enchantment, Integer> map) {
+			if (speed > 0.0F) {
+				int level = Math.min(3, (int) (speed / 0.4F));
+				map.put(Enchantments.UNBREAKING, level);
+			}
+		}
+
+		public void mixLaserBlade(LaserBlade other) {
+			if (attack < other.getAttack()) {
+				attack = other.getAttack();
+			}
+
+			if (speed < other.getSpeed()) {
+				speed = other.getSpeed();
+			}
+
+			// Mix Enchantments
+			Map<Enchantment, Integer> mapOtherEnch = other.getEnchantmentMap();
+			mixEnchantment(mapOtherEnch, Enchantments.SMITE, 2);
+			mixEnchantment(mapOtherEnch, Enchantments.LOOTING, 4);
+			mixEnchantment(mapOtherEnch, Enchantments.SWEEPING, 4);
+			mixEnchantment(mapOtherEnch, Enchantments.FIRE_ASPECT, 4);
+			mixEnchantment(mapOtherEnch, Enchantments.MENDING, 8);
+			mixEnchantment(mapOtherEnch, Enchantments.VANISHING_CURSE, 8);
+
+			// Repair
+			int repairValue = Math.min(damage, MAX_USES - other.getDamage());
+			damage = Math.max(0, damage - repairValue - (int) (MAX_USES * 0.12F));
+			cost += (int) Math.ceil(repairValue / (double) (MAX_USES / 4));
+		}
+
+		public int repairByMaterial(int stackSize) {
+			int costItem = Math.min(stackSize, (int) Math.ceil(damage / (double) (MAX_USES / 4)));
+			damage = Math.max(0, damage - costItem * (MAX_USES / 4));
+			cost += costItem;
+			return costItem;
+		}
+
+		private void mixEnchantment(Map<Enchantment, Integer> otherEnchantments, Enchantment enchantment, int costRate) {
+			int thisLevel = mapEnch.getOrDefault(enchantment, 0);
+			int otherLevel = otherEnchantments.getOrDefault(enchantment, 0);
+
+			if (thisLevel > 0 && thisLevel == otherLevel && thisLevel < enchantment.getMaxLevel()) {
+				thisLevel++;
+				mapEnch.put(enchantment, thisLevel);
+				cost += thisLevel * costRate;
+
+			} else if (thisLevel < otherLevel) {
+				mapEnch.put(enchantment, otherLevel);
+			}
+		}
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -666,7 +884,7 @@ public class ItemLaserBlade extends ItemSword {
 
 		@Override
 		public int getMaxUses() {
-			return 32000;
+			return MAX_USES;
 		}
 
 		@Override
