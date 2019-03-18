@@ -1,5 +1,5 @@
 {
-	"parent": "item/generated",
+	"parent": "item/handheld",
 	"textures": {
 		"layer0": "tolaserblade:item/laser_blade_core"
 	}
