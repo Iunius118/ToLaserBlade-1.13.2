@@ -1,7 +1,6 @@
 package com.github.iunius118.tolaserblade.item;
 
 import com.github.iunius118.tolaserblade.ToLaserBlade;
-import com.github.iunius118.tolaserblade.item.ItemLaserBlade.LaserBlade;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.AnvilUpdateEvent;
@@ -16,7 +15,7 @@ public class ItemEventHandler {
 	public void onPlayerDestroyItem(PlayerDestroyItemEvent event) {
 		ItemStack original = event.getOriginal();
 
-		if (original.getItem() == ToLaserBlade.Items.laser_blade) {
+		if (original.getItem() == ToLaserBlade.Items.laser_blade && original.getDamage() >= LaserBlade.MAX_USES - 1) {
 			LaserBlade laserBlade = new LaserBlade(original);
 			ItemStack core = laserBlade.saveTagsToItemStack(ToLaserBlade.Items.laser_blade_core.getDefaultInstance());
 			event.getEntityPlayer().setHeldItem(event.getHand(), core);
@@ -50,8 +49,8 @@ public class ItemEventHandler {
 	public void onAnvilUpdate(AnvilUpdateEvent event) {
 		ItemStack left = event.getLeft();
 
-		if (left.getItem() == ToLaserBlade.Items.laser_blade) {
-			((ItemLaserBlade) left.getItem()).onAnvilUpdate(event);
+		if (left.getItem() == ToLaserBlade.Items.laser_blade || left.getItem() == ToLaserBlade.Items.laser_blade_core) {
+			((ItemLaserBlade) ToLaserBlade.Items.laser_blade).onAnvilUpdate(event);
 		}
 	}
 }
