@@ -1,16 +1,16 @@
 package com.github.iunius118.tolaserblade.item.crafting;
 
 import com.github.iunius118.tolaserblade.ToLaserBlade;
-import com.github.iunius118.tolaserblade.item.ItemLaserBlade;
+import com.github.iunius118.tolaserblade.item.LaserBlade;
 import com.google.gson.JsonObject;
 
+import net.minecraft.init.Enchantments;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.RecipeSerializers;
 import net.minecraft.item.crafting.ShapedRecipe;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 
@@ -27,18 +27,17 @@ public class RecipeLaserBladeClass1 extends ShapedRecipe {
 
 	@Override
 	public ItemStack getCraftingResult(IInventory inv) {
-		ItemStack result = getRecipeOutput().copy();
-		NBTTagCompound nbt = result.getTag();
+		LaserBlade result = new LaserBlade(getRecipeOutput().copy());
 
 		for (int i = 0; i < inv.getSizeInventory(); ++i) {
 			ItemStack stack = inv.getStackInSlot(i);
 
-			if (ItemLaserBlade.changeBladeColorByItem(nbt, stack)) {
-				return result;
+			if (result.changeColorByItem(stack).getCost() > 0) {
+				return result.getItemStack();
 			}
 		}
 
-		return result;
+		return result.getItemStack();
 	}
 
 	// tolaserblade:laser_blade_class_1
@@ -49,9 +48,11 @@ public class RecipeLaserBladeClass1 extends ShapedRecipe {
 		public ShapedRecipe read(ResourceLocation recipeId, JsonObject json) {
 			ShapedRecipe recipe = RecipeSerializers.CRAFTING_SHAPED.read(recipeId, json);
 
-			ItemStack output = recipe.getRecipeOutput();
-			NBTTagCompound nbt = ItemLaserBlade.setPerformanceClass1(output, ItemLaserBlade.colors[0]);
-			nbt.setBoolean(ItemLaserBlade.KEY_IS_CRAFTING, true);
+			ItemStack output = new LaserBlade(recipe.getRecipeOutput())
+					.setAttack(LaserBlade.MOD_ATK_CLASS_1)
+					.enchant(Enchantments.SMITE, LaserBlade.LVL_SMITE_CLASS_1)
+					.setCraftingTag()
+					.getItemStack();
 
 			return new RecipeLaserBladeClass1(recipe.getId(), recipe.getGroup(), recipe.getRecipeWidth(), recipe.getRecipeHeight(), recipe.getIngredients(), output);
 		}

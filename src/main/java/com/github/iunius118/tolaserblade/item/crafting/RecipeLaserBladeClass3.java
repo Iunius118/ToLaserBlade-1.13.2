@@ -1,15 +1,15 @@
 package com.github.iunius118.tolaserblade.item.crafting;
 
 import com.github.iunius118.tolaserblade.ToLaserBlade;
-import com.github.iunius118.tolaserblade.item.ItemLaserBlade;
+import com.github.iunius118.tolaserblade.item.LaserBlade;
 import com.google.gson.JsonObject;
 
+import net.minecraft.init.Enchantments;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.RecipeSerializers;
 import net.minecraft.item.crafting.ShapedRecipe;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 
@@ -32,10 +32,12 @@ public class RecipeLaserBladeClass3 extends ShapedRecipe {
 		public ShapedRecipe read(ResourceLocation recipeId, JsonObject json) {
 			ShapedRecipe recipe = RecipeSerializers.CRAFTING_SHAPED.read(recipeId, json);
 
-
-			ItemStack output = recipe.getRecipeOutput();
-			NBTTagCompound nbt = ItemLaserBlade.setPerformanceClass3(output, ItemLaserBlade.colors[0]);
-			nbt.setBoolean(ItemLaserBlade.KEY_IS_CRAFTING, true);
+			ItemStack output = new LaserBlade(recipe.getRecipeOutput())
+					.setAttack(LaserBlade.MOD_ATK_CLASS_3)
+					.setSpeed(LaserBlade.MOD_SPD_CLASS_3)
+					.enchant(Enchantments.SMITE, LaserBlade.LVL_SMITE_CLASS_3)
+					.setCraftingTag()
+					.getItemStack();
 
 			return new RecipeLaserBladeClass3(recipe.getId(), recipe.getGroup(), recipe.getRecipeWidth(), recipe.getRecipeHeight(), recipe.getIngredients(), output);
 		}
