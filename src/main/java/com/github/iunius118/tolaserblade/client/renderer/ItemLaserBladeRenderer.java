@@ -12,7 +12,7 @@ import org.lwjgl.opengl.GL14;
 import com.github.iunius118.tolaserblade.ToLaserBlade;
 import com.github.iunius118.tolaserblade.ToLaserBladeConfig;
 import com.github.iunius118.tolaserblade.client.model.ModelLaserBlade;
-import com.github.iunius118.tolaserblade.item.ItemLaserBlade;
+import com.github.iunius118.tolaserblade.item.LaserBlade;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -28,14 +28,12 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.pipeline.LightUtil;
-import net.minecraftforge.common.util.Constants.NBT;
 
 @SuppressWarnings("deprecation") // for ItemCameraTransforms
 @OnlyIn(Dist.CLIENT)
@@ -53,30 +51,11 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer {
 
 	public void doRender(ModelLaserBlade model) {
 		BufferBuilder renderer = Tessellator.getInstance().getBuffer();
-		int colorCore = 0xFFFFFFFF;
-		int colorHalo = 0xFFFF0000;
-		boolean isSubColorCore = false;
-		boolean isSubColorHalo = false;
-		NBTTagCompound nbt = model.itemStack.getTag();
-
-		// Load blade colors from ItemStack NBT.
-		if (nbt != null) {
-			if (nbt.contains(ItemLaserBlade.KEY_COLOR_CORE, NBT.TAG_INT)) {
-				colorCore = nbt.getInt(ItemLaserBlade.KEY_COLOR_CORE);
-			}
-
-			if (nbt.contains(ItemLaserBlade.KEY_COLOR_HALO, NBT.TAG_INT)) {
-				colorHalo = nbt.getInt(ItemLaserBlade.KEY_COLOR_HALO);
-			}
-
-			if (nbt.contains(ItemLaserBlade.KEY_IS_SUB_COLOR_CORE, NBT.TAG_BYTE)) {
-				isSubColorCore = nbt.getBoolean(ItemLaserBlade.KEY_IS_SUB_COLOR_CORE);
-			}
-
-			if (nbt.contains(ItemLaserBlade.KEY_IS_SUB_COLOR_HALO, NBT.TAG_BYTE)) {
-				isSubColorHalo = nbt.getBoolean(ItemLaserBlade.KEY_IS_SUB_COLOR_HALO);
-			}
-		}
+		LaserBlade laserBlade = new LaserBlade(model.itemStack);
+		int colorCore = laserBlade.getCoreColor();
+		int colorHalo = laserBlade.getHaloColor();
+		boolean isSubColorCore = laserBlade.isCoreSubColor();
+		boolean isSubColorHalo = laserBlade.isHaloSubColor();
 
 		TransformType cameraTransformType = model.cameraTransformType;
 
