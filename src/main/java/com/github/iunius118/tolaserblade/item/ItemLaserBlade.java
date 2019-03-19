@@ -357,7 +357,7 @@ public class ItemLaserBlade extends ItemSword {
 	@Override
 	public boolean onBlockDestroyed(ItemStack stack, World worldIn, IBlockState state, BlockPos pos, EntityLivingBase entityLiving) {
 		if(state.getBlockHardness(worldIn, pos) != 0.0F) {
-			stack.damageItem(31999, entityLiving);
+			stack.damageItem(1, entityLiving);
 		}
 
 		return true;
