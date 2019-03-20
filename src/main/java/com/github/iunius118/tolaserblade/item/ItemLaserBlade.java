@@ -268,7 +268,7 @@ public class ItemLaserBlade extends ItemSword {
 					laserBlade.increaseAttack();
 				}
 
-				event.setCost((int) laserBlade.getAttack() / 100 + 30 + costNaming);
+				event.setCost((int) laserBlade.getAttack() / 100 + 40 + costNaming);
 				event.setMaterialCost(1);
 				event.setOutput(laserBlade.getItemStack());
 
