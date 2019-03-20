@@ -125,7 +125,12 @@ public class ItemLaserBlade extends ItemSword {
 			if (costLevel > 0) {
 				event.setCost(costLevel);
 				event.setMaterialCost(1);
-				event.setOutput(laserBlade.getItemStack());
+
+				if (left.getItem() == this) {
+					event.setOutput(laserBlade.getItemStack());
+				} else {
+					event.setOutput(laserBlade.saveTagsToItemStack(laserBlade.getItemStack()));
+				}
 			} else {
 				event.setCanceled(true);
 			}
@@ -268,11 +273,20 @@ public class ItemLaserBlade extends ItemSword {
 					laserBlade.increaseAttack();
 				}
 
-				event.setCost((int) laserBlade.getAttack() / 100 + 40 + costNaming);
+				event.setCost((int) laserBlade.getAttack() / 100 + 40 + costNaming);	// Not delete, but too expensive for survival mode players
 				event.setMaterialCost(1);
 				event.setOutput(laserBlade.getItemStack());
 
 				return;
+			}
+
+		} else	if (itemRight == Items.IRON_AXE) {
+			// EXTRACT CORE
+			if (left.getItem() == this) {
+				ItemStack core = laserBlade.saveTagsToItemStack(ToLaserBlade.Items.laser_blade_core.getDefaultInstance());
+				event.setCost(4);
+				event.setMaterialCost(1);
+				event.setOutput(core);
 			}
 
 		} else {
