@@ -1,6 +1,6 @@
 ## ToLaserBlade アイテム解説
 
-以下の解説は、バージョン 1.13.2-1.4.1.0 時点での仕様に基づいて書かれています。
+以下の解説は、バージョン 1.13.2-1.5.0.1 時点での仕様に基づいて書かれています。
 
 - [パージョン 1.12.2-1.3.1.0 の解説はこちら](https://github.com/Iunius118/ToLaserBlade/blob/1.12.2_1.3.1/docs/recipes_ja.md)
 
@@ -22,8 +22,7 @@
 ### Laser Blade / レーザーブレイド
 
 - タイプ：剣
-- 耐久度：∞
-- クラフト方法によって性能がクラス1～4まで変化する
+- 耐久度：32000
 - （設定ファイルの変更で有効にすると）右マウスボタンで盾のようにガード（ブロッキング）することができる
 
 #### クラス 1
@@ -36,7 +35,8 @@
 - 攻撃力：6
 - 地上（オーバーワールド）の素材のみでクラフト可能
 - 中央はガラスまたは色付きガラス。色付きガラスの場合はその色に応じて刃の周辺部分の色が変わる
-- エンチャントテーブルで剣タイプのエンチャントが可能
+- エンチャント：アンデッド特効 (Smite) I
+- クラフトした時点でエンチャントされている
 
 #### クラス 2
 
@@ -46,42 +46,8 @@
 
 - 攻撃速度：2.8
 - 攻撃力：7
-- エンチャントテーブルで剣タイプのエンチャントが可能
-
-#### クラス 3
-
-<img src="img/recipe_laserblade_class_3.png" title="Recipe Laser Blade Class 3">
-
->グロウストーンとダイヤモンドを増量して出力をさらに強化したレーザーブレイド。ついでにレッドストーンを大量に添加することによって攻撃時の出力回復速度も向上させた。出力強化の過程でたぶん光属性を持ち、特にアンデッドに対して強くなっている。
-
-- 攻撃速度：4
-- 攻撃力：10
-- エンチャント：アンデッド特効 (Smite) V
+- エンチャント：アンデッド特効 (Smite) II
 - クラフトした時点でエンチャントされている
-
-クラス1～2のレーザーブレイド（ただし未エンチャントに限る）は、以下のように金床を使ってクラス3相当に強化することが可能。
-
-<img src="img/recipe_laserblade_class_3_gift_x.png" title="Name GIFT or おたから">
-
-- 未エンチャントのレーザーブレイドの名前を金床で特定のワードに変更する
-- ヒント：かな4文字［A5=お, T2U, A1L=か, W1R］
-
-#### クラス 4
-
-<img src="img/recipe_laserblade_class_4.png" title="Recipe Laser Blade Class 4">
-
->魔術的なレアアイテムを組み込んで出力をさらにさらに強化したレーザーブレイド。攻撃力がさらにさらに増加し、アンデッドに対してもさらにさらに強くなった。もはやこれは工具というレベルではない。
-
-- 攻撃速度：4
-- 攻撃力：14
-- エンチャント：アンデッド特効 (Smite) X、範囲ダメージ増加 (Sweeping Edge) III
-- 強化前のレーザーブレイドにアンデッド特効と相反するエンチャントが付いていた場合は、アンデッド特効で上書きされる
-
-#### クラス 4+
-
-<img src="img/recipe_laserblade_class_4_plus.png" title="Recipe Laser Blade Class 4 plus">
-
-- 金床でクラス4のレーザーブレイドとバニラのmobの頭やプレイヤーの頭を合成すると、攻撃力をさらに上げることができる。
 
 #### 刃染色レシピ
 
@@ -93,6 +59,8 @@
 - クラフト後アイテムの情報が更新されるまでは何色に染色されたのかはわからない
 - 性能はクラフト前のものが引き継がれる
 
+#### 金床での刃染色
+
 <img src="img/recipe_laserblade_anvil_dyeing_1.png" title="Laser Blade dyeing by dye">
 
 - 金床で染料と合成するとその色に応じて刃の中心部分の色を変更することができる
@@ -101,6 +69,30 @@
 <img src="img/recipe_laserblade_anvil_dyeing_2.png" title="Laser Blade dyeing by stained glass">
 
 - 金床で色付きガラスと合成するとその色に応じて刃の周辺部分の色を変更することができる
+
+#### 金床での強化
+
+<img src="img/upgrade_laserblade_example.png" title="Upgrade Laser Blade Example">
+
+- 金床で特定のアイテムと一定のレベルを消費することによりレーザーブレイドを強化することができる
+
+<img src="img/upgrade_laserblade_and_cost_1.5.0.0.png" title="Upgrade Laser Blade and Cost">
+
+#### 金床での修理
+
+<img src="img/repair_laserblade.png" title="Repair Laser Blade">
+
+- 残りの耐久値に応じた数の鉄インゴットとレベルを消費する
+
+### Laser Blade Core / レーザーブレイドのコア
+
+<img src="img/laserblade_core.png" title="Laser Blade Core">
+
+- レーザーブレイドが消耗により壊れた際に手に入る
+
+<img src="img/repair_laserblade_core.png" title="Repair Laser Blade Core">
+
+- 金床で鉄インゴットとレベルを消費してレーザーブレイドに戻すことができる
 
 ## ToLaserBlade 設定項目
 
