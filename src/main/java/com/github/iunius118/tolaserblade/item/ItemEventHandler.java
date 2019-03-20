@@ -24,7 +24,11 @@ public class ItemEventHandler {
 
 	@SubscribeEvent
 	public void onCriticalHit(CriticalHitEvent event) {
+		ItemStack stack = event.getEntityPlayer().getHeldItemMainhand();
 
+		if (stack.getItem() == ToLaserBlade.Items.laser_blade) {
+			((ItemLaserBlade) stack.getItem()).onCriticalHit(event);
+		}
 	}
 
 	@SubscribeEvent

@@ -72,6 +72,8 @@ public class LaserBlade {
 	public static final float MOD_ATK_CLASS_4 = 7.0F;
 	public static final float MOD_ATK_MAX = 2041.0F;
 
+	public static final float MOD_CRITICAL_VS_WITHER = 2.0F;
+
 	public static final int LVL_SMITE_CLASS_1 = 1;
 	public static final int LVL_SMITE_CLASS_2 = 2;
 	public static final int LVL_SMITE_CLASS_3 = 5;

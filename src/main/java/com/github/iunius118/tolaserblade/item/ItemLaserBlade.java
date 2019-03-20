@@ -10,9 +10,11 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockAbstractSkull;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.color.IItemColor;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Enchantments;
@@ -42,6 +44,7 @@ import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.entity.player.AnvilRepairEvent;
+import net.minecraftforge.event.entity.player.CriticalHitEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
 
 public class ItemLaserBlade extends ItemSword {
@@ -64,6 +67,14 @@ public class ItemLaserBlade extends ItemSword {
 	}
 
 	/* Handle events */
+
+	public void onCriticalHit(CriticalHitEvent event) {
+		Entity target = event.getTarget();
+
+		if (target instanceof EntityWither && event.isVanillaCritical()) {
+			event.setDamageModifier(LaserBlade.MOD_CRITICAL_VS_WITHER);
+		}
+	}
 
 	public void onCrafting(ItemCraftedEvent event) {
 		if (event.getPlayer().world.isRemote) {
@@ -134,7 +145,9 @@ public class ItemLaserBlade extends ItemSword {
 
 		} else	if (isContainedInItemTag(itemRight, "forge:storage_blocks/diamond")) {
 			// ATTACK++
-			if (laserBlade.getAttack() < LaserBlade.MOD_ATK_CLASS_3) {
+			float attack = laserBlade.getAttack();
+
+			if (attack > LaserBlade.MOD_ATK_CLASS_1 && attack < LaserBlade.MOD_ATK_CLASS_3) {
 				laserBlade.increaseAttack();
 				laserBlade.changeDisplayName(name);
 				event.setCost(laserBlade.getCost());
@@ -158,7 +171,9 @@ public class ItemLaserBlade extends ItemSword {
 
 		} else	if (getBlockFromItem(itemRight) == Blocks.GLOWSTONE) {
 			// SMITE++
-			if (!laserBlade.isEnchantmentMaxLavel(Enchantments.SMITE)) {
+			int smite = laserBlade.getEnchantmentLavel(Enchantments.SMITE);
+
+			if (smite > LaserBlade.LVL_SMITE_CLASS_1 && smite < Enchantments.SMITE.getMaxLevel()) {
 				laserBlade.increaseEnchantmentLevel(Enchantments.SMITE);
 				laserBlade.changeDisplayName(name);
 				event.setCost(laserBlade.getCost());
@@ -253,7 +268,7 @@ public class ItemLaserBlade extends ItemSword {
 					laserBlade.increaseAttack();
 				}
 
-				event.setCost((int) laserBlade.getAttack() / 100 + 10 + costNaming);
+				event.setCost((int) laserBlade.getAttack() / 100 + 30 + costNaming);
 				event.setMaterialCost(1);
 				event.setOutput(laserBlade.getItemStack());
 
