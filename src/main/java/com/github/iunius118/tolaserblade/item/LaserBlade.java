@@ -85,7 +85,7 @@ public class LaserBlade {
 	public static final int MAX_USES = 32000;
 
 	public LaserBlade() {
-		this(ToLaserBlade.Items.laser_blade.getDefaultInstance());
+		this(new ItemStack(ToLaserBlade.Items.laser_blade));
 	}
 
 	public LaserBlade(@Nonnull ItemStack itemStack) {

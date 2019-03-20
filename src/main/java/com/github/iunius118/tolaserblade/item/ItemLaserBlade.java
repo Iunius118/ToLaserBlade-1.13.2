@@ -228,7 +228,7 @@ public class ItemLaserBlade extends ItemSword {
 			// REPAIR
 			if (left.getItem() == ToLaserBlade.Items.laser_blade_core && right.getCount() >= 4) {
 				// From Core
-				ItemStack output = laserBlade.saveTagsToLaserBlade(ToLaserBlade.Items.laser_blade.getDefaultInstance());
+				ItemStack output = laserBlade.saveTagsToLaserBlade(new ItemStack(ToLaserBlade.Items.laser_blade));
 				event.setCost(laserBlade.getCost() + 4);
 				event.setMaterialCost(4);
 				event.setOutput(output);
@@ -283,7 +283,7 @@ public class ItemLaserBlade extends ItemSword {
 		} else	if (itemRight == Items.IRON_AXE) {
 			// EXTRACT CORE
 			if (left.getItem() == this) {
-				ItemStack core = laserBlade.saveTagsToItemStack(ToLaserBlade.Items.laser_blade_core.getDefaultInstance());
+				ItemStack core = laserBlade.saveTagsToItemStack(new ItemStack(ToLaserBlade.Items.laser_blade_core));
 				event.setCost(4);
 				event.setMaterialCost(1);
 				event.setOutput(core);

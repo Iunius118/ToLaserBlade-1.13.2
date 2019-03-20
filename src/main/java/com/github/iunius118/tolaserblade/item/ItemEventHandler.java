@@ -17,7 +17,7 @@ public class ItemEventHandler {
 
 		if (original.getItem() == ToLaserBlade.Items.laser_blade && original.getDamage() >= LaserBlade.MAX_USES - 1) {
 			LaserBlade laserBlade = new LaserBlade(original);
-			ItemStack core = laserBlade.saveTagsToItemStack(ToLaserBlade.Items.laser_blade_core.getDefaultInstance());
+			ItemStack core = laserBlade.saveTagsToItemStack(new ItemStack(ToLaserBlade.Items.laser_blade_core));
 			event.getEntityPlayer().setHeldItem(event.getHand(), core);
 		}
 	}
