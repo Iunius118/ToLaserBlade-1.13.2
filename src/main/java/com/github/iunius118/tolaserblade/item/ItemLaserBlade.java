@@ -365,8 +365,9 @@ public class ItemLaserBlade extends ItemSword {
 		ItemStack itemstack = playerIn.getHeldItem(handIn);
 
 		if (ToLaserBladeConfig.COMMON.isEnabledBlockingWithLaserBladeInServer.get()) {
-			EnumAction mainhandItemAction = playerIn.getHeldItemMainhand().getUseAction();
-			if (mainhandItemAction != EnumAction.BOW && mainhandItemAction != EnumAction.SPEAR) {
+			EnumAction offhandItemAction = playerIn.getHeldItemOffhand().getUseAction();
+
+			if (offhandItemAction != EnumAction.BOW && offhandItemAction != EnumAction.SPEAR) {
 				playerIn.setActiveHand(handIn);
 			}
 
