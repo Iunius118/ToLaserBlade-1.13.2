@@ -239,7 +239,7 @@ public class ItemLaserBlade extends ItemSword {
 				if (costItem > 0) {
 					laserBlade.changeDisplayName(name);
 					event.setCost(laserBlade.getCost());
-					event.setMaterialCost(1);
+					event.setMaterialCost(costItem);
 					event.setOutput(laserBlade.getItemStack());
 				}
 			}
