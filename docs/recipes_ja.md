@@ -76,7 +76,13 @@
 
 - 金床で特定のアイテムと一定のレベルを消費することによりレーザーブレイドを強化することができる
 
-<img src="img/upgrade_laserblade_and_cost_1.5.0.0.png" title="Upgrade Laser Blade and Cost">
+<img src="img/upgrade_laserblade_and_cost_1.5.0.0_ja.png" title="Upgrade Laser Blade and Cost">
+
+#### 金床での合成
+
+<img src="img/combine_laserblades_example.png" title="Combine Laser Blades">
+
+- それぞれのレーザーブレイドが持っているエンチャントが合成される
 
 #### 金床での修理
 
@@ -88,7 +94,7 @@
 
 <img src="img/laserblade_core.png" title="Laser Blade Core">
 
-- レーザーブレイドが消耗により壊れた際に手に入る
+- レーザーブレイドが消耗により破壊された際に手に入る
 
 <img src="img/repair_laserblade_core.png" title="Repair Laser Blade Core">
 
