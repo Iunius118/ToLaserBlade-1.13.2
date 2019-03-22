@@ -1,6 +1,12 @@
+# ToLaserBlade v1.13.2-1.5.0.2 (Beta)
+
+## ToLaserBlade ダウンロード
+
+- [ダウンロードサイト（Curse Forge）](https://minecraft.curseforge.com/projects/tolaserblade)
+
 ## ToLaserBlade アイテム解説
 
-以下の解説は、バージョン 1.13.2-1.5.0.1 時点での仕様に基づいて書かれています。
+以下の解説は、バージョン 1.13.2-1.5.0.2 時点での仕様に基づいて書かれています。
 
 - [パージョン 1.12.2-1.3.1.0 の解説はこちら](https://github.com/Iunius118/ToLaserBlade/blob/1.12.2_1.3.1/docs/recipes_ja.md)
 
