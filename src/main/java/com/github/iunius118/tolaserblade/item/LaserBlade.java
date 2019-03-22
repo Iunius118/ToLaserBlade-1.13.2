@@ -90,7 +90,7 @@ public class LaserBlade {
 
 	public LaserBlade(@Nonnull ItemStack itemStack) {
 		stack = itemStack;
-		boolean isLaserBladeStack = (stack.getItem() == ToLaserBlade.Items.laser_blade);
+		boolean isLaserBladeStack = isItemLaserBlade();
 
 		damage = itemStack.getDamage();
 
@@ -251,6 +251,10 @@ public class LaserBlade {
 		stack.setDamage(damage);
 
 		return stack;
+	}
+
+	public boolean isItemLaserBlade() {
+		return stack.getItem() == ToLaserBlade.Items.laser_blade;
 	}
 
 	public LaserBlade setDefaultColors() {
@@ -588,9 +592,11 @@ public class LaserBlade {
 		costLevelRates.forEach((ench, rate) -> mixEnchantment(mapOtherEnch, ench, rate));
 
 		// Repair
-		int repairValue = Math.min(damage, MAX_USES - other.getDamage());
-		damage = Math.max(0, damage - repairValue - (int) (MAX_USES * 0.12F));
-		cost += (int) Math.ceil(repairValue / (double) (MAX_USES / 4));
+		if (other.isItemLaserBlade()) {
+			int repairValue = Math.min(damage, MAX_USES - other.getDamage());
+			damage = Math.max(0, damage - repairValue - (int) (MAX_USES * 0.12F));
+			cost += (int) Math.ceil(repairValue / (double) (MAX_USES / 4));
+		}
 	}
 
 	public int repairByMaterial(int stackSize) {
