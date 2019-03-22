@@ -80,9 +80,9 @@
 
 #### 金床での合成
 
-<img src="img/combine_laserblades_example.png" title="Combine Laser Blades">
+<img src="img/combine_laserblades_example.png" title="Combine Laser Blades"> <img src="img/combine_laserblade_and_core.png" title="Combine Laser Blade and Core"> <img src="img/combine_laserblade_and_enchantedbook.png" title="Combine Laser Blade and Enchanted Book">
 
-- それぞれのレーザーブレイドが持っているエンチャントが合成される
+- レーザーブレイドにレーザーブレイド・レーザーブレイドのコア・エンチャントの本が持っているエンチャントを合成することができる
 
 #### 金床での修理
 
