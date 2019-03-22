@@ -343,6 +343,11 @@ public class ItemLaserBlade extends ItemSword {
 	/* Shield function */
 
 	@Override
+	public boolean isShield(ItemStack stack, @Nullable EntityLivingBase entity) {
+		return ToLaserBladeConfig.COMMON.isEnabledBlockingWithLaserBladeInServer.get();
+	}
+
+	@Override
 	public EnumAction getUseAction(ItemStack stack) {
 		if (ToLaserBladeConfig.COMMON.isEnabledBlockingWithLaserBladeInServer.get()) {
 			return EnumAction.BLOCK;
