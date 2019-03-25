@@ -102,9 +102,13 @@
 
 - レーザーブレイドが消耗により破壊された際に手に入る
 
+<img src="img/extract_core.png" title="Extract Core">
+
+- また金床で鉄の斧を消費して強制的にコアを取り出すこともできる
+
 <img src="img/repair_laserblade_core.png" title="Repair Laser Blade Core">
 
-- 金床で鉄インゴットとレベルを消費してレーザーブレイドに戻すことができる
+- コアは金床で鉄インゴットとレベルを消費してレーザーブレイドに戻すことができる
 
 ## ToLaserBlade 設定項目
 
