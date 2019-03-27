@@ -29,6 +29,7 @@
 
 - タイプ：剣
 - 耐久度：32000
+- エンチャントテーブルでのエンチャントは不可
 - （設定ファイルの変更で有効にすると）右マウスボタンで盾のようにガード（ブロッキング）することができる
 
 #### クラス 1
@@ -41,7 +42,7 @@
 - 攻撃力：6
 - 地上（オーバーワールド）の素材のみでクラフト可能
 - 中央はガラスまたは色付きガラス。色付きガラスの場合はその色に応じて刃の周辺部分の色が変わる
-- エンチャント：アンデッド特効 (Smite) I
+- エンチャント：アンデッド特効（Smite） I
 - クラフトした時点でエンチャントされている
 
 #### クラス 2
@@ -52,7 +53,7 @@
 
 - 攻撃速度：2.8
 - 攻撃力：7
-- エンチャント：アンデッド特効 (Smite) II
+- エンチャント：アンデッド特効（Smite） II
 - クラフトした時点でエンチャントされている
 
 #### 刃染色レシピ
@@ -76,6 +77,13 @@
 
 - 金床で色付きガラスと合成するとその色に応じて刃の周辺部分の色を変更することができる
 
+#### 金床での合成
+
+<img src="img/combine_laserblades_example.png" title="Combine Laser Blades"> <img src="img/combine_laserblade_and_core.png" title="Combine Laser Blade and Core"> <img src="img/combine_laserblade_and_enchantedbook.png" title="Combine Laser Blade and Enchanted Book">
+
+- A（レーザーブレイド、レーザーブレイドのコア）＋ B（レーザーブレイド、レーザーブレイドのコア、エンチャントの本）→ AにBの持っているエンチャントを合成
+- ダメージ増加（Sharpness）は攻撃力に、耐久力（Unbreaking）は攻撃速度に変換される
+
 #### 金床での強化
 
 <img src="img/upgrade_laserblade_example.png" title="Upgrade Laser Blade Example">
@@ -83,12 +91,6 @@
 - 金床で特定のアイテムと一定のレベルを消費することによりレーザーブレイドを強化することができる
 
 <img src="img/upgrade_laserblade_and_cost_1.5.0.0_ja.png" title="Upgrade Laser Blade and Cost">
-
-#### 金床での合成
-
-<img src="img/combine_laserblades_example.png" title="Combine Laser Blades"> <img src="img/combine_laserblade_and_core.png" title="Combine Laser Blade and Core"> <img src="img/combine_laserblade_and_enchantedbook.png" title="Combine Laser Blade and Enchanted Book">
-
-- レーザーブレイドにレーザーブレイド・レーザーブレイドのコア・エンチャントの本が持っているエンチャントを合成することができる
 
 #### 金床での修理
 
@@ -99,6 +101,8 @@
 ### Laser Blade Core / レーザーブレイドのコア
 
 <img src="img/laserblade_core.png" title="Laser Blade Core">
+
+>レーザーブレイドのコアとなるレーザー発振器。レッドストーンのエネルギーは非常に強力であると同時にとても安定しているため、（我々の期待に反して）手荒に扱っても大爆発を起こしたりするようなことはない。レーザーデバイスの規制が強化される以前は電気街や観光地の土産物屋で簡単に入手することができたという。
 
 - レーザーブレイドが消耗により破壊された際に手に入る
 
