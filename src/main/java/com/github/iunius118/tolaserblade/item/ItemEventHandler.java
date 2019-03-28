@@ -46,6 +46,9 @@ public class ItemEventHandler {
 
 		if (left.getItem() == ToLaserBlade.Items.LASER_BLADE) {
 			((ItemLaserBlade) left.getItem()).onAnvilRepair(event);
+			event.setBreakChance(0.075F);
+		} else if (left.getItem() == ToLaserBlade.Items.LASER_BLADE_CORE) {
+			event.setBreakChance(0.075F);
 		}
 	}
 
