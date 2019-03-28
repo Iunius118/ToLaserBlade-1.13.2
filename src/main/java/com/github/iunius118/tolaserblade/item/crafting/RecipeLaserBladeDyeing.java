@@ -51,7 +51,7 @@ public class RecipeLaserBladeDyeing extends ShapelessRecipe {
 			for (int j = 0; j < inv.getWidth(); ++j) {
 				ItemStack itemstack = inv.getStackInSlot(j + i * inv.getWidth());
 
-				if (itemstack.getItem() == ToLaserBlade.Items.laser_blade) {
+				if (itemstack.getItem() == ToLaserBlade.Items.LASER_BLADE) {
 					return itemstack.copy();
 				}
 			}

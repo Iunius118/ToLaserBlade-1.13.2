@@ -106,9 +106,9 @@ public class ToLaserBlade {
 
 	@ObjectHolder(MOD_ID)
 	public static class Items {
-		public static final Item lasar_blade = null;
-		public static final Item laser_blade = null;
-		public static final Item laser_blade_core = null;
+		public static final Item LASAR_BLADE = null;
+		public static final Item LASER_BLADE = null;
+		public static final Item LASER_BLADE_CORE = null;
 	}
 
 	@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -137,7 +137,7 @@ public class ToLaserBlade {
 			String name = mapping.key.getPath();
 			if (name.equals(MOD_ID + "." + NAME_ITEM_LASER_BLADE)) {
 				// Replace item ID "tolaserblade:tolaserblade.laser_blade" (-1.11.2) with "tolaserblade:laser_blade" (1.12-)
-				mapping.remap(ToLaserBlade.Items.laser_blade);
+				mapping.remap(ToLaserBlade.Items.LASER_BLADE);
 			}
 		}
 	}

@@ -32,7 +32,7 @@ public class ClientEventHandler {
 
 	@SubscribeEvent
 	public void onItemColorHandlerEvent(ColorHandlerEvent.Item event) {
-		event.getItemColors().register(new ItemLaserBlade.ColorHandler(), Items.laser_blade);
+		event.getItemColors().register(new ItemLaserBlade.ColorHandler(), Items.LASER_BLADE);
 	}
 
 	public IBakedModel bakeModel(ResourceLocation location) {

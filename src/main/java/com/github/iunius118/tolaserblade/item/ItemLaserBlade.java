@@ -82,7 +82,7 @@ public class ItemLaserBlade extends ItemSword {
 		}
 
 		ItemStack stackOut = event.getCrafting();
-		LaserBlade laserBlade = new LaserBlade(stackOut);
+		LaserBlade laserBlade = LaserBlade.create(stackOut);
 
 		if (laserBlade.hasCraftingTag()) {
 			// Crafting on crafting table
@@ -101,8 +101,8 @@ public class ItemLaserBlade extends ItemSword {
 			String name = output.getDisplayName().getString();
 
 			// Use GIFT code
-			if ("GIFT".equals(name) || "おたから".equals(name)) {
-				new LaserBlade(output).setAttackIfLess(LaserBlade.MOD_ATK_CLASS_2).enchantIfLessLevel(Enchantments.SMITE, 2).getItemStack();
+			if ("GIFT".equals(name) || /* "おたから" */ "\u304a\u305f\u304b\u3089".equals(name)) {
+				LaserBlade.create(output).setAttackIfLess(LaserBlade.MOD_ATK_CLASS_2).enchantIfLessLevel(Enchantments.SMITE, 2).getItemStack();
 				output.clearCustomName();
 			}
 		}
@@ -113,11 +113,11 @@ public class ItemLaserBlade extends ItemSword {
 		ItemStack right = event.getRight();
 		Item itemRight = right.getItem();
 		String name = event.getName();
-		LaserBlade laserBlade = new LaserBlade(left.copy());
+		LaserBlade laserBlade = LaserBlade.create(left.copy());
 
-		if (itemRight == this || itemRight == ToLaserBlade.Items.laser_blade_core || itemRight == Items.ENCHANTED_BOOK) {
+		if (itemRight == this || itemRight == ToLaserBlade.Items.LASER_BLADE_CORE || itemRight == Items.ENCHANTED_BOOK) {
 			// MIX LASER BLADES
-			LaserBlade rightLaserBlade = new LaserBlade(right.copy());
+			LaserBlade rightLaserBlade = LaserBlade.create(right.copy());
 			laserBlade.mixLaserBlade(rightLaserBlade);
 			laserBlade.changeDisplayName(name);
 			int costLevel = laserBlade.getCost();
@@ -226,9 +226,9 @@ public class ItemLaserBlade extends ItemSword {
 
 		} else	if (isContainedInItemTag(itemRight, "forge:ingots/iron")) {
 			// REPAIR
-			if (left.getItem() == ToLaserBlade.Items.laser_blade_core && right.getCount() >= 4) {
+			if (left.getItem() == ToLaserBlade.Items.LASER_BLADE_CORE && right.getCount() >= 4) {
 				// From Core
-				ItemStack output = laserBlade.saveTagsToLaserBlade(new ItemStack(ToLaserBlade.Items.laser_blade));
+				ItemStack output = laserBlade.saveTagsToLaserBlade(new ItemStack(ToLaserBlade.Items.LASER_BLADE));
 				event.setCost(laserBlade.getCost() + 4);
 				event.setMaterialCost(4);
 				event.setOutput(output);
@@ -283,7 +283,7 @@ public class ItemLaserBlade extends ItemSword {
 		} else	if (itemRight == Items.IRON_AXE) {
 			// EXTRACT CORE
 			if (left.getItem() == this) {
-				ItemStack core = laserBlade.saveTagsToItemStack(new ItemStack(ToLaserBlade.Items.laser_blade_core));
+				ItemStack core = laserBlade.saveTagsToItemStack(new ItemStack(ToLaserBlade.Items.LASER_BLADE_CORE));
 				event.setCost(4);
 				event.setMaterialCost(1);
 				event.setOutput(core);
@@ -444,7 +444,7 @@ public class ItemLaserBlade extends ItemSword {
 		Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
 
 		if (slot == EntityEquipmentSlot.MAINHAND) {
-			LaserBlade laserBlade = new LaserBlade(stack);
+			LaserBlade laserBlade = LaserBlade.create(stack);
 
 			multimap.removeAll(SharedMonsterAttributes.ATTACK_DAMAGE.getName());
 			multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(),

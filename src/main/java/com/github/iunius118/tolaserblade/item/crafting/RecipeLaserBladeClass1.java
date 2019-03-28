@@ -27,7 +27,7 @@ public class RecipeLaserBladeClass1 extends ShapedRecipe {
 
 	@Override
 	public ItemStack getCraftingResult(IInventory inv) {
-		LaserBlade result = new LaserBlade(getRecipeOutput().copy());
+		LaserBlade result = LaserBlade.create(getRecipeOutput().copy());
 
 		for (int i = 0; i < inv.getSizeInventory(); ++i) {
 			ItemStack stack = inv.getStackInSlot(i);
@@ -48,7 +48,7 @@ public class RecipeLaserBladeClass1 extends ShapedRecipe {
 		public ShapedRecipe read(ResourceLocation recipeId, JsonObject json) {
 			ShapedRecipe recipe = RecipeSerializers.CRAFTING_SHAPED.read(recipeId, json);
 
-			ItemStack output = new LaserBlade(recipe.getRecipeOutput())
+			ItemStack output = LaserBlade.create(recipe.getRecipeOutput())
 					.setAttack(LaserBlade.MOD_ATK_CLASS_1)
 					.enchant(Enchantments.SMITE, LaserBlade.LVL_SMITE_CLASS_1)
 					.setCraftingTag()

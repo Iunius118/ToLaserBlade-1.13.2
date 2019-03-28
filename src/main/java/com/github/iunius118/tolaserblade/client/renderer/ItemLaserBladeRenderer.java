@@ -51,7 +51,7 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer {
 
 	public void doRender(ModelLaserBlade model) {
 		BufferBuilder renderer = Tessellator.getInstance().getBuffer();
-		LaserBlade laserBlade = new LaserBlade(model.itemStack);
+		LaserBlade laserBlade = LaserBlade.create(model.itemStack);
 		int colorCore = laserBlade.getCoreColor();
 		int colorHalo = laserBlade.getHaloColor();
 		boolean isSubColorCore = laserBlade.isCoreSubColor();

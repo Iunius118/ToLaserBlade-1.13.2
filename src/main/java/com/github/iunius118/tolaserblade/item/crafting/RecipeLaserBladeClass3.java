@@ -32,7 +32,7 @@ public class RecipeLaserBladeClass3 extends ShapedRecipe {
 		public ShapedRecipe read(ResourceLocation recipeId, JsonObject json) {
 			ShapedRecipe recipe = RecipeSerializers.CRAFTING_SHAPED.read(recipeId, json);
 
-			ItemStack output = new LaserBlade(recipe.getRecipeOutput())
+			ItemStack output = LaserBlade.create(recipe.getRecipeOutput())
 					.setAttack(LaserBlade.MOD_ATK_CLASS_3)
 					.setSpeed(LaserBlade.MOD_SPD_CLASS_3)
 					.enchant(Enchantments.SMITE, LaserBlade.LVL_SMITE_CLASS_3)

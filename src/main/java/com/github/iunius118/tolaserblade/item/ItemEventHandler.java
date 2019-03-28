@@ -15,9 +15,9 @@ public class ItemEventHandler {
 	public void onPlayerDestroyItem(PlayerDestroyItemEvent event) {
 		ItemStack original = event.getOriginal();
 
-		if (original.getItem() == ToLaserBlade.Items.laser_blade && original.getDamage() >= LaserBlade.MAX_USES - 1) {
-			LaserBlade laserBlade = new LaserBlade(original);
-			ItemStack core = laserBlade.saveTagsToItemStack(new ItemStack(ToLaserBlade.Items.laser_blade_core));
+		if (original.getItem() == ToLaserBlade.Items.LASER_BLADE && original.getDamage() >= LaserBlade.MAX_USES - 1) {
+			LaserBlade laserBlade = LaserBlade.create(original);
+			ItemStack core = laserBlade.saveTagsToItemStack(new ItemStack(ToLaserBlade.Items.LASER_BLADE_CORE));
 			event.getEntityPlayer().setHeldItem(event.getHand(), core);
 		}
 	}
@@ -26,7 +26,7 @@ public class ItemEventHandler {
 	public void onCriticalHit(CriticalHitEvent event) {
 		ItemStack stack = event.getEntityPlayer().getHeldItemMainhand();
 
-		if (stack.getItem() == ToLaserBlade.Items.laser_blade) {
+		if (stack.getItem() == ToLaserBlade.Items.LASER_BLADE) {
 			((ItemLaserBlade) stack.getItem()).onCriticalHit(event);
 		}
 	}
@@ -35,7 +35,7 @@ public class ItemEventHandler {
 	public void onCrafting(ItemCraftedEvent event) {
 		ItemStack stackOut = event.getCrafting();
 
-		if (stackOut.getItem() == ToLaserBlade.Items.laser_blade) {
+		if (stackOut.getItem() == ToLaserBlade.Items.LASER_BLADE) {
 			((ItemLaserBlade) stackOut.getItem()).onCrafting(event);
 		}
 	}
@@ -44,7 +44,7 @@ public class ItemEventHandler {
 	public void onAnvilRepair(AnvilRepairEvent event) {
 		ItemStack left = event.getItemInput();
 
-		if (left.getItem() == ToLaserBlade.Items.laser_blade) {
+		if (left.getItem() == ToLaserBlade.Items.LASER_BLADE) {
 			((ItemLaserBlade) left.getItem()).onAnvilRepair(event);
 		}
 	}
@@ -53,8 +53,8 @@ public class ItemEventHandler {
 	public void onAnvilUpdate(AnvilUpdateEvent event) {
 		ItemStack left = event.getLeft();
 
-		if (left.getItem() == ToLaserBlade.Items.laser_blade || left.getItem() == ToLaserBlade.Items.laser_blade_core) {
-			((ItemLaserBlade) ToLaserBlade.Items.laser_blade).onAnvilUpdate(event);
+		if (left.getItem() == ToLaserBlade.Items.LASER_BLADE || left.getItem() == ToLaserBlade.Items.LASER_BLADE_CORE) {
+			((ItemLaserBlade) ToLaserBlade.Items.LASER_BLADE).onAnvilUpdate(event);
 		}
 	}
 }

@@ -85,7 +85,7 @@ public class LaserBlade {
 	public static final int MAX_USES = 32000;
 
 	public LaserBlade() {
-		this(new ItemStack(ToLaserBlade.Items.laser_blade));
+		this(new ItemStack(ToLaserBlade.Items.LASER_BLADE));
 	}
 
 	public LaserBlade(@Nonnull ItemStack itemStack) {
@@ -134,6 +134,14 @@ public class LaserBlade {
 			getHaloColor();
 			isHaloSubColor();
 		}
+	}
+
+	public static LaserBlade create() {
+		return new LaserBlade();
+	}
+
+	public static LaserBlade create(@Nonnull ItemStack itemStack) {
+		return new LaserBlade(itemStack);
 	}
 
 	public LaserBlade setCraftingTag() {
@@ -254,7 +262,7 @@ public class LaserBlade {
 	}
 
 	public boolean isItemLaserBlade() {
-		return stack.getItem() == ToLaserBlade.Items.laser_blade;
+		return stack.getItem() == ToLaserBlade.Items.LASER_BLADE;
 	}
 
 	public LaserBlade setDefaultColors() {
