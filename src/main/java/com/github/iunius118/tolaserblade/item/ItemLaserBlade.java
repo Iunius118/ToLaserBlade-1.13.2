@@ -105,6 +105,13 @@ public class ItemLaserBlade extends ItemSword {
 				LaserBlade.create(output).setAttackIfLess(LaserBlade.MOD_ATK_CLASS_2).enchantIfLessLevel(Enchantments.SMITE, 2).getItemStack();
 				output.clearCustomName();
 			}
+		} else if (right.getItem() == Items.IRON_AXE) {
+			// EXTRACT CORE
+			// Consume Iron Axe damage
+			ItemStack ironAxe = right.copy();
+			EntityPlayer player = event.getEntityPlayer();
+			ironAxe.damageItem(10, player);
+			player.addItemStackToInventory(ironAxe);
 		}
 	}
 
@@ -278,6 +285,7 @@ public class ItemLaserBlade extends ItemSword {
 		} else	if (itemRight == Items.IRON_AXE) {
 			// EXTRACT CORE
 			if (left.getItem() == this) {
+				// Only Laser Blade
 				ItemStack core = laserBlade.saveTagsToItemStack(new ItemStack(ToLaserBlade.Items.LASER_BLADE_CORE));
 				event.setCost(4);
 				event.setMaterialCost(1);
