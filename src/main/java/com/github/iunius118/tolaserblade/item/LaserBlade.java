@@ -250,6 +250,10 @@ public class LaserBlade {
 	}
 
 	public ItemStack getItemStack() {
+		if (!isItemLaserBlade()) {
+			return saveTagsToItemStack(stack);
+		}
+
 		NBTTagCompound nbt = stack.getTag();
 
 		nbt.setFloat(KEY_ATK, attack);
@@ -548,7 +552,7 @@ public class LaserBlade {
 
 		Map<Enchantment, Integer> map = Maps.newLinkedHashMap();
 		setSharpnessFromAttack(map);
-		setSharpnessFromSpeed(map);
+		setUnbreakingFromSpeed(map);
 		mapEnch.forEach((key, value) -> map.put(key, value));
 		EnchantmentHelper.setEnchantments(map, itemStack);
 
@@ -577,7 +581,7 @@ public class LaserBlade {
 		}
 	}
 
-	private void setSharpnessFromSpeed(Map<Enchantment, Integer> map) {
+	private void setUnbreakingFromSpeed(Map<Enchantment, Integer> map) {
 		if (speed > MOD_SPD_CLASS_1) {
 			int level = Math.min(3, (int) (speed / 0.4F));
 			map.put(Enchantments.UNBREAKING, level);

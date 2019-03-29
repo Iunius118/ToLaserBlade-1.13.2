@@ -125,12 +125,7 @@ public class ItemLaserBlade extends ItemSword {
 			if (costLevel > 0) {
 				event.setCost(costLevel);
 				event.setMaterialCost(1);
-
-				if (left.getItem() == this) {
-					event.setOutput(laserBlade.getItemStack());
-				} else {
-					event.setOutput(laserBlade.saveTagsToItemStack(laserBlade.getItemStack()));
-				}
+				event.setOutput(laserBlade.getItemStack());
 			} else {
 				event.setCanceled(true);
 			}
