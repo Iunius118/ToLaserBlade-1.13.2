@@ -6,21 +6,38 @@
 		]
 	},
 	"criteria": {
-		"has_diamond": {
+		"has_redstone": {
 			"trigger": "minecraft:inventory_changed",
 			"conditions": {
 				"items": [
 					{
-						"item": "minecraft:diamond"
+						"item": "minecraft:redstone"
 					}
 				]
 			}
 		},
-		"has_lasar_blade_recipe": {
+		"has_laser_blade": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "tolaserblade:laser_blade"
+					}
+				]
+			}
+		},
+		"has_the_recipe": {
 			"trigger": "minecraft:recipe_unlocked",
 			"conditions": {
-				"recipe": "tolaserblade:lasar_blade"
+				"recipe": "tolaserblade:laser_blade_class_1"
 			}
 		}
-	}
+	},
+	"requirements": [
+		[
+			"has_redstone",
+			"has_laser_blade",
+			"has_the_recipe"
+		]
+	]
 }

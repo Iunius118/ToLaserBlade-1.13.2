@@ -15,6 +15,18 @@
 					}
 				]
 			}
+		},
+		"has_the_recipe": {
+			"trigger": "minecraft:recipe_unlocked",
+			"conditions": {
+				"recipe": "tolaserblade:lasar_blade"
+			}
 		}
-	}
+	},
+	"requirements": [
+		[
+			"has_redstone",
+			"has_the_recipe"
+		]
+	]
 }
