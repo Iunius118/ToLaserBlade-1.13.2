@@ -1,4 +1,4 @@
-# ToLaserBlade v1.13.2-1.5.0.2 (Beta)
+# ToLaserBlade v1.13.2-1.5.1.0 (Beta)
 
 ## ToLaserBlade ダウンロード
 
@@ -6,7 +6,7 @@
 
 ## ToLaserBlade アイテム解説
 
-以下の解説は、バージョン 1.13.2-1.5.0.2 時点での仕様に基づいて書かれています。
+以下の解説は、バージョン 1.13.2-1.5.1.0 時点での仕様に基づいて書かれています。
 
 - [パージョン 1.12.2-1.3.1.0 の解説はこちら](https://github.com/Iunius118/ToLaserBlade/blob/1.12.2_1.3.1/docs/recipes_ja.md)
 
@@ -108,7 +108,7 @@
 
 <img src="img/extract_core.png" title="Extract Core">
 
-- また金床で鉄の斧を消費して強制的にコアを取り出すこともできる
+- また金床で鉄の斧の耐久値とレベルを消費して強制的にコアを取り出すこともできる
 
 <img src="img/repair_laserblade_core.png" title="Repair Laser Blade Core">
 
