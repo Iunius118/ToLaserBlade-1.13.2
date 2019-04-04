@@ -11,16 +11,54 @@ import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.IUnbakedModel;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.VersionChecker;
+import net.minecraftforge.fml.VersionChecker.CheckResult;
+import net.minecraftforge.fml.VersionChecker.Status;
 
 public class ClientEventHandler {
 	public static void setTEISR() {
 		ItemLaserBlade.properties = ItemLaserBlade.properties.setTEISR(() -> () -> new ItemLaserBladeRenderer());
+	}
+
+	public static void checkUpdate() {
+		if (!ToLaserBlade.hasShownUpdate) {
+			// Check update and Notify client
+			CheckResult result = VersionChecker.getResult(ModList.get().getModFileById(ToLaserBlade.MOD_ID).getMods().get(0));
+			Status status = result.status;
+
+			if (status == Status.PENDING) {
+				// Failed to get update information
+				return;
+			}
+
+			if (status == Status.OUTDATED || status == Status.BETA_OUTDATED) {
+				ITextComponent modNameHighlighted = new TextComponentString(ToLaserBlade.MOD_NAME);
+				modNameHighlighted.getStyle().setColor(TextFormatting.YELLOW);
+
+				ITextComponent newVersionHighlighted = new TextComponentString(result.target.toString());
+				newVersionHighlighted.getStyle().setColor(TextFormatting.YELLOW);
+
+				ITextComponent message = new TextComponentTranslation("tolaserblade.update.newversion", modNameHighlighted).appendText(": ")
+						.appendSibling(newVersionHighlighted);
+				message.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, result.url));
+
+				Minecraft.getInstance().ingameGUI.getChatGUI().printChatMessage(message);
+
+				ToLaserBlade.hasShownUpdate = true;
+			}
+		}
 	}
 
 	// Model bakery

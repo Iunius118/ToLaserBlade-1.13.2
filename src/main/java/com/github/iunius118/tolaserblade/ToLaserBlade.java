@@ -58,7 +58,7 @@ public class ToLaserBlade {
 
 	public static final String NAME_ITEM_LASER_BLADE_CORE = "laser_blade_core";
 
-	// public static boolean hasShownUpdate = false;
+	public static boolean hasShownUpdate = false;
 
 	// Recipe Serializers
 	public static final IRecipeSerializer<ShapelessRecipe> CRAFTING_LASER_BLADE_DYEING = RecipeSerializers.register(new RecipeLaserBladeDyeing.Serializer());
@@ -162,41 +162,4 @@ public class ToLaserBlade {
 	Minecraft.getMinecraft().ingameGUI.addChatMessage(ChatType.SYSTEM, new TextComponentString(str));
 	}
 	// */
-
-	/*
-		@SubscribeEvent
-		public void onConnectedToServer(ClientConnectedToServerEvent event) {
-			if (!hasShownUpdate) {
-				// Check update and Notify client
-				CheckResult result = ForgeVersion.getResult(Loader.instance().activeModContainer());
-				Status status = result.status;
-
-				if (status == Status.PENDING) {
-					// Failed to get update information
-					return;
-				}
-
-				if (status == Status.OUTDATED || status == Status.BETA_OUTDATED) {
-					ITextComponent modNameHighlighted = new TextComponentString(MOD_NAME);
-					modNameHighlighted.getStyle().setColor(TextFormatting.YELLOW);
-
-					ITextComponent newVersionHighlighted = new TextComponentString(result.target.toString());
-					newVersionHighlighted.getStyle().setColor(TextFormatting.YELLOW);
-
-					ITextComponent message = new TextComponentTranslation("tolaserblade.update.newversion", modNameHighlighted).appendText(": ")
-							.appendSibling(newVersionHighlighted);
-					message.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, result.url));
-
-					Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(message);
-
-					hasShownUpdate = true;
-				}
-
-			}
-		}
-
-	}
-
-	// */
-
 }

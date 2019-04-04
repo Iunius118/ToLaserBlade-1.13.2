@@ -7,6 +7,7 @@ import org.apache.logging.log4j.MarkerManager;
 
 import com.github.iunius118.tolaserblade.ToLaserBlade;
 import com.github.iunius118.tolaserblade.ToLaserBladeConfig;
+import com.github.iunius118.tolaserblade.client.ClientEventHandler;
 
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -32,6 +33,8 @@ public class ServerConfigMessage {
 		ctx.get().enqueueWork(() -> {
 			ToLaserBladeConfig.COMMON.isEnabledBlockingWithLaserBladeInServer = msg.isEnabledBlockingWithLaserBladeInServer ? () -> true : () -> false;
 			ToLaserBlade.LOGGER.info(SVRCFGMSG_MARKER, "config.common.enabledBlockingWithLaserBladeInServer: {}", msg.isEnabledBlockingWithLaserBladeInServer);
+
+			ClientEventHandler.checkUpdate();
 		});
 
 		ctx.get().setPacketHandled(true);
