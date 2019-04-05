@@ -67,10 +67,11 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer {
 		// Transform by Camera type.
 		transform(cameraTransformType, isBlocking);
 
-		// Enable Back-face Culling.
-		if (cameraTransformType == TransformType.THIRD_PERSON_LEFT_HAND || cameraTransformType == TransformType.THIRD_PERSON_RIGHT_HAND) {
+		// Enable Culling.
+		boolean isEnableCull = GL11.glIsEnabled(GL11.GL_CULL_FACE);
+
+		if (!isEnableCull) {
 			GlStateManager.enableCull();
-			GlStateManager.cullFace(GlStateManager.CullFace.BACK);
 		}
 
 		// Draw hilt.
@@ -86,35 +87,55 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer {
 		// Draw bright part of hilt.
 		renderQuads(renderer, model.mapQuads.get("Hilt_bright"), -1);
 
-		// Enable Add-color.
-		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
-		GL14.glBlendEquation(GL14.GL_FUNC_ADD);
+		if (ToLaserBladeConfig.CLIENT.laserBladeRenderingMode.get() == 1) {
+			// Rendering Mode 1: Disable Blending
+			if (isSubColorCore) {
+				colorCore = ~colorCore | 0xFF000000;
+			}
 
-		// Draw blade core.
-		if (isSubColorCore) {
-			// Draw core with Sub-color.
-			GL14.glBlendEquation(GL14.GL_FUNC_REVERSE_SUBTRACT);
-		}
+			if (isSubColorHalo) {
+				colorHalo = ~colorHalo | 0xFF000000;
+			}
 
-		renderQuads(renderer, model.mapQuads.get("Blade_core"), colorCore);
+			// Draw blade.
+			renderQuads(renderer, model.mapQuads.get("Blade_halo_2"), colorHalo);
+			renderQuads(renderer, model.mapQuads.get("Blade_halo_1"), colorHalo);
+			renderQuads(renderer, model.mapQuads.get("Blade_core"), colorCore);
 
-		// Draw blade halo.
-		if (!isSubColorCore && isSubColorHalo) {
-			// Draw halo with Sub-color.
-			GL14.glBlendEquation(GL14.GL_FUNC_REVERSE_SUBTRACT);
-		} else if (isSubColorCore && !isSubColorHalo) {
+		} else {
+			// Rendering Mode 0: Default
+			// Enable Add-color.
+			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
 			GL14.glBlendEquation(GL14.GL_FUNC_ADD);
+
+			// Draw blade core.
+			if (isSubColorCore) {
+				// Draw core with Sub-color.
+				GL14.glBlendEquation(GL14.GL_FUNC_REVERSE_SUBTRACT);
+			}
+
+			renderQuads(renderer, model.mapQuads.get("Blade_core"), colorCore);
+
+			// Draw blade halo.
+			if (!isSubColorCore && isSubColorHalo) {
+				// Draw halo with Sub-color.
+				GL14.glBlendEquation(GL14.GL_FUNC_REVERSE_SUBTRACT);
+			} else if (isSubColorCore && !isSubColorHalo) {
+				GL14.glBlendEquation(GL14.GL_FUNC_ADD);
+			}
+
+			renderQuads(renderer, model.mapQuads.get("Blade_halo_1"), colorHalo);
+			renderQuads(renderer, model.mapQuads.get("Blade_halo_2"), colorHalo);
+
+			if (isSubColorHalo) {
+				GL14.glBlendEquation(GL14.GL_FUNC_ADD);
+			}
+
+			// Disable Add-color.
+			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 		}
 
-		renderQuads(renderer, model.mapQuads.get("Blade_halo_1"), colorHalo);
-		renderQuads(renderer, model.mapQuads.get("Blade_halo_2"), colorHalo);
-
-		if (isSubColorHalo) {
-			GL14.glBlendEquation(GL14.GL_FUNC_ADD);
-		}
-
-		// Disable Add-color and bright rendering.
-		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+		// Disable bright rendering.
 		OpenGlHelper.glMultiTexCoord2f(OpenGlHelper.GL_TEXTURE1, lastBrightnessX, lastBrightnessY);
 		RenderHelper.enableStandardItemLighting();
 		GL11.glPopAttrib();
@@ -126,8 +147,8 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer {
 		}
 
 		// Disable Culling.
-		if (cameraTransformType == TransformType.THIRD_PERSON_LEFT_HAND || cameraTransformType == TransformType.THIRD_PERSON_RIGHT_HAND) {
-			GlStateManager.disableCull();
+		if (!isEnableCull) {
+			GlStateManager.disableCull();;
 		}
 	}
 
@@ -138,7 +159,7 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer {
 		transformMatrices.put(TransformType.FIRST_PERSON_RIGHT_HAND, new float[] { -3.090862E-8F, 3.090862E-8F, -1.0F, 0.0F, 0.8838835F, 0.8838835F, 0.0F, 0.0F, 0.70710677F, -0.70710677F, -4.371139E-8F, 0.0F, -0.030330122F, -0.030330122F, 0.5F, 1.0F });
 		transformMatrices.put(TransformType.THIRD_PERSON_LEFT_HAND, new float[] { -3.244294E-8F, 4.633332E-8F, -1.294F, 0.0F, 0.94637173F, 0.8825059F, 7.871984E-9F, 0.0F, 0.8825059F, -0.94637173F, -5.6012073E-8F, 0.0F, 0.035000555F, 0.030994587F, 0.5F, 1.0F });
 		transformMatrices.put(TransformType.THIRD_PERSON_RIGHT_HAND, new float[] { -3.244294E-8F, 4.633332E-8F, -1.294F, 0.0F, 0.94637173F, 0.8825059F, 7.871984E-9F, 0.0F, 0.8825059F, -0.94637173F, -5.6012073E-8F, 0.0F, 0.035000555F, 0.030994587F, 0.5F, 1.0F });
-		transformMatrices.put(TransformType.FIXED, new float[] { -5.0862745E-8F, -2.7817755E-8F, -0.9F, 0.0F, 0.63639605F, 0.63639605F, -5.5635514E-8F, 0.0F, 0.63639605F, -0.63639605F, -1.6295264E-8F, 0.0F, 0.022702962F, 0.022702962F, 0.46400005F, 1.0F });
+		transformMatrices.put(TransformType.FIXED, new float[] { -5.0862745E-8F, -2.7817755E-8F, -0.9F, 0.0F, 0.63639605F, 0.63639605F, -5.5635514E-8F, 0.0F, 0.63639605F, -0.63639605F, -1.6295264E-8F, 0.0F, 0.022702962F, 0.022702962F, 0.52250004F, 1.0F });
 		transformMatrices.put(TransformType.NONE, new float[] { -2.7817755E-8F, 2.7817755E-8F, -0.9F, 0.0F, 0.63639605F, 0.63639605F, 0.0F, 0.0F, 0.63639605F, -0.63639605F, -3.934025E-8F, 0.0F, 0.022702962F, 0.022702962F, 0.5F, 1.0F });
 	}
 
@@ -206,7 +227,7 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer {
 		    GlStateManager.rotatef(180.0F, 0.0F, 1.0F, 0.0F);
 		    GlStateManager.scaled(0.9D, 0.9D, 0.9D);
 		    GlStateManager.rotatef(45.0F, 0.0F, 0.0F, 1.0F);
-		    GlStateManager.translatef(0.0F, -0.75F, 0.04F);
+		    GlStateManager.translatef(0.0F, -0.75F, -0.025F);
 		    GlStateManager.rotatef(90.0F, 0.0F, -1.0F, 0.0F);
 		    break;
 		default:

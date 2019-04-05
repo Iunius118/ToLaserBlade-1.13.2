@@ -6,6 +6,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
+import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 
 public class ToLaserBladeConfig {
 	public static class Common {
@@ -26,6 +27,7 @@ public class ToLaserBladeConfig {
 
 	public static class Client {
 		public final BooleanValue isEnabledLaserBlade3DModel;
+		public final IntValue laserBladeRenderingMode;
 
 		Client(ForgeConfigSpec.Builder builder) {
 			builder.comment("ToLaserBlade's client side settings.").push("client");
@@ -34,6 +36,11 @@ public class ToLaserBladeConfig {
 					.comment("Enable Laser Blade to use 3D Model.")
 					.translation("tolaserblade.configgui.enableLaserBlade3DModel")
 					.define("enableLaserBlade3DModel", true);
+
+			laserBladeRenderingMode = builder
+					.comment("Select rendering mode of Laser Blade (0: Default, 1: Disable blending). This option is available when enableLaserBlade3DModel is true.")
+					.translation("tolaserblade.configgui.laserBladeRenderingMode")
+					.defineInRange("laserBladeRenderingMode", 0, 0, 1);
 
 			builder.pop();
 		}

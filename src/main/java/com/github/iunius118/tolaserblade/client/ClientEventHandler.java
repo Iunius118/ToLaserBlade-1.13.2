@@ -2,6 +2,7 @@ package com.github.iunius118.tolaserblade.client;
 
 import com.github.iunius118.tolaserblade.ToLaserBlade;
 import com.github.iunius118.tolaserblade.ToLaserBlade.Items;
+import com.github.iunius118.tolaserblade.ToLaserBladeConfig;
 import com.github.iunius118.tolaserblade.client.model.ModelLaserBlade;
 import com.github.iunius118.tolaserblade.client.renderer.ItemLaserBladeRenderer;
 import com.github.iunius118.tolaserblade.item.ItemLaserBlade;
@@ -64,7 +65,16 @@ public class ClientEventHandler {
 	// Model bakery
 	@SubscribeEvent
 	public void onModelBakeEvent(ModelBakeEvent event) {
-		ModelLaserBlade modelLaserBlade = new ModelLaserBlade(bakeModel(ToLaserBlade.RL_OBJ_ITEM_LASER_BLADE), event.getModelRegistry().get(ToLaserBlade.MRL_ITEM_LASER_BLADE));
+		ModelLaserBlade modelLaserBlade;
+
+		if (ToLaserBladeConfig.CLIENT.laserBladeRenderingMode.get() == 1) {
+			// Rendering Mode 1: Disable Blending
+			modelLaserBlade = new ModelLaserBlade(bakeModel(ToLaserBlade.RL_OBJ_ITEM_LASER_BLADE_1), event.getModelRegistry().get(ToLaserBlade.MRL_ITEM_LASER_BLADE));
+		} else {
+			// Rendering Mode 0: Default
+			modelLaserBlade = new ModelLaserBlade(bakeModel(ToLaserBlade.RL_OBJ_ITEM_LASER_BLADE), event.getModelRegistry().get(ToLaserBlade.MRL_ITEM_LASER_BLADE));
+		}
+
 		event.getModelRegistry().put(ToLaserBlade.MRL_ITEM_LASER_BLADE, modelLaserBlade);
 	}
 
