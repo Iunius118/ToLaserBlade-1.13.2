@@ -104,6 +104,7 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer {
 
 		} else {
 			// Rendering Mode 0: Default
+
 			// Enable Add-color.
 			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
 			GL14.glBlendEquation(GL14.GL_FUNC_ADD);
@@ -148,7 +149,7 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer {
 
 		// Disable Culling.
 		if (!isEnableCull) {
-			GlStateManager.disableCull();;
+			GlStateManager.disableCull();
 		}
 	}
 

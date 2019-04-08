@@ -26,6 +26,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -151,16 +152,17 @@ public class ToLaserBlade {
 				NetworkDirection.PLAY_TO_CLIENT);
 	}
 
-	/*
-
-	// For damage test
-	/*
 	@SubscribeEvent
-	public static void onLivingHurt(LivingHurtEvent event)
-	{
-	float dmg = CombatRules.getDamageAfterAbsorb(event.getAmount(), (float)event.getEntityLiving().getTotalArmorValue(), (float)event.getEntityLiving().getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue());
-	String str = event.getSource().getDamageType() + " caused " + dmg + " point damage to " + event.getEntityLiving().getName() + "!";
-	Minecraft.getMinecraft().ingameGUI.addChatMessage(ChatType.SYSTEM, new TextComponentString(str));
+	public void onLivingDamage(LivingDamageEvent event) {
+		/*
+		// For debug
+		String str = event.getSource().getDamageType() + " caused " + event.getAmount() + " point damage to " + event.getEntityLiving().getName().getFormattedText() + "!";
+
+		if (FMLLoader.getDist().isClient()) {
+			Minecraft.getInstance().ingameGUI.addChatMessage(ChatType.SYSTEM, new TextComponentString(str));
+		} else {
+			LOGGER.info(str);
+		}
+		// */
 	}
-	// */
 }
