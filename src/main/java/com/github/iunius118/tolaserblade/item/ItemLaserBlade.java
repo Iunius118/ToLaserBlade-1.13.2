@@ -66,13 +66,16 @@ public class ItemLaserBlade extends ItemSword {
 		addPropertyOverride(new ResourceLocation("blocking"), BLOCKING_GETTER);
 	}
 
-	/* Handle events */
+	/* Handle item events */
 
 	public void onCriticalHit(CriticalHitEvent event) {
 		Entity target = event.getTarget();
+		LaserBlade laserBlade = LaserBlade.create(event.getEntityPlayer().getHeldItemMainhand());
 
-		if (target instanceof EntityWither && event.isVanillaCritical()) {
-			event.setDamageModifier(LaserBlade.MOD_CRITICAL_VS_WITHER);
+		if (event.isVanillaCritical()) {
+			if (target instanceof EntityWither || laserBlade.getAttack() > LaserBlade.MOD_ATK_CLASS_4) {
+				event.setDamageModifier(LaserBlade.MOD_CRITICAL_VS_WITHER);
+			}
 		}
 	}
 
@@ -263,8 +266,20 @@ public class ItemLaserBlade extends ItemSword {
 
 		} else if (getBlockFromItem(itemRight) instanceof BlockAbstractSkull) {
 			// MORE ATTACK++
-			// Only Class 4 blade
-			if (laserBlade.getAttack() >= LaserBlade.MOD_ATK_CLASS_4 && laserBlade.getAttack() < LaserBlade.MOD_ATK_MAX) {
+			if (laserBlade.getAttack() < LaserBlade.MOD_ATK_CLASS_3) {
+				return;
+			} else 	if (itemRight == Items.DRAGON_HEAD && laserBlade.getAttack() <= LaserBlade.MOD_ATK_CLASS_4) {
+				// 15 ATTACK DAMAGE
+				laserBlade.setAttackIfLess(LaserBlade.MOD_ATK_CLASS_4 + 1.0F);
+				laserBlade.changeDisplayName(name);
+				event.setCost(LaserBlade.COST_LVL_CLASS_4);
+				event.setMaterialCost(1);
+				event.setOutput(laserBlade.getItemStack());
+
+				return;
+
+			} else	if (laserBlade.getAttack() > LaserBlade.MOD_ATK_CLASS_4 && laserBlade.getAttack() < LaserBlade.MOD_ATK_MAX) {
+				// ATTACK++
 				laserBlade.changeDisplayName(name);
 				int costNaming = laserBlade.getCost();
 
@@ -275,6 +290,7 @@ public class ItemLaserBlade extends ItemSword {
 					laserBlade.increaseAttack();
 				}
 
+				laserBlade.changeDisplayName(name);
 				event.setCost((int) laserBlade.getAttack() / 100 + 40 + costNaming);	// Not delete, but too expensive for survival mode players
 				event.setMaterialCost(1);
 				event.setOutput(laserBlade.getItemStack());

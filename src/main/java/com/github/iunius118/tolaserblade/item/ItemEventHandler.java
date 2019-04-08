@@ -15,16 +15,19 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
 public class ItemEventHandler {
 	@SubscribeEvent
 	public void onPlayerDestroyItem(PlayerDestroyItemEvent event) {
-		ItemStack original = event.getOriginal();
+		EntityPlayer player = event.getEntityPlayer();
 
-		if (original.getItem() == ToLaserBlade.Items.LASER_BLADE && original.getDamage() >= LaserBlade.MAX_USES - 1) {
-			LaserBlade laserBlade = LaserBlade.create(original);
-			ItemStack core = laserBlade.saveTagsToItemStack(new ItemStack(ToLaserBlade.Items.LASER_BLADE_CORE));
+		if (!player.getEntityWorld().isRemote) {
+			ItemStack original = event.getOriginal();
 
-			// Drop Core
-			EntityPlayer player = event.getEntityPlayer();
-			EntityItem entityitem = new EntityItem(player.world, player.posX, player.posY + 0.5, player.posZ, core);
-			player.world.spawnEntity(entityitem);
+			if (original.getItem() == ToLaserBlade.Items.LASER_BLADE && original.getDamage() >= LaserBlade.MAX_USES - 1) {
+				LaserBlade laserBlade = LaserBlade.create(original);
+				ItemStack core = laserBlade.saveTagsToItemStack(new ItemStack(ToLaserBlade.Items.LASER_BLADE_CORE));
+
+				// Drop Core
+				EntityItem entityitem = new EntityItem(player.world, player.posX, player.posY + 0.5, player.posZ, core);
+				player.world.spawnEntity(entityitem);
+			}
 		}
 	}
 

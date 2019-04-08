@@ -48,13 +48,25 @@
 					}
 				]
 			}
+		},
+		"has_laser_blade_attack_15": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "tolaserblade:laser_blade",
+						"nbt": "{\"ATK\":8f}"
+					}
+				]
+			}
 		}
 	},
 	"requirements": [
 		[
 			"has_laser_blade_attack_10",
 			"has_laser_blade_attack_11",
-			"has_laser_blade_attack_14"
+			"has_laser_blade_attack_14",
+			"has_laser_blade_attack_15"
 		]
 	]
 }
