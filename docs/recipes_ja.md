@@ -92,7 +92,7 @@
 
 <img src="img/upgrade_laserblade_and_cost_1.5.0.0_ja.png" title="Upgrade Laser Blade and Cost">
 
-- 攻撃力や攻撃速度、そして多くのエンチャントは「アイテムによる強化」と「エンチャントの本からの合成」という2種類の方法で強化することが可能となっている。
+- 攻撃力や攻撃速度、そして多くのエンチャントは「アイテムによる強化」と「エンチャントの合成」という2種類の方法で強化することが可能となっている。
 
 <img src="img/upgrade_laserblade_with_dragon_head.png" title="Upgrade Laser Blade with Dragon Head">
 
