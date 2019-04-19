@@ -1,4 +1,4 @@
-# ToLaserBlade v1.13.2-1.5.1.0 (Beta)
+# ToLaserBlade v1.13.2-2.0.0.0 (Beta)
 
 ## ToLaserBlade ダウンロード
 
@@ -6,7 +6,7 @@
 
 ## ToLaserBlade アイテム解説
 
-以下の解説は、バージョン 1.13.2-1.5.1.0 時点での仕様に基づいて書かれています。
+以下の解説は、バージョン 1.13.2-2.0.0.0 時点での仕様に基づいて書かれています。
 
 - [パージョン 1.12.2-1.3.1.0 の解説はこちら](https://github.com/Iunius118/ToLaserBlade/blob/1.12.2_1.3.1/docs/recipes_ja.md)
 
@@ -92,6 +92,12 @@
 
 <img src="img/upgrade_laserblade_and_cost_1.5.0.0_ja.png" title="Upgrade Laser Blade and Cost">
 
+- 攻撃力や攻撃速度、そして多くのエンチャントは「アイテムによる強化」と「エンチャントの本からの合成」という2種類の方法で強化することが可能となっている。
+
+<img src="img/upgrade_laserblade_with_dragon_head.png" title="Upgrade Laser Blade with Dragon Head">
+
+- 攻撃力10～14のレーザーブレイドに金床でドラゴンの頭を合成すると、攻撃力を15にすることができる。
+
 #### 金床での修理
 
 <img src="img/repair_laserblade.png" title="Repair Laser Blade">
@@ -129,12 +135,15 @@
 
 ### tolaserblade-client.toml
 
-クライアント側限定の設定ファイル。
+クライアント側限定の設定ファイル。これら設定はクライアント側のみで使用される。
 
 - enableLaserBlade3DModel
   - 真偽値、デフォルトは`true`
   - レーザーブレイドの描画に、`true`のときは3D（OBJ）モデルを使用し、`false`のときは2D（JSON）モデルを使用する
-  - この設定はクライアント側のみで使用される
+- laserBladeRenderingMode
+  - 整数値 0～1、デフォルトは`0`
+  - レーザーブレイドの刃の描画モードを選択する
+  - `0`を指定すると従来通りの描画方式、`1`を指定すると加算・減算合成を用いない描画方式になる
   <!-- - ゲーム内のmodオプション設定GUIでも変更可能 -->
 
 ---
