@@ -1,4 +1,4 @@
-# ToLaserBlade v1.13.2-2.0.0.0 (Beta)
+# ToLaserBlade v1.13.2-2.0.0.1
 
 ## ToLaserBlade ダウンロード
 
@@ -6,9 +6,7 @@
 
 ## ToLaserBlade アイテム解説
 
-以下の解説は、バージョン 1.13.2-2.0.0.0 時点での仕様に基づいて書かれています。
-
-- [パージョン 1.12.2-1.3.1.0 の解説はこちら](https://github.com/Iunius118/ToLaserBlade/blob/1.12.2_1.3.1/docs/recipes_ja.md)
+以下の解説は、バージョン 1.13.2-2.0.0.1 時点での仕様に基づいて書かれています。
 
 ### Laser B1ade / レーザーブレ一ド  (Prop / 模造品)
 
