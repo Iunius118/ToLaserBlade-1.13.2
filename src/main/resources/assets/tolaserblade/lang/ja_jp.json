@@ -7,7 +7,7 @@
   "tolaserblade.configgui.laserBladeRenderingMode": "レーザーブレイドの描画モード（0–1）",
   "tolaserblade.configgui.enableBlockingWithLaserBlade": "レーザーブレイドによる防御を有効にする",
   "advancements.tolaserblade.main.root.title": "ToLaserBlade",
-  "advancements.tolaserblade.main.root.description": "レーザーブレイドは切削工具ですので、武器として使用したことにより発生したいかなる損害も補償の対象外となります。",
+  "advancements.tolaserblade.main.root.description": "レーザーブレイドは切削工具です。武器として使用した際に発生した損害は、すべて補償の対象外となります。",
   "advancements.tolaserblade.main.lasar_blade.title": "レーザーブレイド？",
   "advancements.tolaserblade.main.lasar_blade.description": "レーザーブレ一ドをクラフトする。その刃は赤く輝いているという。",
   "advancements.tolaserblade.main.laser_blade.title": "レーザーブレイド",
