@@ -133,7 +133,7 @@
 
 ### tolaserblade-client.toml
 
-クライアント側限定の設定ファイル。これら設定はクライアント側のみで使用される。
+クライアント側限定の設定ファイル。クライアント側のみで使用される。
 
 - enableLaserBlade3DModel
   - 真偽値、デフォルトは`true`
