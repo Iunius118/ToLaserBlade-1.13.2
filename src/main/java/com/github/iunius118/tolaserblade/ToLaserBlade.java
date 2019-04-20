@@ -12,6 +12,7 @@ import com.github.iunius118.tolaserblade.network.NetworkHandler;
 import com.github.iunius118.tolaserblade.network.ServerConfigMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -25,6 +26,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -151,6 +153,16 @@ public class ToLaserBlade {
                 new ServerConfigMessage(ToLaserBladeConfig.COMMON.isEnabledBlockingWithLaserBlade.get()),
                 ((EntityPlayerMP) event.getPlayer()).connection.getNetworkManager(),
                 NetworkDirection.PLAY_TO_CLIENT);
+    }
+
+    @SubscribeEvent
+    public void onEntityJoiningInWorld(final EntityJoinWorldEvent event) {
+        if (event.getWorld().isRemote && event.getEntity() instanceof EntityPlayer) {
+            if (!hasShownUpdate) {
+                ClientEventHandler.checkUpdate();
+                hasShownUpdate = true;
+            }
+        }
     }
 
     @SubscribeEvent

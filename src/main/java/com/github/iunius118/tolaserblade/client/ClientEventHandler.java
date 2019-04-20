@@ -33,31 +33,27 @@ public class ClientEventHandler {
     }
 
     public static void checkUpdate() {
-        if (!ToLaserBlade.hasShownUpdate) {
-            // Check update and Notify client
-            CheckResult result = VersionChecker.getResult(ModList.get().getModFileById(ToLaserBlade.MOD_ID).getMods().get(0));
-            Status status = result.status;
+        // Check update and Notify client
+        CheckResult result = VersionChecker.getResult(ModList.get().getModFileById(ToLaserBlade.MOD_ID).getMods().get(0));
+        Status status = result.status;
 
-            if (status == Status.PENDING) {
-                // Failed to get update information
-                return;
-            }
+        if (status == Status.PENDING) {
+            // Failed to get update information
+            return;
+        }
 
-            if (status == Status.OUTDATED || status == Status.BETA_OUTDATED) {
-                ITextComponent modNameHighlighted = new TextComponentString(ToLaserBlade.MOD_NAME);
-                modNameHighlighted.getStyle().setColor(TextFormatting.YELLOW);
+        if (status == Status.OUTDATED || status == Status.BETA_OUTDATED) {
+            ITextComponent modNameHighlighted = new TextComponentString(ToLaserBlade.MOD_NAME);
+            modNameHighlighted.getStyle().setColor(TextFormatting.YELLOW);
 
-                ITextComponent newVersionHighlighted = new TextComponentString(result.target.toString());
-                newVersionHighlighted.getStyle().setColor(TextFormatting.YELLOW);
+            ITextComponent newVersionHighlighted = new TextComponentString(result.target.toString());
+            newVersionHighlighted.getStyle().setColor(TextFormatting.YELLOW);
 
-                ITextComponent message = new TextComponentTranslation("tolaserblade.update.newversion", modNameHighlighted).appendText(": ")
-                        .appendSibling(newVersionHighlighted);
-                message.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, result.url));
+            ITextComponent message = new TextComponentTranslation("tolaserblade.update.newversion", modNameHighlighted).appendText(": ")
+                    .appendSibling(newVersionHighlighted);
+            message.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, result.url));
 
-                Minecraft.getInstance().ingameGUI.getChatGUI().printChatMessage(message);
-
-                ToLaserBlade.hasShownUpdate = true;
-            }
+            Minecraft.getInstance().ingameGUI.getChatGUI().printChatMessage(message);
         }
     }
 

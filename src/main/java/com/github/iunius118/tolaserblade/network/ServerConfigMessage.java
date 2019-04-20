@@ -31,8 +31,6 @@ public class ServerConfigMessage {
         ctx.get().enqueueWork(() -> {
             ToLaserBladeConfig.COMMON.isEnabledBlockingWithLaserBladeInServer = msg.isEnabledBlockingWithLaserBladeInServer ? () -> true : () -> false;
             ToLaserBlade.LOGGER.info(SVRCFGMSG_MARKER, "config.common.enabledBlockingWithLaserBladeInServer: {}", msg.isEnabledBlockingWithLaserBladeInServer);
-
-            ClientEventHandler.checkUpdate();
         });
 
         ctx.get().setPacketHandled(true);
