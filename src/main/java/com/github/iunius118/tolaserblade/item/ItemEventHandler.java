@@ -20,7 +20,7 @@ public class ItemEventHandler {
         ItemStack itemStack = event.getItemStack();
 
         if (itemStack.getItem() == ToLaserBlade.Items.LASER_BLADE) {
-            // For stopping duplication of Laser Blade when player interact with Item Frame
+            // For stopping duplicate of Laser Blade when player interact with Item Frame
             event.setCanceled(true);
             EntityPlayer player = event.getEntityPlayer();
             ItemStack itemStack1 = itemStack.isEmpty() ? ItemStack.EMPTY : itemStack.copy();
