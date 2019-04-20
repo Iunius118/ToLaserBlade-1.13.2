@@ -4,22 +4,50 @@ import com.github.iunius118.tolaserblade.ToLaserBlade;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumActionResult;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.entity.player.AnvilRepairEvent;
 import net.minecraftforge.event.entity.player.CriticalHitEvent;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
 
 public class ItemEventHandler {
     @SubscribeEvent
+    public void onEntityInteract(PlayerInteractEvent.EntityInteract event) {
+        // When player interact with entity
+        ItemStack itemStack = event.getItemStack();
+
+        if (itemStack.getItem() == ToLaserBlade.Items.LASER_BLADE) {
+            // For stopping duplication of Laser Blade when player interact with Item Frame
+            event.setCanceled(true);
+            EntityPlayer player = event.getEntityPlayer();
+            ItemStack itemStack1 = itemStack.isEmpty() ? ItemStack.EMPTY : itemStack.copy();
+
+            if (event.getTarget().processInitialInteract(event.getEntityPlayer(), event.getHand())) {
+                if (player.abilities.isCreativeMode && itemStack == event.getItemStack() && itemStack.getCount() < itemStack1.getCount()) {
+                    itemStack.setCount(itemStack1.getCount());
+                }
+
+                event.setCancellationResult(EnumActionResult.SUCCESS);
+                return;
+            }
+
+            event.setCancellationResult(EnumActionResult.PASS);
+            return;
+        }
+    }
+
+    @SubscribeEvent
     public void onPlayerDestroyItem(PlayerDestroyItemEvent event) {
+        // When item destroyed by damage
         EntityPlayer player = event.getEntityPlayer();
 
         if (!player.getEntityWorld().isRemote) {
             ItemStack original = event.getOriginal();
 
-            if (original.getItem() == ToLaserBlade.Items.LASER_BLADE && original.getDamage() >= LaserBlade.MAX_USES - 1) {
+            if (original.getItem() == ToLaserBlade.Items.LASER_BLADE) {
                 LaserBlade laserBlade = LaserBlade.create(original);
                 ItemStack core = laserBlade.saveTagsToItemStack(new ItemStack(ToLaserBlade.Items.LASER_BLADE_CORE));
 
