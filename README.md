@@ -14,4 +14,5 @@ ToLaserBlade (T. o. Laser Blade) adds a simple sword with a laser blade.
 
 ---
 Copyright (c) 2019 Iunius118
+
 This mod is released under the MIT license but resources are licensed under a Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0) License.
