@@ -12,6 +12,9 @@ public class ToLaserBladeConfig {
         public final BooleanValue isEnabledBlockingWithLaserBlade;
         public Supplier<Boolean> isEnabledBlockingWithLaserBladeInServer;
 
+        public final IntValue laserBladeEfficiency;
+        public Supplier<Integer> laserBladeEfficiencyInServer;
+
         Common(ForgeConfigSpec.Builder builder) {
             builder.comment("ToLaserBlade's common settings.").push("common");
 
@@ -19,6 +22,11 @@ public class ToLaserBladeConfig {
                     .comment("Enable blocking with Laser Blade.")
                     .translation("tolaserblade.configgui.enableBlockingWithLaserBlade")
                     .define("enableBlockingWithLaserBlade", false);
+
+            laserBladeEfficiency = builder
+                    .comment("An integer value (0-128) that is a factor of mining speed of Laser Blade.")
+                    .translation("tolaserblade.configgui.laserBladeEfficiency")
+                    .defineInRange("laserBladeEfficiency", 12, 0, 128);
 
             builder.pop();
         }
@@ -54,6 +62,7 @@ public class ToLaserBladeConfig {
         COMMON = specPair.getLeft();
 
         COMMON.isEnabledBlockingWithLaserBladeInServer = () -> COMMON.isEnabledBlockingWithLaserBlade.get();
+        COMMON.laserBladeEfficiencyInServer = () -> COMMON.laserBladeEfficiency.get();
     }
 
     static final ForgeConfigSpec clientSpec;
@@ -63,5 +72,10 @@ public class ToLaserBladeConfig {
         final Pair<Client, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Client::new);
         clientSpec = specPair.getRight();
         CLIENT = specPair.getLeft();
+    }
+
+    public static class ServerConfig {
+        public boolean isEnabledBlockingWithLaserBladeInServer;
+        public int laserBladeEfficiency;
     }
 }

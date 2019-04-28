@@ -10,7 +10,6 @@ import com.github.iunius118.tolaserblade.item.crafting.RecipeLaserBladeClass3;
 import com.github.iunius118.tolaserblade.item.crafting.RecipeLaserBladeDyeing;
 import com.github.iunius118.tolaserblade.network.NetworkHandler;
 import com.github.iunius118.tolaserblade.network.ServerConfigMessage;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -21,8 +20,6 @@ import net.minecraft.item.crafting.RecipeSerializers;
 import net.minecraft.item.crafting.ShapedRecipe;
 import net.minecraft.item.crafting.ShapelessRecipe;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ChatType;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
@@ -49,7 +46,6 @@ import org.apache.logging.log4j.Logger;
 public class ToLaserBlade {
     public static final String MOD_ID = "tolaserblade";
     public static final String MOD_NAME = "ToLaserBlade";
-    public static final String MOD_UPDATE_JSON_URL = "https://raw.githubusercontent.com/Iunius118/ToLaserBlade/master/update.json";
 
     public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
 
@@ -149,8 +145,12 @@ public class ToLaserBlade {
 
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerLoggedInEvent event) {
+        ToLaserBladeConfig.ServerConfig serverConfig = new ToLaserBladeConfig.ServerConfig();
+        serverConfig.isEnabledBlockingWithLaserBladeInServer = ToLaserBladeConfig.COMMON.isEnabledBlockingWithLaserBlade.get();
+        serverConfig.laserBladeEfficiency = ToLaserBladeConfig.COMMON.laserBladeEfficiency.get();
+
         NETWORK_HANDLER.getConfigChannel().sendTo(
-                new ServerConfigMessage(ToLaserBladeConfig.COMMON.isEnabledBlockingWithLaserBlade.get()),
+                new ServerConfigMessage(serverConfig),
                 ((EntityPlayerMP) event.getPlayer()).connection.getNetworkManager(),
                 NetworkDirection.PLAY_TO_CLIENT);
     }

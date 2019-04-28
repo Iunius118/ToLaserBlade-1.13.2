@@ -40,7 +40,7 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
 import javax.annotation.Nullable;
 
 public class ItemLaserBlade extends ItemSword {
-    private final IItemTier tier = new ItemLaserBlade.ItemTier();
+    private final IItemTier tier;
     private final float attackDamage;
     private final float attackSpeed;
     public static Item.Properties properties = (new Item.Properties()).setNoRepair().group(ItemGroup.TOOLS);
@@ -50,8 +50,9 @@ public class ItemLaserBlade extends ItemSword {
     };
 
     public ItemLaserBlade() {
-        super(new ItemLaserBlade.ItemTier(), 3, -1.2F, properties);
+        super(new ItemTierLaser(), 3, -1.2F, properties);
 
+        tier = getTier();
         attackDamage = 3.0F + tier.getAttackDamage();
         attackSpeed = -1.2F;
 
@@ -502,44 +503,6 @@ public class ItemLaserBlade extends ItemSword {
             }
 
             return defaultColor;
-        }
-    }
-
-    public static class ItemTier implements IItemTier {
-        @Override
-        public int getHarvestLevel() {
-            return 3;
-        }
-
-        @Override
-        public int getMaxUses() {
-            return LaserBlade.MAX_USES;
-        }
-
-        @Override
-        public float getEfficiency() {
-            return 12.0F;
-        }
-
-        @Override
-        public float getAttackDamage() {
-            return 3.0F;
-        }
-
-        @Override
-        public int getEnchantability() {
-            return 15;
-        }
-
-        @Override
-        public Ingredient getRepairMaterial() {
-            Tag<Item> tag = ItemTags.getCollection().get(new ResourceLocation("forge", "ingots/iron"));
-
-            if (tag != null) {
-                return Ingredient.fromTag(tag);
-            } else {
-                return Ingredient.fromItems(Items.IRON_INGOT);
-            }
         }
     }
 }

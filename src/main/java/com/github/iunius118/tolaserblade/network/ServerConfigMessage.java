@@ -2,7 +2,6 @@ package com.github.iunius118.tolaserblade.network;
 
 import com.github.iunius118.tolaserblade.ToLaserBlade;
 import com.github.iunius118.tolaserblade.ToLaserBladeConfig;
-import com.github.iunius118.tolaserblade.client.ClientEventHandler;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 import org.apache.logging.log4j.Marker;
@@ -14,23 +13,32 @@ public class ServerConfigMessage {
     private static final Marker SVRCFGMSG_MARKER = MarkerManager.getMarker("ServerConfigMessage");
 
     private final boolean isEnabledBlockingWithLaserBladeInServer;
+    private final int laserBladeEfficiency;
 
-    public ServerConfigMessage(boolean enableBlockingWithLaserBlade) {
-        isEnabledBlockingWithLaserBladeInServer = enableBlockingWithLaserBlade;
+    public ServerConfigMessage(ToLaserBladeConfig.ServerConfig serverConfig) {
+        isEnabledBlockingWithLaserBladeInServer = serverConfig.isEnabledBlockingWithLaserBladeInServer;
+        laserBladeEfficiency = serverConfig.laserBladeEfficiency;
     }
 
     public static void encode(ServerConfigMessage msg, PacketBuffer buf) {
         buf.writeBoolean(msg.isEnabledBlockingWithLaserBladeInServer);
+        buf.writeInt(msg.laserBladeEfficiency);
     }
 
     public static ServerConfigMessage decode(PacketBuffer buf) {
-        return new ServerConfigMessage(buf.readBoolean());
+        ToLaserBladeConfig.ServerConfig serverConfig = new ToLaserBladeConfig.ServerConfig();
+        serverConfig.isEnabledBlockingWithLaserBladeInServer = buf.readBoolean();
+        serverConfig.laserBladeEfficiency = buf.readInt();
+        return new ServerConfigMessage(serverConfig);
     }
 
     public static void handle(ServerConfigMessage msg, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             ToLaserBladeConfig.COMMON.isEnabledBlockingWithLaserBladeInServer = msg.isEnabledBlockingWithLaserBladeInServer ? () -> true : () -> false;
             ToLaserBlade.LOGGER.info(SVRCFGMSG_MARKER, "config.common.enabledBlockingWithLaserBladeInServer: {}", msg.isEnabledBlockingWithLaserBladeInServer);
+
+            ToLaserBladeConfig.COMMON.laserBladeEfficiencyInServer = () -> msg.laserBladeEfficiency;
+            ToLaserBlade.LOGGER.info(SVRCFGMSG_MARKER, "config.common.laserBladeEfficiencyInServer: {}", msg.laserBladeEfficiency);
         });
 
         ctx.get().setPacketHandled(true);
