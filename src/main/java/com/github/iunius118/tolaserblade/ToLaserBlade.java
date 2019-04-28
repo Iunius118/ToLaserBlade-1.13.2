@@ -4,10 +4,7 @@ import com.github.iunius118.tolaserblade.client.ClientEventHandler;
 import com.github.iunius118.tolaserblade.item.ItemEventHandler;
 import com.github.iunius118.tolaserblade.item.ItemLasarBlade;
 import com.github.iunius118.tolaserblade.item.ItemLaserBlade;
-import com.github.iunius118.tolaserblade.item.crafting.RecipeLaserBladeClass1;
-import com.github.iunius118.tolaserblade.item.crafting.RecipeLaserBladeClass2;
-import com.github.iunius118.tolaserblade.item.crafting.RecipeLaserBladeClass3;
-import com.github.iunius118.tolaserblade.item.crafting.RecipeLaserBladeDyeing;
+import com.github.iunius118.tolaserblade.item.crafting.*;
 import com.github.iunius118.tolaserblade.network.NetworkHandler;
 import com.github.iunius118.tolaserblade.network.ServerConfigMessage;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
@@ -66,23 +63,24 @@ public class ToLaserBlade {
     public static final IRecipeSerializer<ShapedRecipe> CRAFTING_LASER_BLADE_CLASS_1 = RecipeSerializers.register(new RecipeLaserBladeClass1.Serializer());
     public static final IRecipeSerializer<ShapedRecipe> CRAFTING_LASER_BLADE_CLASS_2 = RecipeSerializers.register(new RecipeLaserBladeClass2.Serializer());
     public static final IRecipeSerializer<ShapedRecipe> CRAFTING_LASER_BLADE_CLASS_3 = RecipeSerializers.register(new RecipeLaserBladeClass3.Serializer());
+    public static final IRecipeSerializer<ShapedRecipe> CRAFTING_LASER_BLADE_CUSTOM = RecipeSerializers.register(new RecipeLaserBladeCustom.Serializer());
 
     // Init network channels
     public static final NetworkHandler NETWORK_HANDLER = new NetworkHandler();
 
     public ToLaserBlade() {
-        // Register lifecycle events
+        // Register lifecycle event listeners
         final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         modEventBus.addListener(this::preInit);
         modEventBus.addListener(this::initServer);
         modEventBus.addListener(this::initClient);
         modEventBus.addListener(this::postInit);
 
-        // Register config
+        // Register config handlers
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ToLaserBladeConfig.commonSpec);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ToLaserBladeConfig.clientSpec);
 
-        // Register events
+        // Register event handlers
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new ItemEventHandler());
     }

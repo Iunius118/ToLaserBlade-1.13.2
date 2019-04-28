@@ -64,6 +64,7 @@ public class LaserBlade {
     public static final float MOD_SPD_CLASS_1 = 0.0F;
     public static final float MOD_SPD_CLASS_3 = 1.2F;
 
+    public static final float MOD_ATK_MIN = -6.0F;
     public static final float MOD_ATK_CLASS_1 = -1.0F;
     public static final float MOD_ATK_CLASS_2 = 0.0F;
     public static final float MOD_ATK_CLASS_3 = 3.0F;
@@ -95,20 +96,21 @@ public class LaserBlade {
         NBTTagCompound nbt = stack.getOrCreateTag();
 
         if (isLaserBladeStack) {
-            attack = nbt.getFloat(KEY_ATK);
+            setAttack(nbt.getFloat(KEY_ATK));
+
         } else {
             attack = MOD_ATK_CLASS_1;
         }
 
-        speed = Math.min(nbt.getFloat(KEY_SPD), MOD_SPD_CLASS_3);
+        setSpeed(nbt.getFloat(KEY_SPD));
         mapEnch = EnchantmentHelper.getEnchantments(stack);
 
         Integer sharpness = mapEnch.getOrDefault(Enchantments.SHARPNESS, 0);
-        attack = Math.max(attack, getAttackFromSharpness(sharpness));
+        setAttackIfLess(getAttackFromSharpness(sharpness));
         mapEnch.remove(Enchantments.SHARPNESS);
 
         Integer unbreaking = mapEnch.getOrDefault(Enchantments.UNBREAKING, 0);
-        speed = Math.max(speed, getSpeedFromUnbreaking(unbreaking));
+        setSpeedIfLess(getSpeedFromUnbreaking(unbreaking));
         mapEnch.remove(Enchantments.UNBREAKING);
 
         // Fix speed for old version
@@ -161,7 +163,7 @@ public class LaserBlade {
 
     private float getAttackFromSharpness(Integer level) {
         if (level > 0) {
-            return level - 1;
+            return (level > (int) MOD_ATK_MAX + 1) ? (int) MOD_ATK_MAX + 1 : level - 1;
         }
 
         return MOD_ATK_CLASS_1;
@@ -427,7 +429,12 @@ public class LaserBlade {
     }
 
     public LaserBlade setAttack(float f) {
-        attack = Math.max(f, MOD_ATK_CLASS_1);
+        if (f > MOD_ATK_MAX) {
+            attack = MOD_ATK_MAX;
+        } else {
+            attack = Math.max(f, MOD_ATK_MIN);
+        }
+
         return this;
     }
 
@@ -588,7 +595,7 @@ public class LaserBlade {
         }
     }
 
-    public void mixLaserBlade(LaserBlade other) {
+    public LaserBlade mixLaserBlade(LaserBlade other) {
         if (attack < other.getAttack()) {
             attack = other.getAttack();
             cost++;
@@ -609,6 +616,8 @@ public class LaserBlade {
             damage = Math.max(0, damage - repairValue - (int) (MAX_USES * 0.12F));
             cost += (int) Math.ceil(repairValue / (double) (MAX_USES / 4));
         }
+
+        return this;
     }
 
     public int repairByMaterial(int stackSize) {
