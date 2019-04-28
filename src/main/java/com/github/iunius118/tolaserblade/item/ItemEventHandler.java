@@ -62,7 +62,7 @@ public class ItemEventHandler {
     public void onCriticalHit(CriticalHitEvent event) {
         ItemStack stack = event.getEntityPlayer().getHeldItemMainhand();
 
-        if (stack.getItem() == ToLaserBlade.Items.LASER_BLADE) {
+        if (stack.getItem() instanceof ItemLaserBlade) {
             ((ItemLaserBlade) stack.getItem()).onCriticalHit(event);
         }
     }
@@ -71,7 +71,7 @@ public class ItemEventHandler {
     public void onCrafting(ItemCraftedEvent event) {
         ItemStack stackOut = event.getCrafting();
 
-        if (stackOut.getItem() == ToLaserBlade.Items.LASER_BLADE) {
+        if (stackOut.getItem() instanceof ItemLaserBlade) {
             ((ItemLaserBlade) stackOut.getItem()).onCrafting(event);
         }
     }
@@ -80,7 +80,7 @@ public class ItemEventHandler {
     public void onAnvilRepair(AnvilRepairEvent event) {
         ItemStack left = event.getItemInput();
 
-        if (left.getItem() == ToLaserBlade.Items.LASER_BLADE) {
+        if (left.getItem() instanceof ItemLaserBlade) {
             ((ItemLaserBlade) left.getItem()).onAnvilRepair(event);
             event.setBreakChance(0.075F);
         } else if (left.getItem() == ToLaserBlade.Items.LASER_BLADE_CORE) {

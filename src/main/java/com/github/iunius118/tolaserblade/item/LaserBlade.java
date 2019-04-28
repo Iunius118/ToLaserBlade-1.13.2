@@ -268,7 +268,7 @@ public class LaserBlade {
     }
 
     public LaserBlade setDefaultColors() {
-        NBTTagCompound nbt = stack.getTag();
+        NBTTagCompound nbt = stack.getOrCreateTag();;
         nbt.setInt(KEY_COLOR_CORE, DEFAULT_COLOR_CORE);
         nbt.setInt(KEY_COLOR_HALO, DEFAULT_COLOR_HALO);
         nbt.setBoolean(KEY_IS_SUB_COLOR_CORE, false);
@@ -289,26 +289,26 @@ public class LaserBlade {
     }
 
     public LaserBlade flipCoreSubColor() {
-        NBTTagCompound nbt = stack.getTag();
+        NBTTagCompound nbt = stack.getOrCreateTag();
         boolean b = nbt.getBoolean(KEY_IS_SUB_COLOR_CORE);
         nbt.setBoolean(KEY_IS_SUB_COLOR_CORE, !b);
         return this;
     }
 
     public LaserBlade setHaloColor(int color) {
-        NBTTagCompound nbt = stack.getTag();
+        NBTTagCompound nbt = stack.getOrCreateTag();
         nbt.setInt(KEY_COLOR_HALO, color);
         return this;
     }
 
     public LaserBlade setHaloSubColor(boolean isSubColor) {
-        NBTTagCompound nbt = stack.getTag();
+        NBTTagCompound nbt = stack.getOrCreateTag();
         nbt.setBoolean(KEY_IS_SUB_COLOR_HALO, isSubColor);
         return this;
     }
 
     public LaserBlade flipHaloSubColor() {
-        NBTTagCompound nbt = stack.getTag();
+        NBTTagCompound nbt = stack.getOrCreateTag();
         boolean b = nbt.getBoolean(KEY_IS_SUB_COLOR_HALO);
         nbt.setBoolean(KEY_IS_SUB_COLOR_HALO, !b);
         return this;
