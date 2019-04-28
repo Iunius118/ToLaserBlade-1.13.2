@@ -61,7 +61,7 @@ public class RecipeLaserBladeDyeing extends ShapelessRecipe {
         return true;
     }
 
-    // tolaserblade:laser_blade_dyeing
+    // tolaserblade:crafting_laser_blade_dyeing
     public static class Serializer extends ShapelessRecipe.Serializer {
         private static final ResourceLocation NAME = new ResourceLocation("tolaserblade", "crafting_laser_blade_dyeing");
 

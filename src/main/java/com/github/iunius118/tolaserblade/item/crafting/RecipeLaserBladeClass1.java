@@ -39,7 +39,7 @@ public class RecipeLaserBladeClass1 extends ShapedRecipe {
         return result.getItemStack();
     }
 
-    // tolaserblade:laser_blade_class_1
+    // tolaserblade:crafting_laser_blade_class_1
     public static class Serializer extends ShapedRecipe.Serializer {
         private static final ResourceLocation NAME = new ResourceLocation("tolaserblade", "crafting_laser_blade_class_1");
 

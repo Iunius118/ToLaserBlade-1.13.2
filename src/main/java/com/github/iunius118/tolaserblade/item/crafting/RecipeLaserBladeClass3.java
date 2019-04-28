@@ -23,7 +23,7 @@ public class RecipeLaserBladeClass3 extends ShapedRecipe {
         return ToLaserBlade.CRAFTING_LASER_BLADE_CLASS_3;
     }
 
-    // tolaserblade:laser_blade_class_3
+    // tolaserblade:crafting_laser_blade_class_3
     public static class Serializer extends ShapedRecipe.Serializer {
         private static final ResourceLocation NAME = new ResourceLocation("tolaserblade", "crafting_laser_blade_class_3");
 
