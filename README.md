@@ -13,6 +13,6 @@ ToLaserBlade (T. o. Laser Blade) adds a simple sword with a laser blade.
 - [Project Page (CurseForge)](https://minecraft.curseforge.com/projects/tolaserblade)
 
 ---
-Copyright (c) 2019 Iunius118
+Copyright (c) 2016-2019 Iunius118
 
-This mod is released under the MIT license but resources are licensed under a Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0) License.
+This mod is released under the MIT license but including resources licensed under a Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0) License.
