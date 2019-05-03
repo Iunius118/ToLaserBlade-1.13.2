@@ -1,0 +1,7 @@
+
+item.tolaserblade.laser_blade.name=Laser Blade
+item.tolaserblade.lasar_blade.name=Laser Blade
+
+tolaserblade.message.update=A new %s version is available
+
+tolaserblade.config.enableLaserBlade3DModel=Enable Laser Blade 3D Model

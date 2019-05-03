@@ -8,9 +8,6 @@
 # Exclude docs
 !/docs/
 
-# Exclude 1.12.2
-!/ToLaserBlade-1.12.2/
-
 # Others
 !.gitignore
 !*.md
