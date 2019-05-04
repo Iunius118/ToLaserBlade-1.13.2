@@ -29,7 +29,6 @@ import java.util.*;
 public class ModelLaserBlade implements IBakedModel
 {
 
-    public IBakedModel bakedOBJModel;
     public IBakedModel bakedJSONModel;
 
     public ItemStack itemStack;
@@ -42,7 +41,10 @@ public class ModelLaserBlade implements IBakedModel
     public EnumFacing side;
     public long rand;
 
-    public Map<String, List<BakedQuad>> mapQuads = new HashMap();
+    public int renderingMode = 0;
+
+    public Map<String, List<BakedQuad>> mapQuads_0 = new HashMap();
+    public Map<String, List<BakedQuad>> mapQuads_1 = new HashMap();
     public String[] partNames = { "Hilt", "Hilt_bright", "Blade_core", "Blade_halo_1", "Blade_halo_2" };
 
     public ModelLaserBlade(IBakedModel bakedOBJModelIn, IBakedModel bakedJSONModelIn)
@@ -50,9 +52,13 @@ public class ModelLaserBlade implements IBakedModel
         this(bakedOBJModelIn, bakedJSONModelIn, false);
     }
 
+    public ModelLaserBlade(IBakedModel bakedOBJModelIn, IBakedModel bakedOBJModelSubIn, IBakedModel bakedJSONModelIn)
+    {
+        this(bakedOBJModelIn, bakedOBJModelSubIn, bakedJSONModelIn, false);
+    }
+
     public ModelLaserBlade(IBakedModel bakedOBJModelIn, IBakedModel bakedJSONModelIn, boolean isInitialized)
     {
-        bakedOBJModel = bakedOBJModelIn;
         bakedJSONModel = bakedJSONModelIn;
 
         if (!isInitialized)
@@ -60,7 +66,23 @@ public class ModelLaserBlade implements IBakedModel
             // Separate Quads to each parts by OBJ Group.
             for (String partName : partNames)
             {
-                mapQuads.put(partName, getPartQuads(bakedOBJModelIn, ImmutableList.of(partName)));
+                mapQuads_0.put(partName, getPartQuads(bakedOBJModelIn, ImmutableList.of(partName)));
+                mapQuads_1 = mapQuads_0;
+            }
+        }
+    }
+
+    public ModelLaserBlade(IBakedModel bakedOBJModelIn, IBakedModel bakedOBJModelSubIn, IBakedModel bakedJSONModelIn, boolean isInitialized)
+    {
+        bakedJSONModel = bakedJSONModelIn;
+
+        if (!isInitialized)
+        {
+            // Separate Quads to each parts by OBJ Group.
+            for (String partName : partNames)
+            {
+                mapQuads_0.put(partName, getPartQuads(bakedOBJModelIn, ImmutableList.of(partName)));
+                mapQuads_1.put(partName, getPartQuads(bakedOBJModelSubIn, ImmutableList.of(partName)));
             }
         }
     }
@@ -132,14 +154,27 @@ public class ModelLaserBlade implements IBakedModel
             side = enumFacingIn;
             rand = longRand;
 
-            if (longRand == 0)
+            if (longRand >= 0 && longRand < partNames.length)
             {
-                return bakedOBJModel.getQuads(null, null, 0);
+                return mapQuads_0.get(partNames[(int) longRand]);
             }
-            else if (longRand >= 1 && longRand <= partNames.length)
-            {
-                return mapQuads.get(partNames[(int) longRand - 1]);
-            }
+        }
+
+        return Collections.emptyList();
+    }
+
+    public List<BakedQuad> getQuadsByName(String name) {
+        Map<String, List<BakedQuad>> mapQuads;
+
+        if (renderingMode == 1)
+        {
+            mapQuads = mapQuads_1;
+        } else {
+            mapQuads = mapQuads_0;
+        }
+
+        if (mapQuads.containsKey(name)) {
+            return mapQuads.get(name);
         }
 
         return Collections.emptyList();

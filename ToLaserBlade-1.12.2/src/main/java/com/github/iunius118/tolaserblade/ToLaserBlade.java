@@ -75,6 +75,7 @@ public class ToLaserBlade
     public static final String NAME_ITEM_LASER_BLADE = "laser_blade";
     public static final ModelResourceLocation MRL_ITEM_LASER_BLADE = new ModelResourceLocation(MOD_ID + ":" + NAME_ITEM_LASER_BLADE + "_2d", "inventory");
     public static final ResourceLocation RL_OBJ_ITEM_LASER_BLADE = new ResourceLocation(MOD_ID, "item/laser_blade.obj");
+    public static final ResourceLocation RL_OBJ_ITEM_LASER_BLADE_1 = new ResourceLocation(MOD_ID, "item/laser_blade_1.obj");
     public static final ResourceLocation RL_TEXTURE_ITEM_LASER_BLADE = new ResourceLocation(MOD_ID, "items/laser_blade");
 
     public static boolean hasShownUpdate = false;
@@ -225,7 +226,7 @@ public class ToLaserBlade
         @SubscribeEvent
         public void onModelBakeEvent(ModelBakeEvent event)
         {
-            ModelLaserBlade modelLaserBlade = new ModelLaserBlade(bakeModel(RL_OBJ_ITEM_LASER_BLADE), event.getModelRegistry().getObject(MRL_ITEM_LASER_BLADE));
+            ModelLaserBlade modelLaserBlade = new ModelLaserBlade(bakeModel(RL_OBJ_ITEM_LASER_BLADE), bakeModel(RL_OBJ_ITEM_LASER_BLADE_1), event.getModelRegistry().getObject(MRL_ITEM_LASER_BLADE));
             event.getModelRegistry().putObject(MRL_ITEM_LASER_BLADE, modelLaserBlade);
         }
 
