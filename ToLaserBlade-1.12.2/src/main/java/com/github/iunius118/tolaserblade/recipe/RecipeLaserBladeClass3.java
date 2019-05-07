@@ -14,21 +14,15 @@ import net.minecraftforge.common.crafting.JsonContext;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 //Recipe Laser Blade - Class 3
-public class RecipeLaserBladeClass3 extends ShapedOreRecipe
-{
-
-    public RecipeLaserBladeClass3(ResourceLocation group, ItemStack result, ShapedPrimer primer)
-    {
+public class RecipeLaserBladeClass3 extends ShapedOreRecipe {
+    public RecipeLaserBladeClass3(ResourceLocation group, ItemStack result, ShapedPrimer primer) {
         super(group, result, primer);
     }
 
     // tolaserblade:laser_blade_class_3
-    public static class Factory implements IRecipeFactory
-    {
-
+    public static class Factory implements IRecipeFactory {
         @Override
-        public IRecipe parse(JsonContext context, JsonObject json)
-        {
+        public IRecipe parse(JsonContext context, JsonObject json) {
             ShapedOreRecipe recipe = ShapedOreRecipe.factory(context, json);
 
             ItemStack output = recipe.getRecipeOutput();
@@ -43,7 +37,5 @@ public class RecipeLaserBladeClass3 extends ShapedOreRecipe
 
             return new RecipeLaserBladeClass3(new ResourceLocation(ToLaserBlade.MOD_ID, "laser_blade_class_3"), output, primer);
         }
-
     }
-
 }

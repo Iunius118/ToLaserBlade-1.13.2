@@ -57,9 +57,7 @@ import org.apache.logging.log4j.Logger;
         guiFactory = "com.github.iunius118.tolaserblade.client.gui.ConfigGuiFactory",
         useMetadata = true)
 @EventBusSubscriber
-public class ToLaserBlade
-{
-
+public class ToLaserBlade {
     public static final String MOD_ID = "tolaserblade";
     public static final String MOD_NAME = "ToLaserBlade";
     public static final String MOD_VERSION = "1.12.2-1.3.1.0";
@@ -88,53 +86,44 @@ public class ToLaserBlade
     public static CommonProxy proxy;
 
     @EventHandler
-    public void preInit(FMLPreInitializationEvent event)
-    {
+    public void preInit(FMLPreInitializationEvent event) {
         logger = event.getModLog();
         proxy.preInit(event);
     }
 
     @EventHandler
-    public void Init(FMLInitializationEvent event)
-    {
+    public void Init(FMLInitializationEvent event) {
         proxy.Init(event);
     }
 
     @EventHandler
-    public void postInit(FMLPostInitializationEvent event)
-    {
+    public void postInit(FMLPostInitializationEvent event) {
         proxy.postInit(event);
     }
 
     @ObjectHolder(MOD_ID)
-    public static class ITEMS
-    {
+    public static class ITEMS {
         public static final Item lasar_blade = null;
         public static final Item laser_blade = null;
     }
 
     @SubscribeEvent
-    public static void registerItems(RegistryEvent.Register<Item> event)
-    {
+    public static void registerItems(RegistryEvent.Register<Item> event) {
         event.getRegistry().registerAll(
                 new ItemLasarBlade().setRegistryName(NAME_ITEM_LASAR_BLADE).setUnlocalizedName(MOD_ID + "." + NAME_ITEM_LASAR_BLADE),
                 new ItemLaserBlade().setRegistryName(NAME_ITEM_LASER_BLADE).setUnlocalizedName(MOD_ID + "." + NAME_ITEM_LASER_BLADE)
-                );
+        );
     }
 
     @SubscribeEvent
-    public static void remapItems(RegistryEvent.MissingMappings<Item> mappings)
-    {
-        for(RegistryEvent.MissingMappings.Mapping<Item> mapping : mappings.getAllMappings())
-        {
-            if (!mapping.key.getResourceDomain().equals(MOD_ID))
-            {
+    public static void remapItems(RegistryEvent.MissingMappings<Item> mappings) {
+        for (RegistryEvent.MissingMappings.Mapping<Item> mapping : mappings.getAllMappings()) {
+            if (!mapping.key.getResourceDomain().equals(MOD_ID)) {
                 continue;
             }
 
             String name = mapping.key.getResourcePath();
-            if(name.equals(MOD_ID + "." + NAME_ITEM_LASER_BLADE))
-            {
+            if (name.equals(MOD_ID + "." + NAME_ITEM_LASER_BLADE)) {
                 // Replace item ID "tolaserblade:tolaserblade.laser_blade" (-1.11.2) with "tolaserblade:laser_blade" (1.12-)
                 mapping.remap(ToLaserBlade.ITEMS.laser_blade);
             }
@@ -144,8 +133,7 @@ public class ToLaserBlade
     // For damage test
     /*
     @SubscribeEvent
-    public static void onLivingHurt(LivingHurtEvent event)
-    {
+    public static void onLivingHurt(LivingHurtEvent event) {
         float dmg = CombatRules.getDamageAfterAbsorb(event.getAmount(), (float)event.getEntityLiving().getTotalArmorValue(), (float)event.getEntityLiving().getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue());
         String str = event.getSource().getDamageType() + " caused " + dmg + " point damage to " + event.getEntityLiving().getName() + "!";
         Minecraft.getMinecraft().ingameGUI.addChatMessage(ChatType.SYSTEM, new TextComponentString(str));
@@ -154,40 +142,30 @@ public class ToLaserBlade
 
     // Proxy Classes
 
-    public static class CommonProxy
-    {
-
-        public void preInit(FMLPreInitializationEvent event)
-        {
+    public static class CommonProxy {
+        public void preInit(FMLPreInitializationEvent event) {
 
         }
 
-        public void Init(FMLInitializationEvent event)
-        {
+        public void Init(FMLInitializationEvent event) {
             // register item event for LaserBlade dyeing
             MinecraftForge.EVENT_BUS.register(ITEMS.laser_blade);
         }
 
-        public void postInit(FMLPostInitializationEvent event)
-        {
+        public void postInit(FMLPostInitializationEvent event) {
 
         }
-
     }
 
     @SideOnly(Side.SERVER)
-    public static class ServerProxy extends CommonProxy
-    {
+    public static class ServerProxy extends CommonProxy {
 
     }
 
     @SideOnly(Side.CLIENT)
-    public static class ClientProxy extends CommonProxy
-    {
-
+    public static class ClientProxy extends CommonProxy {
         @Override
-        public void preInit(FMLPreInitializationEvent event)
-        {
+        public void preInit(FMLPreInitializationEvent event) {
             super.preInit(event);
 
             OBJLoader.INSTANCE.addDomain(MOD_ID);
@@ -195,8 +173,7 @@ public class ToLaserBlade
         }
 
         @Override
-        public void postInit(FMLPostInitializationEvent event)
-        {
+        public void postInit(FMLPostInitializationEvent event) {
             super.postInit(event);
 
             // Register item color handler
@@ -205,18 +182,15 @@ public class ToLaserBlade
 
         // ToLaserBladeConfig
         @SubscribeEvent
-        public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event)
-        {
-            if (event.getModID().equals(MOD_ID))
-            {
+        public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
+            if (event.getModID().equals(MOD_ID)) {
                 ConfigManager.sync(MOD_ID, Config.Type.INSTANCE);
             }
         }
 
         // Model registry and bakery
         @SubscribeEvent
-        public void registerModels(ModelRegistryEvent event)
-        {
+        public void registerModels(ModelRegistryEvent event) {
             ModelLoader.setCustomModelResourceLocation(ITEMS.lasar_blade, 0, MRL_ITEM_LASAR_BLADE);
             ModelLoader.setCustomModelResourceLocation(ITEMS.laser_blade, 0, MRL_ITEM_LASER_BLADE);
 
@@ -225,22 +199,17 @@ public class ToLaserBlade
         }
 
         @SubscribeEvent
-        public void onModelBakeEvent(ModelBakeEvent event)
-        {
+        public void onModelBakeEvent(ModelBakeEvent event) {
             ModelLaserBlade modelLaserBlade = new ModelLaserBlade(bakeModel(RL_OBJ_ITEM_LASER_BLADE), bakeModel(RL_OBJ_ITEM_LASER_BLADE_1), event.getModelRegistry().getObject(MRL_ITEM_LASER_BLADE));
             event.getModelRegistry().putObject(MRL_ITEM_LASER_BLADE, modelLaserBlade);
         }
 
-        public IBakedModel bakeModel(ResourceLocation location)
-        {
-            try
-            {
+        public IBakedModel bakeModel(ResourceLocation location) {
+            try {
                 IModel model = ModelLoaderRegistry.getModel(location);
                 // logger.info("Loaded obj model: " + model.hashCode());  // for debug
                 return model.bake(model.getDefaultState(), DefaultVertexFormats.ITEM, ModelLoader.defaultTextureGetter());
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -248,29 +217,24 @@ public class ToLaserBlade
         }
 
         @SubscribeEvent
-        public void onTextureStitchEvent(TextureStitchEvent.Pre event)
-        {
+        public void onTextureStitchEvent(TextureStitchEvent.Pre event) {
             // Register texture for obj model
             event.getMap().registerSprite(RL_TEXTURE_ITEM_LASER_BLADE);
         }
 
         @SubscribeEvent
-        public void onConnectedToServer(ClientConnectedToServerEvent event)
-        {
-            if (!hasShownUpdate)
-            {
+        public void onConnectedToServer(ClientConnectedToServerEvent event) {
+            if (!hasShownUpdate) {
                 // Check update and Notify client
                 CheckResult result = ForgeVersion.getResult(Loader.instance().activeModContainer());
                 Status status = result.status;
 
-                if (status == Status.PENDING)
-                {
+                if (status == Status.PENDING) {
                     // Failed to get update information
                     return;
                 }
 
-                if (status == Status.OUTDATED || status == Status.BETA_OUTDATED)
-                {
+                if (status == Status.OUTDATED || status == Status.BETA_OUTDATED) {
                     ITextComponent modNameHighlighted = new TextComponentString(MOD_NAME);
                     modNameHighlighted.getStyle().setColor(TextFormatting.YELLOW);
 
@@ -284,10 +248,7 @@ public class ToLaserBlade
 
                     hasShownUpdate = true;
                 }
-
             }
         }
-
     }
-
 }

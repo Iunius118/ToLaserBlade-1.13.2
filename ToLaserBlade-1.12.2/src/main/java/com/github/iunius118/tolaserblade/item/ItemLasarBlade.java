@@ -23,15 +23,12 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class ItemLasarBlade extends ItemSword
-{
-
+public class ItemLasarBlade extends ItemSword {
     private final Item.ToolMaterial material;
     private final float attackDamage;
     private final float attackSpeed;
 
-    public ItemLasarBlade()
-    {
+    public ItemLasarBlade() {
         super(ToLaserBlade.MATERIAL_LASAR);
 
         setCreativeTab(CreativeTabs.TOOLS);
@@ -41,12 +38,10 @@ public class ItemLasarBlade extends ItemSword
     }
 
     @Override
-    public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
-    {
+    public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         ItemStack itemstack = player.getHeldItem(hand);
 
-        if (itemstack.isEmpty() && !(itemstack.getItem() instanceof ItemLasarBlade))
-        {
+        if (itemstack.isEmpty() && !(itemstack.getItem() instanceof ItemLasarBlade)) {
             return EnumActionResult.PASS;
         }
 
@@ -56,53 +51,44 @@ public class ItemLasarBlade extends ItemSword
 
         // Redstone Torch -> Repairing/Collecting
 
-        if (block == Blocks.REDSTONE_TORCH && player.canPlayerEdit(pos, facing, itemstack))
-        {
-                int itemDamage = itemstack.getItemDamage();
-                if (itemDamage >= costDamage || player.capabilities.isCreativeMode)
-                {
-                    // Repair this
-                    itemstack.setItemDamage(itemDamage - costDamage);
+        if (block == Blocks.REDSTONE_TORCH && player.canPlayerEdit(pos, facing, itemstack)) {
+            int itemDamage = itemstack.getItemDamage();
+            if (itemDamage >= costDamage || player.capabilities.isCreativeMode) {
+                // Repair this
+                itemstack.setItemDamage(itemDamage - costDamage);
+            } else {
+                // Collect a Redstone Torch
+                if (!player.inventory.addItemStackToInventory(new ItemStack(Blocks.REDSTONE_TORCH))) {
+                    // Cannot collect because player's inventory is full
+                    return EnumActionResult.FAIL;
                 }
-                else
-                {
-                    // Collect a Redstone Torch
-                    if (!player.inventory.addItemStackToInventory(new ItemStack(Blocks.REDSTONE_TORCH)))
-                    {
-                        // Cannot collect because player's inventory is full
-                        return EnumActionResult.FAIL;
-                    }
-                }
+            }
 
-                // Destroy the Redstone Torch block
-                if (worldIn.isRemote) {
-                    Minecraft.getMinecraft().renderGlobal.playEvent(player, 2001, pos, Block.getStateId(blockstate));
-                }
-                worldIn.setBlockToAir(pos);
+            // Destroy the Redstone Torch block
+            if (worldIn.isRemote) {
+                Minecraft.getMinecraft().renderGlobal.playEvent(player, 2001, pos, Block.getStateId(blockstate));
+            }
+            worldIn.setBlockToAir(pos);
 
-                return EnumActionResult.SUCCESS;
+            return EnumActionResult.SUCCESS;
         }
 
         // Damage -> Redstone Torch
 
-        if (!player.capabilities.isCreativeMode && itemstack.getItemDamage() >= costDamage)
-        {
+        if (!player.capabilities.isCreativeMode && itemstack.getItemDamage() >= costDamage) {
             // This is too damaged to place Redstone Torch
             return EnumActionResult.FAIL;
         }
 
-        if (!block.isReplaceable(worldIn, pos))
-        {
+        if (!block.isReplaceable(worldIn, pos)) {
             pos = pos.offset(facing);
         }
 
-        if (player.canPlayerEdit(pos, facing, itemstack) && worldIn.mayPlace(Blocks.REDSTONE_TORCH, pos, false, facing, null))
-        {
+        if (player.canPlayerEdit(pos, facing, itemstack) && worldIn.mayPlace(Blocks.REDSTONE_TORCH, pos, false, facing, null)) {
             int i = this.getMetadata(itemstack.getMetadata());
             IBlockState iblockstate1 = Blocks.REDSTONE_TORCH.getStateForPlacement(worldIn, pos, facing, hitX, hitY, hitZ, i, player, hand);
 
-            if (new ItemBlock(Blocks.REDSTONE_TORCH).placeBlockAt(itemstack, player, worldIn, pos, facing, hitX, hitY, hitZ, iblockstate1))
-            {
+            if (new ItemBlock(Blocks.REDSTONE_TORCH).placeBlockAt(itemstack, player, worldIn, pos, facing, hitX, hitY, hitZ, iblockstate1)) {
                 // Place a Redstone Torch and Damage this
                 iblockstate1 = worldIn.getBlockState(pos);
                 SoundType soundtype = iblockstate1.getBlock().getSoundType(iblockstate1, worldIn, pos, player);
@@ -111,26 +97,21 @@ public class ItemLasarBlade extends ItemSword
             }
 
             return EnumActionResult.SUCCESS;
-        }
-        else
-        {
+        } else {
             return EnumActionResult.FAIL;
         }
     }
 
     @Override
-    public boolean isRepairable()
-    {
+    public boolean isRepairable() {
         return false;
     }
 
     @Override
-    public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack)
-    {
+    public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack) {
         Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
 
-        if (slot == EntityEquipmentSlot.MAINHAND)
-        {
+        if (slot == EntityEquipmentSlot.MAINHAND) {
             multimap.removeAll(SharedMonsterAttributes.ATTACK_DAMAGE.getName());
             multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", attackDamage, 0));
             multimap.removeAll(SharedMonsterAttributes.ATTACK_SPEED.getName());
@@ -139,5 +120,4 @@ public class ItemLasarBlade extends ItemSword
 
         return multimap;
     }
-
 }

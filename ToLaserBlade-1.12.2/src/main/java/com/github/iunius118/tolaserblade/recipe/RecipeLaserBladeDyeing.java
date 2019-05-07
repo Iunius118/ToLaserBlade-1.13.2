@@ -17,26 +17,19 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import javax.annotation.Nonnull;
 
 // Recipe Laser Blade - dyeing
-public class RecipeLaserBladeDyeing extends ShapelessOreRecipe
-{
-
-    public RecipeLaserBladeDyeing(ResourceLocation group, NonNullList<Ingredient> input, ItemStack result)
-    {
+public class RecipeLaserBladeDyeing extends ShapelessOreRecipe {
+    public RecipeLaserBladeDyeing(ResourceLocation group, NonNullList<Ingredient> input, ItemStack result) {
         super(group, input, result);
     }
 
     @Override
     @Nonnull
-    public ItemStack getCraftingResult(@Nonnull InventoryCrafting inv)
-    {
-        for (int i = 0; i < inv.getHeight(); ++i)
-        {
-            for (int j = 0; j < inv.getWidth(); ++j)
-            {
+    public ItemStack getCraftingResult(@Nonnull InventoryCrafting inv) {
+        for (int i = 0; i < inv.getHeight(); ++i) {
+            for (int j = 0; j < inv.getWidth(); ++j) {
                 ItemStack itemstack = inv.getStackInRowAndColumn(j, i);
 
-                if (itemstack.getItem() == ToLaserBlade.ITEMS.laser_blade)
-                {
+                if (itemstack.getItem() == ToLaserBlade.ITEMS.laser_blade) {
                     return itemstack.copy();
                 }
             }
@@ -46,17 +39,14 @@ public class RecipeLaserBladeDyeing extends ShapelessOreRecipe
     }
 
     @Override
-    public boolean matches(InventoryCrafting inv, World world)
-    {
+    public boolean matches(InventoryCrafting inv, World world) {
         int ingredientCount = 0;
         RecipeItemHelper recipeItemHelper = new RecipeItemHelper();
 
-        for (int i = 0; i < inv.getSizeInventory(); ++i)
-        {
+        for (int i = 0; i < inv.getSizeInventory(); ++i) {
             ItemStack itemstack = inv.getStackInSlot(i);
 
-            if (!itemstack.isEmpty())
-            {
+            if (!itemstack.isEmpty()) {
                 ++ingredientCount;
 
                 // Copy ItemStack to remove NBT from ingredient ItemStack
@@ -75,16 +65,11 @@ public class RecipeLaserBladeDyeing extends ShapelessOreRecipe
     }
 
     // tolaserblade:laser_blade_dyeing
-    public static class Factory implements IRecipeFactory
-    {
-
+    public static class Factory implements IRecipeFactory {
         @Override
-        public IRecipe parse(JsonContext context, JsonObject json)
-        {
+        public IRecipe parse(JsonContext context, JsonObject json) {
             ShapelessOreRecipe recipe = ShapelessOreRecipe.factory(context, json);
             return new RecipeLaserBladeDyeing(new ResourceLocation(ToLaserBlade.MOD_ID, "laser_blade_dyeing"), recipe.getIngredients(), recipe.getRecipeOutput());
         }
-
     }
-
 }

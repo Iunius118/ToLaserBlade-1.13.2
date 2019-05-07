@@ -30,24 +30,19 @@ import java.util.List;
 import java.util.Map;
 
 @SideOnly(Side.CLIENT)
-public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer
-{
-
+public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer {
     @Override
-    public void renderByItem(ItemStack itemStackIn, float partialTicks)
-    {
+    public void renderByItem(ItemStack itemStackIn, float partialTicks) {
         Minecraft mc = Minecraft.getMinecraft();
         IBakedModel model = mc.getRenderItem().getItemModelMesher().getModelManager().getModel(ToLaserBlade.MRL_ITEM_LASER_BLADE);
 
-        if (model instanceof ModelLaserBlade)
-        {
+        if (model instanceof ModelLaserBlade) {
             ModelLaserBlade modelLaserBlade = (ModelLaserBlade) model;
             doRender(modelLaserBlade);
         }
     }
 
-    public void doRender(ModelLaserBlade model)
-    {
+    public void doRender(ModelLaserBlade model) {
         float partialTicks = Animation.getPartialTickTime();
 
         BufferBuilder renderer = Tessellator.getInstance().getBuffer();
@@ -58,25 +53,20 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer
         NBTTagCompound nbt = model.itemStack.getTagCompound();
 
         // Load blade colors from ItemStack NBT.
-        if (nbt != null)
-        {
-            if (nbt.hasKey(ItemLaserBlade.KEY_COLOR_CORE, NBT.TAG_INT))
-            {
+        if (nbt != null) {
+            if (nbt.hasKey(ItemLaserBlade.KEY_COLOR_CORE, NBT.TAG_INT)) {
                 colorCore = nbt.getInteger(ItemLaserBlade.KEY_COLOR_CORE);
             }
 
-            if (nbt.hasKey(ItemLaserBlade.KEY_COLOR_HALO, NBT.TAG_INT))
-            {
+            if (nbt.hasKey(ItemLaserBlade.KEY_COLOR_HALO, NBT.TAG_INT)) {
                 colorHalo = nbt.getInteger(ItemLaserBlade.KEY_COLOR_HALO);
             }
 
-            if (nbt.hasKey(ItemLaserBlade.KEY_IS_SUB_COLOR_CORE, NBT.TAG_BYTE))
-            {
+            if (nbt.hasKey(ItemLaserBlade.KEY_IS_SUB_COLOR_CORE, NBT.TAG_BYTE)) {
                 isSubColorCore = nbt.getBoolean(ItemLaserBlade.KEY_IS_SUB_COLOR_CORE);
             }
 
-            if (nbt.hasKey(ItemLaserBlade.KEY_IS_SUB_COLOR_HALO, NBT.TAG_BYTE))
-            {
+            if (nbt.hasKey(ItemLaserBlade.KEY_IS_SUB_COLOR_HALO, NBT.TAG_BYTE)) {
                 isSubColorHalo = nbt.getBoolean(ItemLaserBlade.KEY_IS_SUB_COLOR_HALO);
             }
         }
@@ -87,8 +77,7 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer
         transform(cameraTransformType);
 
         // Enable Back-face Culling.
-        if (cameraTransformType == TransformType.THIRD_PERSON_LEFT_HAND || cameraTransformType == TransformType.THIRD_PERSON_RIGHT_HAND)
-        {
+        if (cameraTransformType == TransformType.THIRD_PERSON_LEFT_HAND || cameraTransformType == TransformType.THIRD_PERSON_RIGHT_HAND) {
             GlStateManager.enableCull();
             GlStateManager.cullFace(GlStateManager.CullFace.BACK);
         }
@@ -112,8 +101,7 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer
         GL14.glBlendEquation(GL14.GL_FUNC_ADD);
 
         // Draw blade core.
-        if (isSubColorCore)
-        {
+        if (isSubColorCore) {
             // Draw core with Sub-color.
             GL14.glBlendEquation(GL14.GL_FUNC_REVERSE_SUBTRACT);
         }
@@ -122,21 +110,17 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer
 
 
         // Draw blade halo.
-        if (!isSubColorCore && isSubColorHalo)
-        {
-         // Draw halo with Sub-color.
+        if (!isSubColorCore && isSubColorHalo) {
+            // Draw halo with Sub-color.
             GL14.glBlendEquation(GL14.GL_FUNC_REVERSE_SUBTRACT);
-        }
-        else if (isSubColorCore && !isSubColorHalo)
-        {
+        } else if (isSubColorCore && !isSubColorHalo) {
             GL14.glBlendEquation(GL14.GL_FUNC_ADD);
         }
 
         renderQuads(renderer, model.getQuadsByName("Blade_halo_1"), colorHalo);
         renderQuads(renderer, model.getQuadsByName("Blade_halo_2"), colorHalo);
 
-        if (isSubColorHalo)
-        {
+        if (isSubColorHalo) {
             GL14.glBlendEquation(GL14.GL_FUNC_ADD);
         }
 
@@ -147,39 +131,36 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer
         GL11.glPopAttrib();
 
         // Render Enchantment effect.
-        if (model.itemStack.hasEffect())
-        {
+        if (model.itemStack.hasEffect()) {
             renderEffect(model.getQuadsByName("Hilt"));
             renderEffect(model.getQuadsByName("Hilt_bright"));
         }
 
         // Disable Culling.
-        if (cameraTransformType == TransformType.THIRD_PERSON_LEFT_HAND || cameraTransformType == TransformType.THIRD_PERSON_RIGHT_HAND)
-        {
+        if (cameraTransformType == TransformType.THIRD_PERSON_LEFT_HAND || cameraTransformType == TransformType.THIRD_PERSON_RIGHT_HAND) {
             GlStateManager.disableCull();
         }
     }
 
     public static final Map<TransformType, float[]> transformMatrices;
+
     static {
         transformMatrices = new HashMap();
-        transformMatrices.put(TransformType.FIRST_PERSON_LEFT_HAND,  new float[] {-3.090862E-8F,  3.090862E-8F, -1.0F, 0.0F,  0.8838835F, 0.8838835F, 0.0F, 0.0F,  0.70710677F, -0.70710677F, -4.371139E-8F, 0.0F, -0.030330122F, -0.030330122F, 0.5F, 1.0F});
-        transformMatrices.put(TransformType.FIRST_PERSON_RIGHT_HAND, new float[] {-3.090862E-8F,  3.090862E-8F, -1.0F, 0.0F,  0.8838835F, 0.8838835F, 0.0F, 0.0F,  0.70710677F, -0.70710677F, -4.371139E-8F, 0.0F, -0.030330122F, -0.030330122F, 0.5F, 1.0F});
-        transformMatrices.put(TransformType.THIRD_PERSON_LEFT_HAND,  new float[] {-3.244294E-8F, 4.633332E-8F, -1.294F, 0.0F, 0.94637173F, 0.8825059F, 7.871984E-9F, 0.0F, 0.8825059F, -0.94637173F, -5.6012073E-8F, 0.0F, 0.035000555F, 0.030994587F, 0.5F, 1.0F});
-        transformMatrices.put(TransformType.THIRD_PERSON_RIGHT_HAND, new float[] {-3.244294E-8F, 4.633332E-8F, -1.294F, 0.0F, 0.94637173F, 0.8825059F, 7.871984E-9F, 0.0F, 0.8825059F, -0.94637173F, -5.6012073E-8F, 0.0F, 0.035000555F, 0.030994587F, 0.5F, 1.0F});
-        transformMatrices.put(TransformType.FIXED, new float[] {-5.0862745E-8F, -2.7817755E-8F, -0.9F, 0.0F, 0.63639605F, 0.63639605F, -5.5635514E-8F, 0.0F, 0.63639605F, -0.63639605F, -1.6295264E-8F, 0.0F, 0.022702962F, 0.022702962F, 0.46400005F, 1.0F});
-        transformMatrices.put(TransformType.NONE, new float[] {-2.7817755E-8F, 2.7817755E-8F, -0.9F, 0.0F, 0.63639605F, 0.63639605F, 0.0F, 0.0F, 0.63639605F, -0.63639605F, -3.934025E-8F, 0.0F, 0.022702962F, 0.022702962F, 0.5F, 1.0F});
+        transformMatrices.put(TransformType.FIRST_PERSON_LEFT_HAND, new float[]{-3.090862E-8F, 3.090862E-8F, -1.0F, 0.0F, 0.8838835F, 0.8838835F, 0.0F, 0.0F, 0.70710677F, -0.70710677F, -4.371139E-8F, 0.0F, -0.030330122F, -0.030330122F, 0.5F, 1.0F});
+        transformMatrices.put(TransformType.FIRST_PERSON_RIGHT_HAND, new float[]{-3.090862E-8F, 3.090862E-8F, -1.0F, 0.0F, 0.8838835F, 0.8838835F, 0.0F, 0.0F, 0.70710677F, -0.70710677F, -4.371139E-8F, 0.0F, -0.030330122F, -0.030330122F, 0.5F, 1.0F});
+        transformMatrices.put(TransformType.THIRD_PERSON_LEFT_HAND, new float[]{-3.244294E-8F, 4.633332E-8F, -1.294F, 0.0F, 0.94637173F, 0.8825059F, 7.871984E-9F, 0.0F, 0.8825059F, -0.94637173F, -5.6012073E-8F, 0.0F, 0.035000555F, 0.030994587F, 0.5F, 1.0F});
+        transformMatrices.put(TransformType.THIRD_PERSON_RIGHT_HAND, new float[]{-3.244294E-8F, 4.633332E-8F, -1.294F, 0.0F, 0.94637173F, 0.8825059F, 7.871984E-9F, 0.0F, 0.8825059F, -0.94637173F, -5.6012073E-8F, 0.0F, 0.035000555F, 0.030994587F, 0.5F, 1.0F});
+        transformMatrices.put(TransformType.FIXED, new float[]{-5.0862745E-8F, -2.7817755E-8F, -0.9F, 0.0F, 0.63639605F, 0.63639605F, -5.5635514E-8F, 0.0F, 0.63639605F, -0.63639605F, -1.6295264E-8F, 0.0F, 0.022702962F, 0.022702962F, 0.46400005F, 1.0F});
+        transformMatrices.put(TransformType.NONE, new float[]{-2.7817755E-8F, 2.7817755E-8F, -0.9F, 0.0F, 0.63639605F, 0.63639605F, 0.0F, 0.0F, 0.63639605F, -0.63639605F, -3.934025E-8F, 0.0F, 0.022702962F, 0.022702962F, 0.5F, 1.0F});
     }
 
     private static final FloatBuffer matrixBuf = BufferUtils.createFloatBuffer(16);
 
-    public void transform(TransformType cameraTransformType)
-    {
+    public void transform(TransformType cameraTransformType) {
         matrixBuf.clear();
         float[] matrix = transformMatrices.get(cameraTransformType);
 
-        if (matrix == null)
-        {
+        if (matrix == null) {
             matrix = transformMatrices.get(TransformType.NONE);
         }
 
@@ -189,8 +170,7 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer
         GlStateManager.pushMatrix();
         GlStateManager.loadIdentity();
         GlStateManager.translate(0.5F, 0.5F, 0.5F);
-        switch (cameraTransformType)
-        {
+        switch (cameraTransformType) {
         case FIRST_PERSON_LEFT_HAND:
         case FIRST_PERSON_RIGHT_HAND:
             GlStateManager.rotate(45.0F, 0.0F, 0.0F, -1.0F);
@@ -231,8 +211,7 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer
         GlStateManager.multMatrix(matrixBuf);
     }
 
-    public void renderEffect(List<BakedQuad> quads)
-    {
+    public void renderEffect(List<BakedQuad> quads) {
         BufferBuilder renderer = Tessellator.getInstance().getBuffer();
 
         // Render Enchantment effect for hilt.
@@ -268,19 +247,16 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer
         Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
     }
 
-    public void renderQuads(BufferBuilder renderer, List<BakedQuad> quads, int color)
-    {
+    public void renderQuads(BufferBuilder renderer, List<BakedQuad> quads, int color) {
         renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.ITEM);
 
         // Render Quads.
-        for (BakedQuad quad : quads)
-        {
+        for (BakedQuad quad : quads) {
             LightUtil.renderQuadColor(renderer, quad, color);
             Vec3i vec3i = quad.getFace().getDirectionVec();
-            renderer.putNormal((float)vec3i.getX(), (float)vec3i.getY(), (float)vec3i.getZ());
+            renderer.putNormal((float) vec3i.getX(), (float) vec3i.getY(), (float) vec3i.getZ());
         }
 
         Tessellator.getInstance().draw();
     }
-
 }

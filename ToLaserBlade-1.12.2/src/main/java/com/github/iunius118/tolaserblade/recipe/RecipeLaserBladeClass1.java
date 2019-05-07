@@ -17,29 +17,22 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import javax.annotation.Nonnull;
 
 //Recipe Laser Blade - Class 1
-public class RecipeLaserBladeClass1 extends ShapedOreRecipe
-{
-
-    public RecipeLaserBladeClass1(ResourceLocation group, ItemStack result, ShapedPrimer primer)
-    {
+public class RecipeLaserBladeClass1 extends ShapedOreRecipe {
+    public RecipeLaserBladeClass1(ResourceLocation group, ItemStack result, ShapedPrimer primer) {
         super(group, result, primer);
     }
 
     @Override
     @Nonnull
-    public ItemStack getCraftingResult(@Nonnull InventoryCrafting inv)
-    {
+    public ItemStack getCraftingResult(@Nonnull InventoryCrafting inv) {
         ItemStack result = getRecipeOutput().copy();
         NBTTagCompound nbt = result.getTagCompound();
 
-        for (int i = 0; i < inv.getHeight(); ++i)
-        {
-            for (int j = 0; j < inv.getWidth(); ++j)
-            {
+        for (int i = 0; i < inv.getHeight(); ++i) {
+            for (int j = 0; j < inv.getWidth(); ++j) {
                 ItemStack stack = inv.getStackInRowAndColumn(j, i);
 
-                if (ItemLaserBlade.changeBladeColorByItem(nbt, stack))
-                {
+                if (ItemLaserBlade.changeBladeColorByItem(nbt, stack)) {
                     return result;
                 }
             }
@@ -49,12 +42,9 @@ public class RecipeLaserBladeClass1 extends ShapedOreRecipe
     }
 
     // tolaserblade:laser_blade_class_1
-    public static class Factory implements IRecipeFactory
-    {
-
+    public static class Factory implements IRecipeFactory {
         @Override
-        public IRecipe parse(JsonContext context, JsonObject json)
-        {
+        public IRecipe parse(JsonContext context, JsonObject json) {
             ShapedOreRecipe recipe = ShapedOreRecipe.factory(context, json);
 
             ItemStack output = recipe.getRecipeOutput();
@@ -69,7 +59,5 @@ public class RecipeLaserBladeClass1 extends ShapedOreRecipe
 
             return new RecipeLaserBladeClass1(new ResourceLocation(ToLaserBlade.MOD_ID, "laser_blade_class_1"), output, primer);
         }
-
     }
-
 }

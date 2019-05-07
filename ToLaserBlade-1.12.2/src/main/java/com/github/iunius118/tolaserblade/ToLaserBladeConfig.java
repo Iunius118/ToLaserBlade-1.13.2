@@ -3,9 +3,7 @@ package com.github.iunius118.tolaserblade;
 import net.minecraftforge.common.config.Config;
 
 @Config(modid = ToLaserBlade.MOD_ID, category = "")
-public class ToLaserBladeConfig
-{
-
+public class ToLaserBladeConfig {
     @Config.Comment("Common settings. If you are playing a multiplayer game, the server-side settings will be used.")
     @Config.LangKey("tolaserblade.configgui.category.commonConfig")
     public static CommonConfig common = new CommonConfig();
@@ -14,9 +12,7 @@ public class ToLaserBladeConfig
     @Config.LangKey("tolaserblade.configgui.category.clientConfig")
     public static ClientConfig client = new ClientConfig();
 
-    public static class CommonConfig
-    {
-
+    public static class CommonConfig {
         @Config.Comment("Enable blocking with Laser Blade.")
         @Config.LangKey("tolaserblade.configgui.enableBlockingWithLaserBlade")
         @Config.Name("enableBlockingWithLaserBlade")
@@ -27,13 +23,10 @@ public class ToLaserBladeConfig
         @Config.RangeInt(min = 0, max = 128)
         @Config.Name("laserBladeEfficiency")
         public int laserBladeEfficiency = 12;
-
     }
 
     @Config(modid = ToLaserBlade.MOD_ID, category = "client")
-    public static class ClientConfig
-    {
-
+    public static class ClientConfig {
         @Config.Comment("Enable Laser Blade to use 3D Model.")
         @Config.LangKey("tolaserblade.configgui.enableLaserBlade3DModel")
         @Config.Name("enableLaserBlade3DModel")
@@ -44,7 +37,5 @@ public class ToLaserBladeConfig
         @Config.RangeInt(min = 0, max = 1)
         @Config.Name("laserBladeRenderingMode")
         public int laserBladeRenderingMode = 0;
-
     }
-
 }
