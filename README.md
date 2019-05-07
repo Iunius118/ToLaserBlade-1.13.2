@@ -6,7 +6,7 @@ ToLaserBlade (T. o. Laser Blade) adds a simple sword with a laser blade.
 
 - アイテム解説
   - [1.13.2](docs/recipes_ja.md)
-  - [1.12.2](https://github.com/Iunius118/ToLaserBlade/blob/1.12.2_1.3.1/docs/recipes_ja.md)
+  - [1.12.2](docs/recipes_1.12.2_ja.md)
 
 ## Description and Download
 
