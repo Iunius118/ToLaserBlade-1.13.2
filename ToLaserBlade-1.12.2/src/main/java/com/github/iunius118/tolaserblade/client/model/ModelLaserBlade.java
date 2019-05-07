@@ -1,6 +1,7 @@
 package com.github.iunius118.tolaserblade.client.model;
 
 import com.github.iunius118.tolaserblade.ToLaserBlade;
+import com.github.iunius118.tolaserblade.ToLaserBladeConfig;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.UnmodifiableIterator;
 import net.minecraft.block.state.IBlockState;
@@ -242,7 +243,7 @@ public class ModelLaserBlade implements IBakedModel
 
         cameraTransformType = transformTypeIn;
 
-        if (ToLaserBlade.isEnabledLaserBlade3DModel)
+        if (ToLaserBladeConfig.client.isEnabledLaserBlade3DModel)
         {
             return Pair.of(this, matrix);
         }

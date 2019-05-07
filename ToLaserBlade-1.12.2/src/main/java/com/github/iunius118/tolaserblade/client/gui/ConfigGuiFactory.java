@@ -12,6 +12,7 @@ import net.minecraftforge.fml.client.config.GuiConfig;
 import net.minecraftforge.fml.client.config.IConfigElement;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 public class ConfigGuiFactory implements IModGuiFactory
@@ -31,12 +32,8 @@ public class ConfigGuiFactory implements IModGuiFactory
     @Override
     public GuiScreen createConfigGui(GuiScreen parentScreen)
     {
-        ArrayList<IConfigElement> elements = new ArrayList<>();
-
-        for (Property property : ToLaserBladeConfig.config.getCategory(Configuration.CATEGORY_GENERAL).getOrderedValues())
-        {
-            elements.add(new ConfigElement(property));
-        }
+        List<IConfigElement> elements;
+        elements = ConfigElement.from(ToLaserBladeConfig.class).getChildElements();
 
         return new GuiConfig(parentScreen, elements, ToLaserBlade.MOD_ID, false, false, ToLaserBlade.MOD_NAME);
     }

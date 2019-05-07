@@ -28,6 +28,8 @@ import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.common.ForgeVersion.CheckResult;
 import net.minecraftforge.common.ForgeVersion.Status;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Config;
+import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -80,7 +82,7 @@ public class ToLaserBlade
 
     public static boolean hasShownUpdate = false;
 
-    public static boolean isEnabledLaserBlade3DModel = true;
+    public static final ToLaserBladeConfig config = new ToLaserBladeConfig();
 
     @SidedProxy
     public static CommonProxy proxy;
@@ -157,7 +159,7 @@ public class ToLaserBlade
 
         public void preInit(FMLPreInitializationEvent event)
         {
-            ToLaserBladeConfig.loadConfig(event);
+
         }
 
         public void Init(FMLInitializationEvent event)
@@ -207,8 +209,7 @@ public class ToLaserBlade
         {
             if (event.getModID().equals(MOD_ID))
             {
-                ToLaserBladeConfig.config.save();
-                isEnabledLaserBlade3DModel = ToLaserBladeConfig.propIsEnabledLaserBlade3DModel.getBoolean();
+                ConfigManager.sync(MOD_ID, Config.Type.INSTANCE);
             }
         }
 

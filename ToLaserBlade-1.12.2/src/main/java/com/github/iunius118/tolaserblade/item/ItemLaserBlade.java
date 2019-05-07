@@ -1,6 +1,7 @@
 package com.github.iunius118.tolaserblade.item;
 
 import com.github.iunius118.tolaserblade.ToLaserBlade;
+import com.github.iunius118.tolaserblade.ToLaserBladeConfig;
 import com.google.common.collect.Multimap;
 import net.minecraft.block.BlockStainedGlass;
 import net.minecraft.block.state.IBlockState;
@@ -606,7 +607,7 @@ public class ItemLaserBlade extends ItemSword
         @Override
         public int colorMultiplier(ItemStack stack, int tintIndex)
         {
-            if (ToLaserBlade.isEnabledLaserBlade3DModel)
+            if (ToLaserBladeConfig.client.isEnabledLaserBlade3DModel)
             {
                 return 0xFFFFFFFF;
             }
