@@ -5,10 +5,10 @@
 
   "tolaserblade.update.newversion": "A new %s version is available",
 
-  "tolaserblade.configgui.enableLaserBlade3DModel": "Enable Laser Blade 3D model",
-  "tolaserblade.configgui.laserBladeRenderingMode": "Rendering mode of Laser Blade (0–1)",
-  "tolaserblade.configgui.enableBlockingWithLaserBlade": "Enable blocking with Laser Blade",
-  "tolaserblade.configgui.laserBladeEfficiency": "Mining speed of Laser Blade (0–128)",
+  "tolaserblade.configgui.enableLaserBlade3DModel": "Enable Laser Blade 3D Model",
+  "tolaserblade.configgui.laserBladeRenderingMode": "Laser Blade Rendering mode (0–1)",
+  "tolaserblade.configgui.enableBlockingWithLaserBlade": "Enable Blocking with Laser Blade",
+  "tolaserblade.configgui.laserBladeEfficiency": "Laser Blade Mining Speed (0–128)",
 
   "advancements.tolaserblade.main.root.title": "ToLaserBlade",
   "advancements.tolaserblade.main.root.description": "Laser Blade is a tool used to cut through material, so any damage caused by using as a weapon is not covered by the warranty.",

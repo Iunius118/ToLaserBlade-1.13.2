@@ -40,7 +40,7 @@ public class ToLaserBladeConfig {
             builder.comment("ToLaserBlade's client side settings.").push("client");
 
             isEnabledLaserBlade3DModel = builder
-                    .comment("Enable Laser Blade to use 3D Model.")
+                    .comment("Enable Laser Blade to use 3D model.")
                     .translation("tolaserblade.configgui.enableLaserBlade3DModel")
                     .define("enableLaserBlade3DModel", true);
 
