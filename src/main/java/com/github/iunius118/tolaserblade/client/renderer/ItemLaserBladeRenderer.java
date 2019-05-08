@@ -68,7 +68,7 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer {
         }
 
         // Draw hilt.
-        renderQuads(renderer, model.mapQuads.get("Hilt"), -1);
+        renderQuads(renderer, model.getQuadsByName("Hilt"), -1);
 
         // Enable bright rendering.
         GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
@@ -78,10 +78,11 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer {
         OpenGlHelper.glMultiTexCoord2f(OpenGlHelper.GL_TEXTURE1, 240.0F, 240.0F);
 
         // Draw bright part of hilt.
-        renderQuads(renderer, model.mapQuads.get("Hilt_bright"), -1);
+        renderQuads(renderer, model.getQuadsByName("Hilt_bright"), -1);
 
         if (ToLaserBladeConfig.CLIENT.laserBladeRenderingMode.get() == 1) {
-            // Rendering Mode 1: Disable Blending
+            // Rendering Mode 1: Using only alpha blending
+
             if (isSubColorCore) {
                 colorCore = ~colorCore | 0xFF000000;
             }
@@ -91,9 +92,9 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer {
             }
 
             // Draw blade.
-            renderQuads(renderer, model.mapQuads.get("Blade_halo_2"), colorHalo);
-            renderQuads(renderer, model.mapQuads.get("Blade_halo_1"), colorHalo);
-            renderQuads(renderer, model.mapQuads.get("Blade_core"), colorCore);
+            renderQuads(renderer, model.getQuadsByName("Blade_halo_2"), colorHalo);
+            renderQuads(renderer, model.getQuadsByName("Blade_halo_1"), colorHalo);
+            renderQuads(renderer, model.getQuadsByName("Blade_core"), colorCore);
 
         } else {
             // Rendering Mode 0: Default
@@ -108,7 +109,7 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer {
                 GL14.glBlendEquation(GL14.GL_FUNC_REVERSE_SUBTRACT);
             }
 
-            renderQuads(renderer, model.mapQuads.get("Blade_core"), colorCore);
+            renderQuads(renderer, model.getQuadsByName("Blade_core"), colorCore);
 
             // Draw blade halo.
             if (!isSubColorCore && isSubColorHalo) {
@@ -118,8 +119,8 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer {
                 GL14.glBlendEquation(GL14.GL_FUNC_ADD);
             }
 
-            renderQuads(renderer, model.mapQuads.get("Blade_halo_1"), colorHalo);
-            renderQuads(renderer, model.mapQuads.get("Blade_halo_2"), colorHalo);
+            renderQuads(renderer, model.getQuadsByName("Blade_halo_1"), colorHalo);
+            renderQuads(renderer, model.getQuadsByName("Blade_halo_2"), colorHalo);
 
             if (isSubColorHalo) {
                 GL14.glBlendEquation(GL14.GL_FUNC_ADD);
@@ -136,8 +137,8 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer {
 
         // Render Enchantment effect.
         if (model.itemStack.hasEffect()) {
-            renderEffect(model.mapQuads.get("Hilt"));
-            renderEffect(model.mapQuads.get("Hilt_bright"));
+            renderEffect(model.getQuadsByName("Hilt"));
+            renderEffect(model.getQuadsByName("Hilt_bright"));
         }
 
         // Disable Culling.

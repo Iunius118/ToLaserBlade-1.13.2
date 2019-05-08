@@ -121,6 +121,14 @@ public class ModelLaserBlade implements IBakedModel {
         return Collections.emptyList();
     }
 
+    public List<BakedQuad> getQuadsByName(String name) {
+        if (mapQuads.containsKey(name)) {
+            return mapQuads.get(name);
+        }
+
+        return Collections.emptyList();
+    }
+
     @Override
     public boolean isAmbientOcclusion() {
         return true;
