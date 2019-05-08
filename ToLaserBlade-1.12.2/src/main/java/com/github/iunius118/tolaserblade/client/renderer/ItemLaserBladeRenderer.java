@@ -1,6 +1,7 @@
 package com.github.iunius118.tolaserblade.client.renderer;
 
 import com.github.iunius118.tolaserblade.ToLaserBlade;
+import com.github.iunius118.tolaserblade.ToLaserBladeConfig;
 import com.github.iunius118.tolaserblade.client.model.ModelLaserBlade;
 import com.github.iunius118.tolaserblade.item.ItemLaserBlade;
 import net.minecraft.client.Minecraft;
@@ -13,6 +14,7 @@ import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.client.model.animation.Animation;
@@ -73,15 +75,24 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer {
 
         TransformType cameraTransformType = model.cameraTransformType;
 
-        // Transform by Camera type.
-        transform(cameraTransformType);
+        // Transform by Blocking.
+        boolean isBlocking = ToLaserBladeConfig.common.isEnabledBlockingWithLaserBlade
+                && (cameraTransformType == TransformType.FIRST_PERSON_RIGHT_HAND || cameraTransformType == TransformType.FIRST_PERSON_LEFT_HAND)
+                && model.entity != null && model.entity.isHandActive();
 
-        // Enable Back-face Culling.
-        if (cameraTransformType == TransformType.THIRD_PERSON_LEFT_HAND || cameraTransformType == TransformType.THIRD_PERSON_RIGHT_HAND) {
+        // Transform by Camera type.
+        transform(cameraTransformType, isBlocking);
+
+
+        // Enable Culling.
+        boolean isEnableCull = GL11.glIsEnabled(GL11.GL_CULL_FACE);
+
+        if (!isEnableCull) {
             GlStateManager.enableCull();
-            GlStateManager.cullFace(GlStateManager.CullFace.BACK);
         }
 
+        // Set rendering mode.
+        model.renderingMode = ToLaserBladeConfig.client.laserBladeRenderingMode;
 
         // Draw hilt.
         renderQuads(renderer, model.getQuadsByName("Hilt"), -1);
@@ -96,36 +107,58 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer {
         // Draw bright part of hilt.
         renderQuads(renderer, model.getQuadsByName("Hilt_bright"), -1);
 
-        // Enable Add-color.
-        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
-        GL14.glBlendEquation(GL14.GL_FUNC_ADD);
 
-        // Draw blade core.
-        if (isSubColorCore) {
-            // Draw core with Sub-color.
-            GL14.glBlendEquation(GL14.GL_FUNC_REVERSE_SUBTRACT);
-        }
+        if (ToLaserBladeConfig.client.laserBladeRenderingMode == 1) {
+            // Rendering Mode 1: Using only alpha blending
 
-        renderQuads(renderer, model.getQuadsByName("Blade_core"), colorCore);
+            if (isSubColorCore) {
+                colorCore = ~colorCore | 0xFF000000;
+            }
 
+            if (isSubColorHalo) {
+                colorHalo = ~colorHalo | 0xFF000000;
+            }
 
-        // Draw blade halo.
-        if (!isSubColorCore && isSubColorHalo) {
-            // Draw halo with Sub-color.
-            GL14.glBlendEquation(GL14.GL_FUNC_REVERSE_SUBTRACT);
-        } else if (isSubColorCore && !isSubColorHalo) {
+            // Draw blade.
+            renderQuads(renderer, model.getQuadsByName("Blade_halo_2"), colorHalo);
+            renderQuads(renderer, model.getQuadsByName("Blade_halo_1"), colorHalo);
+            renderQuads(renderer, model.getQuadsByName("Blade_core"), colorCore);
+
+        } else {
+            // Rendering Mode 0: Default
+
+            // Enable Add-color.
+            GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
             GL14.glBlendEquation(GL14.GL_FUNC_ADD);
+
+            // Draw blade core.
+            if (isSubColorCore) {
+                // Draw core with Sub-color.
+                GL14.glBlendEquation(GL14.GL_FUNC_REVERSE_SUBTRACT);
+            }
+
+            renderQuads(renderer, model.getQuadsByName("Blade_core"), colorCore);
+
+            // Draw blade halo.
+            if (!isSubColorCore && isSubColorHalo) {
+                // Draw halo with Sub-color.
+                GL14.glBlendEquation(GL14.GL_FUNC_REVERSE_SUBTRACT);
+            } else if (isSubColorCore && !isSubColorHalo) {
+                GL14.glBlendEquation(GL14.GL_FUNC_ADD);
+            }
+
+            renderQuads(renderer, model.getQuadsByName("Blade_halo_1"), colorHalo);
+            renderQuads(renderer, model.getQuadsByName("Blade_halo_2"), colorHalo);
+
+            if (isSubColorHalo) {
+                GL14.glBlendEquation(GL14.GL_FUNC_ADD);
+            }
+
+            // Disable Add-color and bright rendering.
+            GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         }
 
-        renderQuads(renderer, model.getQuadsByName("Blade_halo_1"), colorHalo);
-        renderQuads(renderer, model.getQuadsByName("Blade_halo_2"), colorHalo);
-
-        if (isSubColorHalo) {
-            GL14.glBlendEquation(GL14.GL_FUNC_ADD);
-        }
-
-        // Disable Add-color and bright rendering.
-        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        // Disable bright rendering.
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
         RenderHelper.enableStandardItemLighting();
         GL11.glPopAttrib();
@@ -137,7 +170,7 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer {
         }
 
         // Disable Culling.
-        if (cameraTransformType == TransformType.THIRD_PERSON_LEFT_HAND || cameraTransformType == TransformType.THIRD_PERSON_RIGHT_HAND) {
+        if (!isEnableCull) {
             GlStateManager.disableCull();
         }
     }
@@ -154,11 +187,35 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer {
         transformMatrices.put(TransformType.NONE, new float[]{-2.7817755E-8F, 2.7817755E-8F, -0.9F, 0.0F, 0.63639605F, 0.63639605F, 0.0F, 0.0F, 0.63639605F, -0.63639605F, -3.934025E-8F, 0.0F, 0.022702962F, 0.022702962F, 0.5F, 1.0F});
     }
 
+    public static final Map<TransformType, float[]> transformMatricesBlockingRight;
+    static {
+        transformMatricesBlockingRight = new HashMap<>();
+        transformMatricesBlockingRight.put(TransformType.FIRST_PERSON_LEFT_HAND, new float[] { -0.04950499F, -0.8617275F, -0.50495046F, 0.0F, 0.10771594F, 0.62499994F, -1.0771594F, 0.0F, 0.9950494F, -0.08617279F, 0.049504925F, 0.0F, 0.45283374F, 0.05398178F, 0.6716627F, 1.0F });
+        transformMatricesBlockingRight.put(TransformType.FIRST_PERSON_RIGHT_HAND, new float[] { -0.04950499F, 0.8617275F, -0.50495046F, 0.0F, -0.10771594F, 0.62499994F, 1.0771594F, 0.0F, 0.9950494F, 0.08617279F, 0.049504925F, 0.0F, 0.5471663F, 0.05398178F, 0.3283373F, 1.0F });
+    }
+
+    public static final Map<TransformType, float[]> transformMatricesBlockingLeft;
+    static {
+        transformMatricesBlockingLeft = new HashMap<>();
+        transformMatricesBlockingLeft.put(TransformType.FIRST_PERSON_LEFT_HAND, new float[] { 0.049504902F, -0.8617275F, -0.50495046F, 0.0F, -0.10771594F, 0.62499994F, -1.0771594F, 0.0F, 0.9950494F, 0.086172715F, -0.04950497F, 0.0F, 0.5471663F, 0.05398178F, 0.6716627F, 1.0F });
+        transformMatricesBlockingLeft.put(TransformType.FIRST_PERSON_RIGHT_HAND, new float[] { 0.049504902F, 0.8617275F, -0.50495046F, 0.0F, 0.10771594F, 0.62499994F, 1.0771594F, 0.0F, 0.9950494F, -0.086172715F, -0.04950497F, 0.0F, 0.45283374F, 0.05398178F, 0.3283373F, 1.0F });
+    }
+
     private static final FloatBuffer matrixBuf = BufferUtils.createFloatBuffer(16);
 
-    public void transform(TransformType cameraTransformType) {
+    public void transform(TransformType cameraTransformType, boolean isBlocking) {
         matrixBuf.clear();
-        float[] matrix = transformMatrices.get(cameraTransformType);
+        float[] matrix;
+
+        if (isBlocking) {
+            if (Minecraft.getMinecraft().gameSettings.mainHand == EnumHandSide.RIGHT) {
+                matrix = transformMatricesBlockingRight.get(cameraTransformType);
+            } else {
+                matrix = transformMatricesBlockingLeft.get(cameraTransformType);
+            }
+        } else {
+            matrix = transformMatrices.get(cameraTransformType);
+        }
 
         if (matrix == null) {
             matrix = transformMatrices.get(TransformType.NONE);
@@ -173,9 +230,9 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer {
         switch (cameraTransformType) {
         case FIRST_PERSON_LEFT_HAND:
         case FIRST_PERSON_RIGHT_HAND:
-            GlStateManager.rotate(45.0F, 0.0F, 0.0F, -1.0F);
+            GlStateManager.rotate(45.0F, 0.0F, 0.0F, -1.0F);    // GlStateManager.rotatef(60.0F, 1.0F, 0.0F, 0.1F); // <- For Blocking with Right hand (Main)
             GlStateManager.scale(1.0D, 1.25D, 1.0D);
-            GlStateManager.translate(0.0F, -0.6F, 0.0F);
+            GlStateManager.translate(0.0F, -0.6F, 0.0F);        // GlStateManager.translatef(0.0F, -0.3F, 0.3F); // <- For Blocking with Right hand (Main)
             GlStateManager.rotate(90.0F, 0.0F, 1.0F, 0.0F);
             break;
         case THIRD_PERSON_LEFT_HAND:
@@ -204,7 +261,7 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer {
         GlStateManager.getFloat(GL11.GL_MODELVIEW_MATRIX, matrixBuf);
         GlStateManager.popMatrix();
         matrix = new float[16];
-        matrixBuf.get(matrix);
+        matrixBuf.get(matrix);  // Put transformation matrix in matrix
         // */
 
         matrixBuf.flip();
