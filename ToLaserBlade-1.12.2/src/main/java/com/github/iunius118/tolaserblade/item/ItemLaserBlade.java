@@ -500,7 +500,7 @@ public class ItemLaserBlade extends ItemSword {
 
     @Override
     public float getDestroySpeed(ItemStack stack, IBlockState state) {
-        return material.getEfficiency();
+        return ToLaserBladeConfig.server.laserBladeEfficiency;
     }
 
     @Override
