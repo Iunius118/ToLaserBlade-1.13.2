@@ -45,7 +45,7 @@ public class ToLaserBladeConfig {
                     .define("enableLaserBlade3DModel", true);
 
             laserBladeRenderingMode = builder
-                    .comment("Select rendering mode of Laser Blade (0: Default, 1: Disable blending). This option is available when enableLaserBlade3DModel is true.")
+                    .comment("Select rendering mode of Laser Blade (0: Default, 1: Using only alpha blending). This option is available when enableLaserBlade3DModel is true.")
                     .translation("tolaserblade.configgui.laserBladeRenderingMode")
                     .defineInRange("laserBladeRenderingMode", 0, 0, 1);
 
