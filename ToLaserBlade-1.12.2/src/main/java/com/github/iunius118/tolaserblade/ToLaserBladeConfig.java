@@ -12,6 +12,10 @@ public class ToLaserBladeConfig {
     @Config.LangKey("tolaserblade.configgui.category.clientConfig")
     public static ClientConfig client = new ClientConfig();
 
+    // Settings copied from server
+    @Config.Ignore()
+    public static ServerConfig server = new ServerConfig();
+
     public static class CommonConfig {
         @Config.Comment("Enable blocking with Laser Blade.")
         @Config.LangKey("tolaserblade.configgui.enableBlockingWithLaserBlade")
@@ -36,5 +40,17 @@ public class ToLaserBladeConfig {
         @Config.RangeInt(min = 0, max = 1)
         @Config.Name("laserBladeRenderingMode")
         public int laserBladeRenderingMode = 0;
+    }
+
+    public static class ServerConfig {
+        @Config.Ignore()
+        public boolean isEnabledBlockingWithLaserBlade;
+        @Config.Ignore()
+        public int laserBladeEfficiency;
+    }
+
+    public static void init() {
+        server.isEnabledBlockingWithLaserBlade = common.isEnabledBlockingWithLaserBlade;
+        server.laserBladeEfficiency = common.laserBladeEfficiency;
     }
 }

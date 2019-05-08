@@ -76,7 +76,7 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer {
         TransformType cameraTransformType = model.cameraTransformType;
 
         // Transform by Blocking.
-        boolean isBlocking = ToLaserBladeConfig.common.isEnabledBlockingWithLaserBlade
+        boolean isBlocking = ToLaserBladeConfig.server.isEnabledBlockingWithLaserBlade
                 && (cameraTransformType == TransformType.FIRST_PERSON_RIGHT_HAND || cameraTransformType == TransformType.FIRST_PERSON_LEFT_HAND)
                 && model.entity != null && model.entity.isHandActive();
 

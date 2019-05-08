@@ -4,10 +4,13 @@ import com.github.iunius118.tolaserblade.client.model.ModelLaserBlade;
 import com.github.iunius118.tolaserblade.client.renderer.ItemLaserBladeRenderer;
 import com.github.iunius118.tolaserblade.item.ItemLasarBlade;
 import com.github.iunius118.tolaserblade.item.ItemLaserBlade;
+import com.github.iunius118.tolaserblade.network.ServerConfigMessage;
+import com.github.iunius118.tolaserblade.network.ToLaserBladePacketHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemStack;
@@ -42,6 +45,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 import net.minecraftforge.fml.relauncher.Side;
@@ -130,6 +134,19 @@ public class ToLaserBlade {
         }
     }
 
+    @SubscribeEvent
+    public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+        if (event.player instanceof EntityPlayerMP) {
+            // Send packet of server-side settings to logged-in player's client
+            ToLaserBladeConfig.ServerConfig serverConfig = new ToLaserBladeConfig.ServerConfig();
+            serverConfig.isEnabledBlockingWithLaserBlade = ToLaserBladeConfig.common.isEnabledBlockingWithLaserBlade;
+            serverConfig.laserBladeEfficiency = ToLaserBladeConfig.common.laserBladeEfficiency;
+
+            logger.info("Send packet of server-side settings to logged-in player's client.");
+            ToLaserBladePacketHandler.INSTANCE.sendTo(new ServerConfigMessage(serverConfig), (EntityPlayerMP) event.player);
+        }
+    }
+
     // For damage test
     /*
     @SubscribeEvent
@@ -144,7 +161,10 @@ public class ToLaserBlade {
 
     public static class CommonProxy {
         public void preInit(FMLPreInitializationEvent event) {
-
+            // Init network (register packet)
+            ToLaserBladePacketHandler.init();
+            // Init config
+            ToLaserBladeConfig.init();
         }
 
         public void Init(FMLInitializationEvent event) {
@@ -185,6 +205,12 @@ public class ToLaserBlade {
         public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
             if (event.getModID().equals(MOD_ID)) {
                 ConfigManager.sync(MOD_ID, Config.Type.INSTANCE);
+
+                if (Minecraft.getMinecraft().isSingleplayer()) {
+                    // Update common settings only when player is playing single-player
+                    ToLaserBladeConfig.server.isEnabledBlockingWithLaserBlade = ToLaserBladeConfig.common.isEnabledBlockingWithLaserBlade;
+                    ToLaserBladeConfig.server.laserBladeEfficiency = ToLaserBladeConfig.common.laserBladeEfficiency;
+                }
             }
         }
 

@@ -17,6 +17,10 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -30,6 +34,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -64,6 +69,10 @@ public class ItemLaserBlade extends ItemSword {
     public static final int COST_LVL_CLASS_4 = 20;
     public static final int COST_ITEM_CLASS_4 = 1;
 
+    private static final IItemPropertyGetter BLOCKING_GETTER = (stack, world, entity) -> {
+        return entity != null && entity.isHandActive() && entity.getActiveItemStack() == stack ? 1.0F : 0.0F;
+    };
+
     public ItemLaserBlade() {
         super(ToLaserBlade.MATERIAL_LASER);
 
@@ -75,6 +84,8 @@ public class ItemLaserBlade extends ItemSword {
 
         enchSmite = Enchantment.getEnchantmentByLocation("smite");
         enchSweeping = Enchantment.getEnchantmentByLocation("sweeping");
+
+        addPropertyOverride(new ResourceLocation("blocking"), BLOCKING_GETTER);
     }
 
     public static NBTTagCompound setPerformance(ItemStack stack, float modSpeed, float modAttack) {
@@ -433,6 +444,46 @@ public class ItemLaserBlade extends ItemSword {
     }
 
     @Override
+    public boolean isShield(ItemStack stack, @Nullable EntityLivingBase entity) {
+        return ToLaserBladeConfig.server.isEnabledBlockingWithLaserBlade;
+    }
+
+    @Override
+    public EnumAction getItemUseAction(ItemStack stack) {
+        if (ToLaserBladeConfig.server.isEnabledBlockingWithLaserBlade) {
+            return EnumAction.BLOCK;
+        } else {
+            return EnumAction.NONE;
+        }
+    }
+
+    @Override
+    public int getMaxItemUseDuration(ItemStack stack) {
+        if (ToLaserBladeConfig.server.isEnabledBlockingWithLaserBlade) {
+            return 72000;
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
+        ItemStack itemstack = playerIn.getHeldItem(handIn);
+
+        if (ToLaserBladeConfig.server.isEnabledBlockingWithLaserBlade) {
+            EnumAction offhandItemAction = playerIn.getHeldItemOffhand().getItemUseAction();
+
+            if (offhandItemAction != EnumAction.BOW) {
+                playerIn.setActiveHand(handIn);
+            }
+
+            return new ActionResult<>(EnumActionResult.PASS, itemstack);
+        } else {
+            return new ActionResult<>(EnumActionResult.PASS, itemstack);
+        }
+    }
+
+    @Override
     public float getAttackDamage() {
         return attackDamage;
     }
@@ -460,6 +511,11 @@ public class ItemLaserBlade extends ItemSword {
     @Override
     public int getHarvestLevel(ItemStack stack, String toolClass, EntityPlayer player, IBlockState blockState) {
         return material.getHarvestLevel();
+    }
+
+    @Override
+    public int getMaxDamage(ItemStack stack) {
+        return 0;
     }
 
     @Override
