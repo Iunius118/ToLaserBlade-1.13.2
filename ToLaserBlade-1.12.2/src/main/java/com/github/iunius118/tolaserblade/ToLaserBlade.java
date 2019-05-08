@@ -207,7 +207,7 @@ public class ToLaserBlade {
                 ConfigManager.sync(MOD_ID, Config.Type.INSTANCE);
 
                 if (Minecraft.getMinecraft().isSingleplayer()) {
-                    // Update common settings only when player is playing single-player
+                    // Update common settings only when the player is playing single-player
                     ToLaserBladeConfig.server.isEnabledBlockingWithLaserBlade = ToLaserBladeConfig.common.isEnabledBlockingWithLaserBlade;
                     ToLaserBladeConfig.server.laserBladeEfficiency = ToLaserBladeConfig.common.laserBladeEfficiency;
                 }
