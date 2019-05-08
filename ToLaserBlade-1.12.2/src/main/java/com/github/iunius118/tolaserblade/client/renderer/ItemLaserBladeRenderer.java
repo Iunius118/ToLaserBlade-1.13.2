@@ -178,27 +178,29 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer {
     public static final Map<TransformType, float[]> transformMatrices;
 
     static {
-        transformMatrices = new HashMap();
+        transformMatrices = new HashMap<>();
         transformMatrices.put(TransformType.FIRST_PERSON_LEFT_HAND, new float[]{-3.090862E-8F, 3.090862E-8F, -1.0F, 0.0F, 0.8838835F, 0.8838835F, 0.0F, 0.0F, 0.70710677F, -0.70710677F, -4.371139E-8F, 0.0F, -0.030330122F, -0.030330122F, 0.5F, 1.0F});
         transformMatrices.put(TransformType.FIRST_PERSON_RIGHT_HAND, new float[]{-3.090862E-8F, 3.090862E-8F, -1.0F, 0.0F, 0.8838835F, 0.8838835F, 0.0F, 0.0F, 0.70710677F, -0.70710677F, -4.371139E-8F, 0.0F, -0.030330122F, -0.030330122F, 0.5F, 1.0F});
         transformMatrices.put(TransformType.THIRD_PERSON_LEFT_HAND, new float[]{-3.244294E-8F, 4.633332E-8F, -1.294F, 0.0F, 0.94637173F, 0.8825059F, 7.871984E-9F, 0.0F, 0.8825059F, -0.94637173F, -5.6012073E-8F, 0.0F, 0.035000555F, 0.030994587F, 0.5F, 1.0F});
         transformMatrices.put(TransformType.THIRD_PERSON_RIGHT_HAND, new float[]{-3.244294E-8F, 4.633332E-8F, -1.294F, 0.0F, 0.94637173F, 0.8825059F, 7.871984E-9F, 0.0F, 0.8825059F, -0.94637173F, -5.6012073E-8F, 0.0F, 0.035000555F, 0.030994587F, 0.5F, 1.0F});
-        transformMatrices.put(TransformType.FIXED, new float[]{-5.0862745E-8F, -2.7817755E-8F, -0.9F, 0.0F, 0.63639605F, 0.63639605F, -5.5635514E-8F, 0.0F, 0.63639605F, -0.63639605F, -1.6295264E-8F, 0.0F, 0.022702962F, 0.022702962F, 0.46400005F, 1.0F});
+        transformMatrices.put(TransformType.FIXED, new float[]{-5.0862745E-8F, -2.7817755E-8F, -0.9F, 0.0F, 0.63639605F, 0.63639605F, -5.5635514E-8F, 0.0F, 0.63639605F, -0.63639605F, -1.6295264E-8F, 0.0F, 0.022702962F, 0.022702962F, 0.52250004F, 1.0F});
         transformMatrices.put(TransformType.NONE, new float[]{-2.7817755E-8F, 2.7817755E-8F, -0.9F, 0.0F, 0.63639605F, 0.63639605F, 0.0F, 0.0F, 0.63639605F, -0.63639605F, -3.934025E-8F, 0.0F, 0.022702962F, 0.022702962F, 0.5F, 1.0F});
     }
 
     public static final Map<TransformType, float[]> transformMatricesBlockingRight;
+
     static {
         transformMatricesBlockingRight = new HashMap<>();
-        transformMatricesBlockingRight.put(TransformType.FIRST_PERSON_LEFT_HAND, new float[] { -0.04950499F, -0.8617275F, -0.50495046F, 0.0F, 0.10771594F, 0.62499994F, -1.0771594F, 0.0F, 0.9950494F, -0.08617279F, 0.049504925F, 0.0F, 0.45283374F, 0.05398178F, 0.6716627F, 1.0F });
-        transformMatricesBlockingRight.put(TransformType.FIRST_PERSON_RIGHT_HAND, new float[] { -0.04950499F, 0.8617275F, -0.50495046F, 0.0F, -0.10771594F, 0.62499994F, 1.0771594F, 0.0F, 0.9950494F, 0.08617279F, 0.049504925F, 0.0F, 0.5471663F, 0.05398178F, 0.3283373F, 1.0F });
+        transformMatricesBlockingRight.put(TransformType.FIRST_PERSON_LEFT_HAND, new float[]{-0.04950499F, -0.8617275F, -0.50495046F, 0.0F, 0.10771594F, 0.62499994F, -1.0771594F, 0.0F, 0.9950494F, -0.08617279F, 0.049504925F, 0.0F, 0.45283374F, 0.05398178F, 0.6716627F, 1.0F});
+        transformMatricesBlockingRight.put(TransformType.FIRST_PERSON_RIGHT_HAND, new float[]{-0.04950499F, 0.8617275F, -0.50495046F, 0.0F, -0.10771594F, 0.62499994F, 1.0771594F, 0.0F, 0.9950494F, 0.08617279F, 0.049504925F, 0.0F, 0.5471663F, 0.05398178F, 0.3283373F, 1.0F});
     }
 
     public static final Map<TransformType, float[]> transformMatricesBlockingLeft;
+
     static {
         transformMatricesBlockingLeft = new HashMap<>();
-        transformMatricesBlockingLeft.put(TransformType.FIRST_PERSON_LEFT_HAND, new float[] { 0.049504902F, -0.8617275F, -0.50495046F, 0.0F, -0.10771594F, 0.62499994F, -1.0771594F, 0.0F, 0.9950494F, 0.086172715F, -0.04950497F, 0.0F, 0.5471663F, 0.05398178F, 0.6716627F, 1.0F });
-        transformMatricesBlockingLeft.put(TransformType.FIRST_PERSON_RIGHT_HAND, new float[] { 0.049504902F, 0.8617275F, -0.50495046F, 0.0F, 0.10771594F, 0.62499994F, 1.0771594F, 0.0F, 0.9950494F, -0.086172715F, -0.04950497F, 0.0F, 0.45283374F, 0.05398178F, 0.3283373F, 1.0F });
+        transformMatricesBlockingLeft.put(TransformType.FIRST_PERSON_LEFT_HAND, new float[]{0.049504902F, -0.8617275F, -0.50495046F, 0.0F, -0.10771594F, 0.62499994F, -1.0771594F, 0.0F, 0.9950494F, 0.086172715F, -0.04950497F, 0.0F, 0.5471663F, 0.05398178F, 0.6716627F, 1.0F});
+        transformMatricesBlockingLeft.put(TransformType.FIRST_PERSON_RIGHT_HAND, new float[]{0.049504902F, 0.8617275F, -0.50495046F, 0.0F, 0.10771594F, 0.62499994F, 1.0771594F, 0.0F, 0.9950494F, -0.086172715F, -0.04950497F, 0.0F, 0.45283374F, 0.05398178F, 0.3283373F, 1.0F});
     }
 
     private static final FloatBuffer matrixBuf = BufferUtils.createFloatBuffer(16);
