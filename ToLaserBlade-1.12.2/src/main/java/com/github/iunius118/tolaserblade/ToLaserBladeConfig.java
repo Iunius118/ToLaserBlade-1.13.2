@@ -25,14 +25,13 @@ public class ToLaserBladeConfig {
         public int laserBladeEfficiency = 12;
     }
 
-    @Config(modid = ToLaserBlade.MOD_ID, category = "client")
     public static class ClientConfig {
         @Config.Comment("Enable Laser Blade to use 3D Model.")
         @Config.LangKey("tolaserblade.configgui.enableLaserBlade3DModel")
         @Config.Name("enableLaserBlade3DModel")
         public boolean isEnabledLaserBlade3DModel = true;
 
-        @Config.Comment("Select rendering mode of Laser Blade (0: Default, 1: Disable blending). This option is available when enableLaserBlade3DModel is true.")
+        @Config.Comment("Select rendering mode of Laser Blade (0: Default, 1: Using only alpha blending). This option is available when enableLaserBlade3DModel is true.")
         @Config.LangKey("tolaserblade.configgui.laserBladeRenderingMode")
         @Config.RangeInt(min = 0, max = 1)
         @Config.Name("laserBladeRenderingMode")

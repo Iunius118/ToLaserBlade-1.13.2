@@ -16,5 +16,5 @@ tolaserblade.configgui.laserBladeEfficiency=Laser Blade Mining Speed
 
 tolaserblade.configgui.enableLaserBlade3DModel.tooltip=Enable Laser Blade to use 3D model.
 tolaserblade.configgui.enableLaserBlade3DModel=Enable Laser Blade 3D Model
-tolaserblade.configgui.laserBladeRenderingMode.tooltip=Select rendering mode of Laser Blade (0: Default, 1: Disable blending). This option is available when "Enable Laser Blade 3D Model" is true.
+tolaserblade.configgui.laserBladeRenderingMode.tooltip=Select rendering mode of Laser Blade (0: Default, 1: Using only alpha blending). This option is available when "Enable Laser Blade 3D Model" is true.
 tolaserblade.configgui.laserBladeRenderingMode=Laser Blade Rendering Mode
