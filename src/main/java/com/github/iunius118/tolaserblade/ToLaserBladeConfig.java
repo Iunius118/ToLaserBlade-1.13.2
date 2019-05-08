@@ -25,8 +25,8 @@ public class ToLaserBladeConfig {
 
             laserBladeEfficiency = builder
                     .comment("An integer value (0-128) that is a factor of mining speed of Laser Blade.")
-                    .translation("tolaserblade.configgui.laserBladeEfficiency")
-                    .defineInRange("laserBladeEfficiency", 12, 0, 128);
+                    .translation("tolaserblade.configgui.laserBladeEfficiencyInServer")
+                    .defineInRange("laserBladeEfficiencyInServer", 12, 0, 128);
 
             builder.pop();
         }
@@ -76,6 +76,6 @@ public class ToLaserBladeConfig {
 
     public static class ServerConfig {
         public boolean isEnabledBlockingWithLaserBladeInServer;
-        public int laserBladeEfficiency;
+        public int laserBladeEfficiencyInServer;
     }
 }

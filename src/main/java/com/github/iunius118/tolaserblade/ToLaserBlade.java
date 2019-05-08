@@ -145,7 +145,7 @@ public class ToLaserBlade {
     public void onPlayerLoggedIn(PlayerLoggedInEvent event) {
         ToLaserBladeConfig.ServerConfig serverConfig = new ToLaserBladeConfig.ServerConfig();
         serverConfig.isEnabledBlockingWithLaserBladeInServer = ToLaserBladeConfig.COMMON.isEnabledBlockingWithLaserBlade.get();
-        serverConfig.laserBladeEfficiency = ToLaserBladeConfig.COMMON.laserBladeEfficiency.get();
+        serverConfig.laserBladeEfficiencyInServer = ToLaserBladeConfig.COMMON.laserBladeEfficiency.get();
 
         NETWORK_HANDLER.getConfigChannel().sendTo(
                 new ServerConfigMessage(serverConfig),
