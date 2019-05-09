@@ -2,6 +2,12 @@
 
 以下の解説は、バージョン 1.13.2-2.0.1.0 時点での仕様に基づいて書かれています。
 
+## 動作環境
+
+- Java 8 以降
+- Minecraft 1.13.2
+- Minecraft Forge 1.13.2-25.0.149+
+
 ## ダウンロード
 
 - [ダウンロードサイト（Curse Forge）](https://minecraft.curseforge.com/projects/tolaserblade)
@@ -160,4 +166,8 @@
   - この項目は`enableLaserBlade3DModel`が`true`のときのみ使用される
 
 ---
-Copyright 2018-2019 Iunius118
+Copyright 2016-2019 Iunius118
+
+This mod is released under the MIT license but including resources licensed under a Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0) License.
+
+このmodはMITライセンスで配布されていますが、リソースにクリエイティブコモンズ 表示 - 非営利 4.0（CC BY-NC 4.0）ライセンスで配布されているファイルを含みます。
