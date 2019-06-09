@@ -1,17 +1,7 @@
-# ToLaserBlade
+# ToLaserBlade-1.13.2
+ToLaserBlade's sub project for Minecraft 1.13.2 with Forge
 
-[<img src="docs/img/tolaserblade_1.png" title="The Laser Blade" width="427">](docs/img/tolaserblade_1.png)
-
-ToLaserBlade (T. o. Laser Blade) adds a simple sword with a laser blade.
-
-- Mod解説（日本語）
-
-  - [1.13.2](docs/recipes_ja.md)
-  - [1.12.2](docs/recipes_1.12.2_ja.md)
-
-## Description and Download
-
-- [Project Page (CurseForge)](https://minecraft.curseforge.com/projects/tolaserblade)
+Main project: https://github.com/Iunius118/ToLaserBlade
 
 ---
 Copyright (c) 2016-2019 Iunius118
