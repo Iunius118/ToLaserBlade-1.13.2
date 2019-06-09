@@ -8,9 +8,8 @@
 # Exclude docs
 !/docs/
 
-# Exclude project for each minecraft version 
+# Exclude 1.12.2
 !/ToLaserBlade-1.12.2/
-!/ToLaserBlade-1.13.2/
 
 # Others
 !.gitignore
