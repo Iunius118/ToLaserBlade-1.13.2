@@ -46,7 +46,7 @@ public class ItemLasarBlade extends ItemSword {
 
         // Redstone Torch -> Repairing/Collecting
 
-        if (block == Blocks.REDSTONE_TORCH && player.canPlayerEdit(pos, facing, itemstack)) {
+        if ((block == Blocks.REDSTONE_TORCH || block == Blocks.REDSTONE_WALL_TORCH) && player.canPlayerEdit(pos, facing, itemstack)) {
             int itemDamage = itemstack.getDamage();
             if (itemDamage >= costDamage || player.abilities.isCreativeMode) {
                 // Repair this
@@ -55,7 +55,7 @@ public class ItemLasarBlade extends ItemSword {
                 // Collect a Redstone Torch
                 if (!player.inventory.addItemStackToInventory(new ItemStack(Blocks.REDSTONE_TORCH))) {
                     // Cannot collect because player's inventory is full
-                    return EnumActionResult.FAIL;
+                    return EnumActionResult.PASS;
                 }
             }
 
@@ -71,16 +71,17 @@ public class ItemLasarBlade extends ItemSword {
 
         if (!player.abilities.isCreativeMode && itemstack.getDamage() >= costDamage) {
             // This is too damaged to place Redstone Torch
-            return EnumActionResult.FAIL;
+            return EnumActionResult.PASS;
         }
 
-        if (Blocks.REDSTONE_TORCH.asItem().onItemUse(context) == EnumActionResult.SUCCESS) {
+        // Place Redstone Torch and Damage this
+        if (player.isSneaking() && Blocks.REDSTONE_TORCH.asItem().onItemUse(context) == EnumActionResult.SUCCESS) {
             itemstack.setCount(1);
             itemstack.damageItem(costDamage, player);
             return EnumActionResult.SUCCESS;
         }
 
-        return EnumActionResult.FAIL;
+        return EnumActionResult.PASS;
     }
 
     @Override
