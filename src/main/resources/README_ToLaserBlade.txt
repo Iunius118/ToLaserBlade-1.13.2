@@ -1,5 +1,5 @@
 ﻿
-	ToLaserBlade 0.0.5
+	ToLaserBlade 0.0.5.1
 
 
 前提mod（必須）
@@ -79,9 +79,6 @@
 	このテクスチャをMTLファイル内で指定するにはmap_Kdステートメントで以下のように設定する（モデラーから出力後テキストエディタなどで要編集）
 
 		map_Kd tolaserblade:items/laser_blade
-
-	当mod同梱のリソースパックは Creative Commons の Attribution-ShareAlike（BY-SA、表示-継承）4.0 ライセンスで配布されている
-	ライセンスについて詳しくは、assets/tolaserblade/LICENSE.txt または https://creativecommons.org/licenses/by-sa/4.0/deed.ja を参照のこと
 
 
 Copyright 2016 Iunius118
