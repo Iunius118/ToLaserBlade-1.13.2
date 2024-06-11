@@ -5,11 +5,11 @@
   "description": "Adds a Laser Blade.",
   "version": "${version}",
   "mcversion": "${mcversion}",
-  "url": "https://twitter.com/Iunius118",
+  "url": "https://github.com/Iunius118/ToLaserBlade",
   "updateUrl": "",
   "authorList": ["Iunius"],
   "credits": "",
-  "logoFile": "",
+  "logoFile": "tolaserblade_logo.png",
   "screenshots": [],
   "dependencies": []
 }
