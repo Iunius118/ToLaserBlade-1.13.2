@@ -6,8 +6,7 @@
 !/src/
 
 # Others
-!README.md
 !.gitignore
-!README_*
-!LICENSE.txt
+!README*
+!LICENSE*
 !build.gradle

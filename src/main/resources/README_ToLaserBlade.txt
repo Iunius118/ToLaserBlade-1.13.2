@@ -1,5 +1,5 @@
 ﻿
-	ToLaserBlade 1.11.2-0.0.6
+	ToLaserBlade 1.11.2-0.0.6.1
 
 
 前提mod（必須）
@@ -81,9 +81,6 @@
 
 		map_Kd tolaserblade:items/laser_blade
 
-	当mod同梱のリソースパックは Creative Commons の Attribution-ShareAlike（BY-SA、表示-継承）4.0 ライセンスで配布されている
-	ライセンスについて詳しくは、assets/tolaserblade/LICENSE.txt または https://creativecommons.org/licenses/by-sa/4.0/deed.ja を参照のこと
 
-
-Copyright 2017 Iunius118
+Copyright 2016 Iunius118
 https://github.com/Iunius118/ToLaserBlade
