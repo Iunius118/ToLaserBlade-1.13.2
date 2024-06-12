@@ -1,7 +1,8 @@
 # ToLaserBlade
 
-- **Download:**
-  - [[1.11.2]ToLaserBlade-1.11.2-0.0.6.jar (from MediaFire)](http://www.mediafire.com/file/tkr0dtqmoht9d22) [[Readme](https://github.com/Iunius118/ToLaserBlade/blob/1.11.2_0.0.6/src/main/resources/README_ToLaserBlade.txt)]
-  - [[1.9.4,1.10]ToLaserBlade-0.0.5.jar (from MediaFire)](http://www.mediafire.com/download/nchz850xncu2awt) [[Readme](https://github.com/Iunius118/ToLaserBlade/blob/0.0.5/src/main/resources/README_ToLaserBlade.txt)]
++ **Download:** [1.11.2] [ToLaserBlade-1.11.2-0.0.6.1.jar](https://github.com/Iunius118/ToLaserBlade-1.13.2/releases/download/v1.11.2-0.0.6.1/ToLaserBlade-1.11.2-0.0.6.1.jar)
++ **Readme:** [README_ToLaserBlade.txt](https://github.com/Iunius118/ToLaserBlade-1.13.2/blob/1.11.2_0.0.6/src/main/resources/README_ToLaserBlade.txt)
 
-Copyright 2017 Iunius118
+Licensed under the MIT License.
+
+Copyright 2016 Iunius118
