@@ -44,6 +44,7 @@ public class LaserBlade {
         costLevelRates.put(Enchantments.LOOTING, 4);
         costLevelRates.put(Enchantments.SWEEPING, 4);
         costLevelRates.put(Enchantments.FIRE_ASPECT, 4);
+        costLevelRates.put(Enchantments.SILK_TOUCH, 8);
         costLevelRates.put(Enchantments.MENDING, 8);
         costLevelRates.put(Enchantments.VANISHING_CURSE, 8);
     }

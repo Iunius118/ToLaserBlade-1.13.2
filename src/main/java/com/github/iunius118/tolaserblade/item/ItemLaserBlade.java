@@ -18,10 +18,8 @@ import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.*;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
@@ -210,10 +208,22 @@ public class ItemLaserBlade extends ItemSword {
 
             return;
 
-        } else if (itemRight == Items.NAUTILUS_SHELL) {
+        } else if (itemRight == Items.NAUTILUS_SHELL || isContainedInItemTag(itemRight, "forge:storage_blocks/emerald")) {
             // LOOTING++
             if (!laserBlade.isEnchantmentMaxLavel(Enchantments.LOOTING)) {
                 laserBlade.increaseEnchantmentLevel(Enchantments.LOOTING);
+                laserBlade.changeDisplayName(name);
+                event.setCost(laserBlade.getCost());
+                event.setMaterialCost(1);
+                event.setOutput(laserBlade.getItemStack());
+            }
+
+            return;
+
+        } else if (right.getItem() == Items.PRISMARINE_CRYSTALS) {
+            // Add Silk Touch
+            if (!laserBlade.isEnchantmentMaxLavel(Enchantments.SILK_TOUCH)) {
+                laserBlade.increaseEnchantmentLevel(Enchantments.SILK_TOUCH);
                 laserBlade.changeDisplayName(name);
                 event.setCost(laserBlade.getCost());
                 event.setMaterialCost(1);
