@@ -1,0 +1,126 @@
+# Cheatsheet
+
+[ToLaserBlade](https://github.com/Iunius118/ToLaserBlade)
+Version 1.13.2-2.1.0.0.
+
+Adds a simple sword with a laser blade.
+
+## Requirements
+
+- Minecraft 1.13.2
+- Forge 1.13.2-25.0.223+
+
+## How to Get Started
+
+1. Craft a laser blade
+2. Craft an anvil
+3. Upgrade the laser blade on the anvil
+
+## Items
+
+### Laser B1ade (Prop Laser Blade)
+
+Crafting Recipe:
+
+    2 Redstone Torches (R) and Stick (s)
+    |   | R |   |
+    |   | R |   |
+    |   | s |   |
+
+Performances:
+
+- Attack Damage : 5
+- Attack Speed  : 2.8
+- Max Durability: 255
+
+When sneaking and right-clicking on a block, a redstone torch is placed on the block and the laser b1ade's durability is consumed.
+When right-clicking on a redstone torch, the redstone torch is broken and the laser b1ade's durability is recovered.
+
+### Laser Blade
+
+Laser Blade can be used to dig or mine for dirt, gravel, stone, diamond, obsidian, etc.
+
+When a Laser Blade wears out and breaks, a Laser Blade Core drops.
+
+#### Low Cost Recipe
+
+Crafting Recipe:
+
+    4 Iron Ingots (i), Diamond (d), Glass or Stained Glass (#), and Redstone (r)
+    |   | i | d |
+    | i | # | i |
+    | r | i |   |
+
+Performances:
+
+- Attack Damage : 6
+- Attack Speed  : 2.8
+- Max Durability: 32000
+- Enchantment   : Smite I
+
+#### High Cost Recipe
+
+Crafting Recipe:
+
+    4 Iron Ingots (i), Diamond (d), Glowstone Dust (g), and Redstone (r)
+    |   | i | d |
+    | i | g | i |
+    | r | i |   |
+
+Performances:
+
+- Attack Damage : 7
+- Attack Speed  : 2.8
+- Max Durability: 32000
+- Enchantment   : Smite II
+
+#### Upgrading Laser Blade
+
+Anvil Recipes:
+
+- Rename Laser Blade (from low cost recipe) to GIFT → 7 attack damage and Smite II
+- Laser Blade + Block of Redstone → + attack speed (up to 4.0)
+- Laser Blade + Block of Diamond → + attack damage (up to 14)
+- Laser Blade + Glowstone → + Smite (up to X)
+- Laser Blade + Nether Star → 4 attack speed, 14 attack damage, and Smite X
+- Laser Blade + Blaze Rod → + Fire Aspect
+- Laser Blade + Eye of Ender → + Sweeping Edge
+- Laser Blade + Nautilus Shell or Block of Emerald → + Looting
+- Laser Blade + Prismarine Crystals → + Silk Touch
+- Laser Blade (14+ attack damage) + Mob Head → + attack damage
+
+#### Coloring Laser Blade
+
+Anvil Recipes:
+
+- Laser Blade + dye item → changing color of inner part of blade
+- Laser Blade + stained glass → changing color of outer part of blade
+- Laser Blade + carpet → changing grip color
+
+Crafting Recipe (Shapeless):
+
+- The player in the Nether, Laser Blade → switching blend mode of inner part of blade
+- The player in the End, Laser Blade → switching blend mode of outer part of blade
+- The player in the other world, Laser Blade → changing color of outer part of blade by the base temperature of the biome
+
+#### Repairing Laser Blade
+
+Anvil Recipe:
+
+- Laser Blade (damaged) + 1-4 Iron Ingot(s) → repaired Laser Blade
+- Laser Blade Core + 4 Iron Ingot → repaired Laser Blade
+
+### Laser Blade Core
+
+When a Laser Blade wears out and breaks, a Laser Blade Core drops.
+
+Anvil Recipe:
+
+- Laser Blade + Iron Axe → Laser Blade Core
+
+## Configurations
+
+Configuration files are NOT compatible with 1.12.2 version.
+
+- Common: `config/tolaserblade-common.toml`
+- Client: `config/tolaserblade-client.toml`

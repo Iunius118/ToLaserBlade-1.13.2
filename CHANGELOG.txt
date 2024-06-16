@@ -3,6 +3,14 @@ Changelog
 
 v1.13.2-2.1.0.0
 
+    Require Forge 1.13.2-25.0.223
+    Switch license to MIT
+    Improve laser blade model
+    Add grip color modification to Laser Blade
+    Fix colors of blade color modification
+    Add enchantment upgrades for Laser Blade
+        [Anvil] Laser Blade + Block of Emerald → + Looting
+        [Anvil] Laser Blade + Prismarine Crystals → + Silk Touch
     Add CHANGELOG.txt (this file)
 
 v1.13.2-2.0.2.0
