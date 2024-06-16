@@ -45,6 +45,7 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer {
     public void doRender(ModelLaserBlade model) {
         BufferBuilder renderer = Tessellator.getInstance().getBuffer();
         LaserBlade laserBlade = LaserBlade.create(model.itemStack);
+        int colorGrip = laserBlade.getGripColor();
         int colorCore = laserBlade.getCoreColor();
         int colorHalo = laserBlade.getHaloColor();
         boolean isSubColorCore = laserBlade.isCoreSubColor();
@@ -68,7 +69,7 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer {
         }
 
         // Draw hilt.
-        renderQuads(renderer, model.getQuadsByName("Hilt"), -1);
+        renderQuads(renderer, model.getQuadsByName("Hilt"), colorGrip);
 
         // Enable bright rendering.
         GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);

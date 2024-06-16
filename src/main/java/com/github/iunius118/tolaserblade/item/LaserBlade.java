@@ -4,6 +4,7 @@ import com.github.iunius118.tolaserblade.ToLaserBlade;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockCarpet;
 import net.minecraft.block.BlockStainedGlass;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -49,12 +50,15 @@ public class LaserBlade {
 
     // Blade color table
     public final static int[] colors = {0xFFFF0000, 0xFFD0A000, 0xFF00E000, 0xFF0080FF, 0xFF0000FF, 0xFFA000FF, 0xFFFFFFFF, 0xFF020202, 0xFFA00080};
+    public final static int[] dyeColors = {0xFFFFFFFF, 0xFFFF681F, 0xFFFF0080, 0xFF00AAFF, 0xFFFFEE00, 0xFFA9FF32, 0xFFFF004C, 0xFF555555, 0xFFAAAAAA, 0xFF00FFFF, 0xFFFF00FF, 0xFF0000FF, 0xFFFF6B00, 0xFF80FF00, 0xFFFF0000, 0xFF020202};
 
+    public static final int DEFAULT_COLOR_GRIP = 0xFFFFFFFF;
     public static final int DEFAULT_COLOR_CORE = 0xFFFFFFFF;
     public static final int DEFAULT_COLOR_HALO = 0xFFFF0000;
 
     public static final String KEY_ATK = "ATK";
     public static final String KEY_SPD = "SPD";
+    public static final String KEY_COLOR_GRIP = "colorG";
     public static final String KEY_COLOR_CORE = "colorC";
     public static final String KEY_COLOR_HALO = "colorH";
     public static final String KEY_IS_SUB_COLOR_CORE = "isSubC";
@@ -189,6 +193,17 @@ public class LaserBlade {
         return speed;
     }
 
+    public int getGripColor() {
+        NBTTagCompound nbt = stack.getTag();
+
+        if (nbt.contains(KEY_COLOR_GRIP, NBT.TAG_INT)) {
+            return nbt.getInt(KEY_COLOR_GRIP);
+        }
+
+        nbt.setInt(KEY_COLOR_GRIP, DEFAULT_COLOR_GRIP);
+        return DEFAULT_COLOR_GRIP;
+    }
+
     public int getCoreColor() {
         NBTTagCompound nbt = stack.getTag();
 
@@ -271,10 +286,17 @@ public class LaserBlade {
 
     public LaserBlade setDefaultColors() {
         NBTTagCompound nbt = stack.getOrCreateTag();;
+        nbt.setInt(KEY_COLOR_GRIP, DEFAULT_COLOR_GRIP);
         nbt.setInt(KEY_COLOR_CORE, DEFAULT_COLOR_CORE);
         nbt.setInt(KEY_COLOR_HALO, DEFAULT_COLOR_HALO);
         nbt.setBoolean(KEY_IS_SUB_COLOR_CORE, false);
         nbt.setBoolean(KEY_IS_SUB_COLOR_HALO, false);
+        return this;
+    }
+
+    public LaserBlade setGripColor(int color) {
+        NBTTagCompound nbt = stack.getTag();
+        nbt.setInt(KEY_COLOR_GRIP, color);
         return this;
     }
 
@@ -366,17 +388,29 @@ public class LaserBlade {
         Item item = stack.getItem();
 
         if (item instanceof ItemDye) {
-            int color = ((ItemDye) stack.getItem()).getDyeColor().getMapColor().colorValue | 0xFF000000;
+            // Inner color of blade
+            int color = dyeColors[((ItemDye) stack.getItem()).getDyeColor().getId() & 0xF] | 0xFF000000;
 
             if (getCoreColor() != color) {
                 setCoreColor(color);
                 cost++;
             }
         } else if (item instanceof ItemBlock) {
+            // With block
             Block block = ((ItemBlock) item).getBlock();
 
-            if (block instanceof BlockStainedGlass) {
-                int color = ((BlockStainedGlass) block).getColor().getMapColor().colorValue | 0xFF000000;
+            if (block instanceof BlockCarpet) {
+                // Grip color
+                int color = dyeColors[((BlockCarpet) block).getColor().getId() & 0xF] | 0xFF000000;
+
+                if (getGripColor() != color) {
+                    setGripColor(color);
+                    cost++;
+                }
+
+            } else if (block instanceof BlockStainedGlass) {
+                // Outer color of blade
+                int color = dyeColors[((BlockStainedGlass) block).getColor().getId() & 0xF] | 0xFF000000;
 
                 if (getHaloColor() != color) {
                     setHaloColor(color);
@@ -530,6 +564,7 @@ public class LaserBlade {
 
         newNBT.setFloat(KEY_ATK, attack);
         newNBT.setFloat(KEY_SPD, speed);
+        copyNBTInt(newNBT, oldNBT, KEY_COLOR_GRIP, DEFAULT_COLOR_GRIP);
         copyNBTInt(newNBT, oldNBT, KEY_COLOR_CORE, DEFAULT_COLOR_CORE);
         copyNBTInt(newNBT, oldNBT, KEY_COLOR_HALO, DEFAULT_COLOR_HALO);
         copyNBTBoolean(newNBT, oldNBT, KEY_IS_SUB_COLOR_CORE, false);
@@ -552,6 +587,7 @@ public class LaserBlade {
         NBTTagCompound newNBT = itemStack.getOrCreateTag();
         NBTTagCompound oldNBT = stack.getTag();
 
+        copyNBTInt(newNBT, oldNBT, KEY_COLOR_GRIP, DEFAULT_COLOR_GRIP);
         copyNBTInt(newNBT, oldNBT, KEY_COLOR_CORE, DEFAULT_COLOR_CORE);
         copyNBTInt(newNBT, oldNBT, KEY_COLOR_HALO, DEFAULT_COLOR_HALO);
         copyNBTBoolean(newNBT, oldNBT, KEY_IS_SUB_COLOR_CORE, false);
